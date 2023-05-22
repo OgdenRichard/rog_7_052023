@@ -1,4 +1,5 @@
-import recipes from "./recipes.js";
+import recipes from './recipes.js';
+import RecipesView from './RecipesView.js';
 
-console.log(JSON.stringify(recipes));
-console.log('héhéhé');
+const View = new RecipesView(recipes);
+View.init();
