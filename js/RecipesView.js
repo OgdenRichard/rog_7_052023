@@ -15,7 +15,9 @@ export default class RecipesView {
       }
       const currentRow = this.grid.lastChild;
       // TODO : destructuring
-      currentRow.appendChild(this.setCard(recipe.name, recipe.time));
+      currentRow.appendChild(
+        this.setCard(recipe.name, recipe.time, recipe.ingredients)
+      );
       nextRow = cardsCount % 3 === 0;
       cardsCount += 1;
     });
@@ -30,7 +32,7 @@ export default class RecipesView {
     return row;
   };
 
-  setCard = (title, time) => {
+  setCard = (title, time, ingredients) => {
     const col = document.createElement('div');
     col.className = 'col';
     const card = document.createElement('div');
@@ -38,6 +40,7 @@ export default class RecipesView {
     const body = document.createElement('div');
     body.className = 'card-body';
     body.appendChild(this.setCardHeader(title, time));
+    body.appendChild(this.setIngredients(ingredients));
     card.appendChild(body);
     col.appendChild(card);
     return col;
@@ -55,5 +58,25 @@ export default class RecipesView {
     header.appendChild(name);
     header.appendChild(clock);
     return header;
+  };
+
+  setIngredients = (ingredients) => {
+    const list = document.createElement('dl');
+    list.className = 'card-ingredients';
+    ingredients.forEach((ingredient) => {
+      const elementTitle = document.createElement('dt');
+      elementTitle.textContent = `${ingredient.ingredient}`;
+      elementTitle.textContent += ingredient.quantity ? ' : ' : '';
+      list.appendChild(elementTitle);
+      const elementDesc = document.createElement('dd');
+      if (ingredient.quantity) {
+        const textUnit = ingredient.unit ? ingredient.unit : '';
+        elementDesc.textContent = `${ingredient.quantity} ${textUnit}`;
+      } else {
+        elementDesc.classList.add('clearfix');
+      }
+      list.appendChild(elementDesc);
+    });
+    return list;
   };
 }

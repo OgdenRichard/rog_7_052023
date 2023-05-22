@@ -16,3 +16,25 @@
   font-weight: 400;
   content: '\f017';
 }
+
+.card-ingredients{
+    list-style-type: none;
+}
+
+dl{
+    margin-bottom: 0;
+    line-height: 1.2em;
+    font-size: 0.8em;
+}
+
+dt {
+    float: left;
+    clear: left;
+    margin-right: 5px;
+/*     font-weight: bold; */
+  }
+  
+  dd {
+    margin-left: 0px;
+    margin-bottom: 0;
+  }
