@@ -1,3 +1,7 @@
+.card-body {
+  min-height: 200px;
+}
+
 .card-title {
   display: flex;
   justify-content: space-between;
@@ -9,7 +13,7 @@
 
 .card-clock::before {
   display: inline-block;
-   vertical-align: middle;
+  vertical-align: middle;
   margin-right: 0.3em;
   font-family: 'FontAwesome';
   font-size: 1.25em;
@@ -17,24 +21,43 @@
   content: '\f017';
 }
 
-.card-ingredients{
-    list-style-type: none;
+.card-details {
+  display: flex;
+  justify-content: space-between;
+  max-height: 175px;
 }
 
-dl{
-    margin-bottom: 0;
-    line-height: 1.2em;
-    font-size: 0.8em;
+.card-recipe {
+  width: calc(45%);
+  max-height: 150px;
+  white-space: wrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.card-recipe > p {
+  font-size: 0.8em;
+}
+
+.card-ingredients {
+  width: auto;
+}
+
+dl {
+  list-style-type: none;
+  margin-bottom: 0;
+  line-height: 1.2em;
+  font-size: 0.8em;
 }
 
 dt {
-    float: left;
-    clear: left;
-    margin-right: 5px;
-/*     font-weight: bold; */
-  }
-  
-  dd {
-    margin-left: 0px;
-    margin-bottom: 0;
-  }
+  float: left;
+  clear: left;
+  margin-right: 5px;
+  /*     font-weight: bold; */
+}
+
+dd {
+  margin-left: 0px;
+  margin-bottom: 0;
+}

@@ -16,7 +16,12 @@ export default class RecipesView {
       const currentRow = this.grid.lastChild;
       // TODO : destructuring
       currentRow.appendChild(
-        this.setCard(recipe.name, recipe.time, recipe.ingredients)
+        this.setCard(
+          recipe.name,
+          recipe.time,
+          recipe.ingredients,
+          recipe.description
+        )
       );
       nextRow = cardsCount % 3 === 0;
       cardsCount += 1;
@@ -32,15 +37,19 @@ export default class RecipesView {
     return row;
   };
 
-  setCard = (title, time, ingredients) => {
+  setCard = (title, time, ingredients, description) => {
     const col = document.createElement('div');
     col.className = 'col';
     const card = document.createElement('div');
     card.className = 'card';
     const body = document.createElement('div');
     body.className = 'card-body';
+    const details = document.createElement('div');
+    details.className = 'card-details';
+    details.appendChild(this.setIngredients(ingredients));
+    details.appendChild(this.setDescription(description));
     body.appendChild(this.setCardHeader(title, time));
-    body.appendChild(this.setIngredients(ingredients));
+    body.appendChild(details);
     card.appendChild(body);
     col.appendChild(card);
     return col;
@@ -61,8 +70,9 @@ export default class RecipesView {
   };
 
   setIngredients = (ingredients) => {
+    const container = document.createElement('div');
+    container.className = 'card-ingredients';
     const list = document.createElement('dl');
-    list.className = 'card-ingredients';
     ingredients.forEach((ingredient) => {
       const elementTitle = document.createElement('dt');
       elementTitle.textContent = `${ingredient.ingredient}`;
@@ -77,6 +87,17 @@ export default class RecipesView {
       }
       list.appendChild(elementDesc);
     });
-    return list;
+    container.append(list);
+    return container;
+  };
+
+  setDescription = (description) => {
+    const container = document.createElement('div');
+    const desc = document.createElement('p');
+    container.className = 'card-recipe';
+    desc.className = 'card-recipe__description';
+    desc.textContent = description;
+    container.appendChild(desc);
+    return container;
   };
 }
