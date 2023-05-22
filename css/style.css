@@ -2,3 +2,17 @@
   display: flex;
   justify-content: space-between;
 }
+
+.card-name {
+  width: 70%;
+}
+
+.card-clock::before {
+  display: inline-block;
+   vertical-align: middle;
+  margin-right: 0.3em;
+  font-family: 'FontAwesome';
+  font-size: 1.25em;
+  font-weight: 400;
+  content: '\f017';
+}

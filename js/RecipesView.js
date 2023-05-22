@@ -6,24 +6,27 @@ export default class RecipesView {
 
   init = () => {
     let nextRow = true;
+    let lastRow = false;
     let cardsCount = 1;
     this.recipes.forEach((recipe) => {
       if (nextRow) {
-        this.grid.appendChild(this.addRow());
+        lastRow = this.recipes.length - cardsCount < 3;
+        this.grid.appendChild(this.addRow(lastRow));
       }
       const currentRow = this.grid.lastChild;
+      // TODO : destructuring
       currentRow.appendChild(this.setCard(recipe.name, recipe.time));
-      // console.log(recipe.name);
       nextRow = cardsCount % 3 === 0;
       cardsCount += 1;
-      console.log(`${cardsCount} | ${nextRow}`);
     });
   };
 
-  addRow = () => {
+  addRow = (lastRow) => {
     const row = document.createElement('div');
     row.className = 'row';
-    // row.classList.add('row-cols-4');
+    if (lastRow) {
+      row.classList.add('row-cols-3');
+    }
     return row;
   };
 
@@ -43,10 +46,12 @@ export default class RecipesView {
   setCardHeader = (title, time) => {
     const header = document.createElement('div');
     const name = document.createElement('h5');
+    name.classList.add('card-name');
     const clock = document.createElement('h5');
+    clock.classList.add('card-clock');
     header.classList.add('card-title');
     name.innerText = title;
-    clock.innerText = time;
+    clock.innerText = `${time} min`;
     header.appendChild(name);
     header.appendChild(clock);
     return header;
