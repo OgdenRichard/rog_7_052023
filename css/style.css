@@ -28,15 +28,11 @@
 }
 
 .card-recipe {
+  display: inline-block;
   width: calc(45%);
   max-height: 150px;
-  white-space: wrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.card-recipe > p {
   font-size: 0.8em;
+  overflow: hidden;
 }
 
 .card-ingredients {

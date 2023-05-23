@@ -93,11 +93,8 @@ export default class RecipesView {
 
   setDescription = (description) => {
     const container = document.createElement('div');
-    const desc = document.createElement('p');
     container.className = 'card-recipe';
-    desc.className = 'card-recipe__description';
-    desc.textContent = description;
-    container.appendChild(desc);
+    container.textContent = description;
     return container;
   };
 }
