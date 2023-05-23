@@ -1,3 +1,8 @@
+.search-main input {
+  background-color: #e9ecef;
+  border-right: none;
+}
+
 .card-body {
   min-height: 200px;
 }
