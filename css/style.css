@@ -1,3 +1,15 @@
+.bg-blue {
+  background-color: #0d6efd;
+}
+
+.bg-green {
+  background-color: #20c997;
+}
+
+.bg-red {
+  background-color: #dc3545;
+}
+
 .search-main input {
   background-color: #e9ecef;
   border-right: none;
@@ -61,4 +73,125 @@ dt {
 dd {
   margin-left: 0px;
   margin-bottom: 0;
+}
+
+/* ----------- DROPDOWNS SECTION ----------- */
+
+.advanced-search {
+  display: flex;
+  position: absolute;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.listbox-dropdown {
+  position: relative;
+  margin-left: 1.5em;
+  padding: 0;
+  z-index: 3;
+}
+
+.listbox-dropdown__header {
+  display: flex;
+  border-radius: 0.35em;
+  cursor: pointer;
+}
+
+.listbox-dropdown > .listbox-dropdown__list:last-child {
+  border-radius: 0 0 0.35em 0.35em;
+  padding-bottom: 1em;
+}
+
+.listbox-dropdown:focus-within .listbox-dropdown__header {
+  border-bottom-right-radius: 0;
+}
+
+.listbox-dropdown:focus-within .listbox-dropdown__list {
+  display: block;
+  height: auto;
+}
+
+.listbox-dropdown:focus-within .listbox-dropdown__input {
+  width: 100%;
+  outline: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.listbox-dropdown:focus-within .arrow-container > .arrow {
+  transform: rotate(-225deg);
+  margin: 1.3em 0 0 0.5em;
+}
+
+.listbox-dropdown__input {
+  width: auto;
+  height: 3em;
+  padding-left: 1em;
+  border: none;
+  border-radius: 0.35em 0 0 0.35em;
+  text-align: left;
+  font-size: inherit;
+  color: whitesmoke;
+  cursor: pointer;
+}
+
+.arrow-container {
+  position: relative;
+  width: 3em;
+  height: auto;
+  padding-left: 0.25em;
+}
+
+.arrow {
+  display: inline-block;
+  height: 0.75em;
+  width: 0.75em;
+  margin: 1em 0 0 0.9em;
+  vertical-align: middle;
+  border-left: 0.15em solid whitesmoke;
+  border-bottom: 0.15em solid whitesmoke;
+  transform: rotate(-45deg);
+  transition: transform 300ms ease-in-out;
+  cursor: pointer;
+}
+
+.arrow::after,
+.arrow::before {
+  content: '';
+  position: absolute;
+  display: block;
+  background: inherit;
+  width: inherit;
+  height: inherit;
+}
+
+.arrow::before {
+  top: 8px;
+}
+
+.arrow::after {
+  bottom: 8px;
+}
+
+.listbox-dropdown__list {
+  display: none;
+  width: auto;
+  height: 0;
+  margin: 0;
+  padding: 0.2em 0 0.2em 1em;
+  column-count: 3;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.listbox-dropdown__option {
+  font-size: 1em;
+  border: none;
+  color: whitesmoke;
+  list-style-type: none;
+  cursor: pointer;
 }
