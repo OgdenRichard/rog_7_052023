@@ -2,6 +2,8 @@ export default class RecipesView {
   constructor(data) {
     this.recipes = data;
     this.grid = document.getElementById('grid');
+    this.ingredients = [];
+    this.ingredientsDropdown = document.getElementById('ingredients');
   }
 
   init = () => {
@@ -9,6 +11,7 @@ export default class RecipesView {
     let lastRow = false;
     let cardsCount = 1;
     this.recipes.forEach((recipe) => {
+      this.processRecipeIngredients(recipe.ingredients);
       if (nextRow) {
         lastRow = this.recipes.length - cardsCount < 3;
         this.grid.appendChild(this.addRow(lastRow));
@@ -26,6 +29,46 @@ export default class RecipesView {
       nextRow = cardsCount % 3 === 0;
       cardsCount += 1;
     });
+    console.log(this.ingredients);
+    this.displayAdvancedSearchCategory();
+  };
+
+  processRecipeIngredients = (ingredients) => {
+    ingredients.forEach((ingredient) => {
+      if (!this.ingredients.includes(ingredient.ingredient)) {
+        this.ingredients.push(ingredient.ingredient);
+      }
+    });
+  };
+
+  displayAdvancedSearchCategory = () => {
+    if (this.ingredients.length) {
+      let currentList = this.setNewList();
+      for (let index = 0; index < this.ingredients.length; index += 1) {
+        const ingredient = this.ingredients[index];
+        const newList = index === 0 || index % 3 === 0;
+        if (newList) {
+          currentList = this.setNewList();
+          this.ingredientsDropdown.appendChild(currentList);
+        }
+        currentList.appendChild(this.setListElement(ingredient));
+      }
+    }
+  };
+
+  setNewList = () => {
+    const list = document.createElement('ul');
+    list.classList.add('listbox-dropdown__list');
+    list.classList.add('bg-blue');
+    return list;
+  };
+
+  setListElement = (ingredient) => {
+    const listElement = document.createElement('li');
+    listElement.classList.add('listbox-dropdown__option');
+    listElement.setAttribute('tabindex', '0');
+    listElement.innerText = ingredient;
+    return listElement;
   };
 
   addRow = (lastRow) => {
