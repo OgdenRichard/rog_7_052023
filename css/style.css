@@ -77,8 +77,15 @@ dd {
 
 /* ----------- DROPDOWNS SECTION ----------- */
 
+.search-wrapper {
+  height: auto;
+  font-size: 16px;
+  margin-bottom: 5em;
+}
+
 .advanced-search {
   display: flex;
+  flex-wrap: wrap;
   position: absolute;
 }
 
