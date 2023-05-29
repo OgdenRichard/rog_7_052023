@@ -7,7 +7,7 @@ export default class RecipesView {
     this.appliances = [];
     this.ingredientsDropdown = document.getElementById('ingredients');
     this.ustensilsDropdown = document.getElementById('ustensils');
-    this.applianceDropdown = document.getElementById('appliances');
+    this.appliancesDropdown = document.getElementById('appliances');
   }
 
   init = () => {
@@ -36,7 +36,21 @@ export default class RecipesView {
     console.log(this.ingredients);
     console.log(this.appliances);
     console.log(this.ustensils);
-    this.displayAdvancedSearchCategory();
+    this.displayAdvancedSearchCategory(
+      this.ingredients,
+      this.ingredientsDropdown,
+      'bg-blue'
+    );
+    this.displayAdvancedSearchCategory(
+      this.appliances,
+      this.appliancesDropdown,
+      'bg-green'
+    );
+    this.displayAdvancedSearchCategory(
+      this.ustensils,
+      this.ustensilsDropdown,
+      'bg-red'
+    );
   };
 
   processAccessories = (recipe) => {
@@ -59,15 +73,15 @@ export default class RecipesView {
     }
   };
 
-  displayAdvancedSearchCategory = () => {
-    if (this.ingredients.length) {
-      let currentList = this.setNewList();
-      for (let index = 0; index < this.ingredients.length; index += 1) {
-        const ingredient = this.ingredients[index];
+  displayAdvancedSearchCategory = (accessoriesArray, dropdown, color) => {
+    if (accessoriesArray.length) {
+      let currentList = this.setNewList(color);
+      for (let index = 0; index < accessoriesArray.length; index += 1) {
+        const ingredient = accessoriesArray[index];
         const newList = index === 0 || index % 3 === 0;
         if (newList) {
-          currentList = this.setNewList('bg-blue');
-          this.ingredientsDropdown.appendChild(currentList);
+          currentList = this.setNewList(color);
+          dropdown.appendChild(currentList);
         }
         currentList.appendChild(this.setListElement(ingredient));
       }
