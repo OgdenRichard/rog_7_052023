@@ -8,6 +8,7 @@ export default class RecipesView {
     this.ingredientsDropdown = document.getElementById('ingredients');
     this.ustensilsDropdown = document.getElementById('ustensils');
     this.appliancesDropdown = document.getElementById('appliances');
+    this.tagsContainer = document.getElementById('tags-container');
   }
 
   init = () => {
@@ -33,9 +34,6 @@ export default class RecipesView {
       nextRow = cardsCount % 3 === 0;
       cardsCount += 1;
     });
-    console.log(this.ingredients);
-    console.log(this.appliances);
-    console.log(this.ustensils);
     this.displayAdvancedSearchCategory(
       this.ingredients,
       this.ingredientsDropdown,
@@ -51,6 +49,9 @@ export default class RecipesView {
       this.ustensilsDropdown,
       'bg-red'
     );
+    this.setDropdownEventListeners(this.ingredientsDropdown, 'bg-blue');
+    this.setDropdownEventListeners(this.appliancesDropdown, 'bg-green');
+    this.setDropdownEventListeners(this.ustensilsDropdown, 'bg-red');
   };
 
   processAccessories = (recipe) => {
@@ -110,6 +111,32 @@ export default class RecipesView {
       row.classList.add('row-cols-3');
     }
     return row;
+  };
+
+  setDropdownEventListeners = (dropdown, color) => {
+    const options = dropdown.getElementsByClassName('listbox-dropdown__option');
+    const optionsArray = [...options];
+    optionsArray.forEach((option) => {
+      option.addEventListener('click', () => {
+        const button = this.setTagButton(option.innerText, color);
+        this.tagsContainer.appendChild(button);
+        option.style.display = 'none';
+        button.addEventListener('click', () => {
+          option.style.display = 'block';
+          this.tagsContainer.removeChild(button);
+        });
+      });
+    });
+  };
+
+  setTagButton = (text, color) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('btn');
+    button.classList.add('tag');
+    button.classList.add(color);
+    button.innerText = text;
+    return button;
   };
 
   setCard = (title, time, ingredients, description) => {

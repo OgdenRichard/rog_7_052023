@@ -202,3 +202,20 @@ dd {
   list-style-type: none;
   cursor: pointer;
 }
+
+.tags-container{ 
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:flex-start;
+  margin-bottom: 1em;
+}
+
+.tag::after {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5em;
+  font-family: 'FontAwesome';
+  font-size: 1.25em;
+  font-weight: 800;
+  content: '\f057';
+}
