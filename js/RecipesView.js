@@ -3,7 +3,11 @@ export default class RecipesView {
     this.recipes = data;
     this.grid = document.getElementById('grid');
     this.ingredients = [];
+    this.ustensils = [];
+    this.appliances = [];
     this.ingredientsDropdown = document.getElementById('ingredients');
+    this.ustensilsDropdown = document.getElementById('ustensils');
+    this.applianceDropdown = document.getElementById('appliances');
   }
 
   init = () => {
@@ -11,7 +15,7 @@ export default class RecipesView {
     let lastRow = false;
     let cardsCount = 1;
     this.recipes.forEach((recipe) => {
-      this.processRecipeIngredients(recipe.ingredients);
+      this.processAccessories(recipe);
       if (nextRow) {
         lastRow = this.recipes.length - cardsCount < 3;
         this.grid.appendChild(this.addRow(lastRow));
@@ -30,15 +34,29 @@ export default class RecipesView {
       cardsCount += 1;
     });
     console.log(this.ingredients);
+    console.log(this.appliances);
+    console.log(this.ustensils);
     this.displayAdvancedSearchCategory();
   };
 
-  processRecipeIngredients = (ingredients) => {
-    ingredients.forEach((ingredient) => {
-      if (!this.ingredients.includes(ingredient.ingredient)) {
-        this.ingredients.push(ingredient.ingredient);
-      }
-    });
+  processAccessories = (recipe) => {
+    if (recipe.ingredients) {
+      recipe.ingredients.forEach((ingredient) => {
+        if (!this.ingredients.includes(ingredient.ingredient)) {
+          this.ingredients.push(ingredient.ingredient);
+        }
+      });
+    }
+    if (recipe.appliance && !this.appliances.includes(recipe.appliance)) {
+      this.appliances.push(recipe.appliance);
+    }
+    if (recipe.ustensils) {
+      recipe.ustensils.forEach((ustensil) => {
+        if (!this.ustensils.includes(ustensil)) {
+          this.ustensils.push(ustensil);
+        }
+      });
+    }
   };
 
   displayAdvancedSearchCategory = () => {
@@ -48,7 +66,7 @@ export default class RecipesView {
         const ingredient = this.ingredients[index];
         const newList = index === 0 || index % 3 === 0;
         if (newList) {
-          currentList = this.setNewList();
+          currentList = this.setNewList('bg-blue');
           this.ingredientsDropdown.appendChild(currentList);
         }
         currentList.appendChild(this.setListElement(ingredient));
@@ -56,18 +74,18 @@ export default class RecipesView {
     }
   };
 
-  setNewList = () => {
+  setNewList = (color) => {
     const list = document.createElement('ul');
     list.classList.add('listbox-dropdown__list');
-    list.classList.add('bg-blue');
+    list.classList.add(color);
     return list;
   };
 
-  setListElement = (ingredient) => {
+  setListElement = (text) => {
     const listElement = document.createElement('li');
     listElement.classList.add('listbox-dropdown__option');
     listElement.setAttribute('tabindex', '0');
-    listElement.innerText = ingredient;
+    listElement.innerText = text;
     return listElement;
   };
 
