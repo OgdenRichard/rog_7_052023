@@ -76,14 +76,10 @@ export default class RecipesView {
 
   displayAdvancedSearchCategory = (accessoriesArray, dropdown, color) => {
     if (accessoriesArray.length) {
-      let currentList = this.setNewList(color);
+      const currentList = this.setNewList(color);
+      dropdown.appendChild(currentList);
       for (let index = 0; index < accessoriesArray.length; index += 1) {
         const ingredient = accessoriesArray[index];
-        const newList = index === 0 || index % 3 === 0;
-        if (newList) {
-          currentList = this.setNewList(color);
-          dropdown.appendChild(currentList);
-        }
         currentList.appendChild(this.setListElement(ingredient));
       }
     }
