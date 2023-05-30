@@ -29,7 +29,7 @@
 .search-wrapper {
   height: auto;
   font-size: 16px;
-  margin-bottom: 5em;
+  margin-bottom: 6em;
 }
 
 .advanced-search {
@@ -159,8 +159,8 @@
   margin-bottom: 1em;
 }
 
-.tag{
-  margin-right: 1em;
+.tag {
+  margin: 0 1em 1em 0;
 }
 
 .tag::after {
@@ -175,8 +175,13 @@
 
 /* ----------- RECIPES SECTION ----------- */
 
+/* .row {
+  margin-bottom: 1.5em;
+} */
+
 .card-body {
-  min-height: 200px;
+  min-height: 250px;
+  background-color: #e7e7e7;
 }
 
 .card-title {

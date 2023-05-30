@@ -107,6 +107,8 @@ export default class RecipesView {
   addRow = (lastRow) => {
     const row = document.createElement('div');
     row.className = 'row';
+    row.classList.add('gx-5');
+    row.classList.add('mb-5');
     if (lastRow) {
       row.classList.add('row-cols-3');
     }
@@ -143,8 +145,14 @@ export default class RecipesView {
   setCard = (title, time, ingredients, description) => {
     const col = document.createElement('div');
     col.className = 'col';
+    col.classList.add('col-xl-4');
+    col.classList.add('col-md-6');
     const card = document.createElement('div');
     card.className = 'card';
+    const img = document.createElement('img');
+    img.className = 'card-img-top';
+    img.src = './assets/img/grey_bg.jpg';
+    img.alt = 'food image';
     const body = document.createElement('div');
     body.className = 'card-body';
     const details = document.createElement('div');
@@ -153,6 +161,7 @@ export default class RecipesView {
     details.appendChild(this.setDescription(description));
     body.appendChild(this.setCardHeader(title, time));
     body.appendChild(details);
+    card.appendChild(img);
     card.appendChild(body);
     col.appendChild(card);
     return col;
