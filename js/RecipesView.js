@@ -37,21 +37,21 @@ export default class RecipesView {
     this.displayAdvancedSearchCategory(
       this.ingredients,
       this.ingredientsDropdown,
-      'bg-blue'
+      'text-bg-primary'
     );
     this.displayAdvancedSearchCategory(
       this.appliances,
       this.appliancesDropdown,
-      'bg-green'
+      'text-bg-success'
     );
     this.displayAdvancedSearchCategory(
       this.ustensils,
       this.ustensilsDropdown,
-      'bg-red'
+      'text-bg-danger'
     );
-    this.setDropdownEventListeners(this.ingredientsDropdown, 'bg-blue');
-    this.setDropdownEventListeners(this.appliancesDropdown, 'bg-green');
-    this.setDropdownEventListeners(this.ustensilsDropdown, 'bg-red');
+    this.setDropdownEventListeners(this.ingredientsDropdown, 'btn-primary');
+    this.setDropdownEventListeners(this.appliancesDropdown, 'btn-success');
+    this.setDropdownEventListeners(this.ustensilsDropdown, 'btn-danger');
   };
 
   processAccessories = (recipe) => {
@@ -132,8 +132,9 @@ export default class RecipesView {
   setTagButton = (text, color) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.classList.add('btn');
     button.classList.add('tag');
+    button.classList.add('btn');
+    /* button.classList.add('btn-primary'); */
     button.classList.add(color);
     button.innerText = text;
     return button;
