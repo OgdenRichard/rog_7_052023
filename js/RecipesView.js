@@ -6,6 +6,7 @@ export default class RecipesView {
     this.ustensils = [];
     this.appliances = [];
     this.ingredientsDropdown = document.getElementById('ingredients');
+    this.ingredientsInput = document.getElementById('input_ingredients');
     this.ustensilsDropdown = document.getElementById('ustensils');
     this.appliancesDropdown = document.getElementById('appliances');
     this.tagsContainer = document.getElementById('tags-container');
@@ -52,6 +53,7 @@ export default class RecipesView {
     this.setDropdownEventListeners(this.ingredientsDropdown, 'btn-primary');
     this.setDropdownEventListeners(this.appliancesDropdown, 'btn-success');
     this.setDropdownEventListeners(this.ustensilsDropdown, 'btn-danger');
+    this.setDropdownInputEventListener(this.ingredientsInput);
   };
 
   processAccessories = (recipe) => {
@@ -119,10 +121,25 @@ export default class RecipesView {
         const button = this.setTagButton(option.innerText, color);
         this.tagsContainer.appendChild(button);
         option.style.display = 'none';
+        this.ingredientsInput.value = 'Ingrédients';
         button.addEventListener('click', () => {
           option.style.display = 'block';
           this.tagsContainer.removeChild(button);
         });
+      });
+    });
+  };
+
+  setDropdownInputEventListener = (input) => {
+    input.addEventListener('click', () => {
+      const test = input.getElementsByTagName('input');
+      test[0].value = '';
+      const tryout = document.activeElement;
+      console.log(tryout === test[0]);
+      test[0].addEventListener('blur', () => {
+        // event.stopPropagation();
+        test[0].value = 'Ingrédients';
+        console.log('blurred');
       });
     });
   };
@@ -132,7 +149,6 @@ export default class RecipesView {
     button.type = 'button';
     button.classList.add('tag');
     button.classList.add('btn');
-    /* button.classList.add('btn-primary'); */
     button.classList.add(color);
     button.innerText = text;
     return button;

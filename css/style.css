@@ -95,6 +95,10 @@
   cursor: pointer;
 }
 
+.listbox-dropdown__input::placeholder{
+  color: lightgrey;
+}
+
 .arrow-container {
   position: relative;
   width: 3em;
