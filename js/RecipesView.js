@@ -1,3 +1,5 @@
+import DropdownListBox from './components/DrodpdownListbox.js';
+
 export default class RecipesView {
   constructor(data) {
     this.recipes = data;
@@ -35,6 +37,12 @@ export default class RecipesView {
       nextRow = cardsCount % 3 === 0;
       cardsCount += 1;
     });
+    const ingredientsTest = new DropdownListBox(
+      this.ingredients,
+      'ingrédients',
+      'primary'
+    );
+    ingredientsTest.init();
     this.displayAdvancedSearchCategory(
       this.ingredients,
       this.ingredientsDropdown,

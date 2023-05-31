@@ -1,16 +1,21 @@
 export default class DropdownListBox {
   constructor(data, name, color) {
     this.data = data;
-    this.label = name;
+    this.name = name;
     this.color = color;
+    this.searchWrapper = document.getElementById('advanced-search');
+    this.listbox = DropdownListBox.buildListBox();
     this.listboxWrapper = this.buildListboxWrapper();
     this.searchInput = this.buildSearchInput();
     this.list = this.buildList();
   }
 
   init = () => {
-    this.listboxWrapper.appendChild(this.buildDropdownHeader());
-    this.listboxWrapper.appendChild(this.list);
+    /* DropdownListBox.buildListboxWrapper(); */
+    this.listbox.appendChild(this.buildDropdownHeader());
+    this.listbox.appendChild(this.list);
+    this.populateList();
+    this.searchWrapper.appendChild(this.listboxWrapper);
   };
 
   buildDropdownHeader = () => {
@@ -19,8 +24,8 @@ export default class DropdownListBox {
     dropdownHeader.classList.add(`text-bg-${this.color}`);
     this.buildSearchInput();
     dropdownHeader.appendChild(this.searchInput);
-    dropdownHeader.appendChild(this.buildHeaderArrow());
-    return dropdownHeader();
+    dropdownHeader.appendChild(DropdownListBox.buildHeaderArrow());
+    return dropdownHeader;
   };
 
   buildSearchInput = () => {
@@ -37,7 +42,7 @@ export default class DropdownListBox {
   populateList = () => {
     if (this.data.length) {
       this.data.forEach((element) => {
-        this.list.appendChild(this.setListElement(element));
+        this.list.appendChild(DropdownListBox.setListElement(element));
       });
     }
   };
@@ -45,29 +50,34 @@ export default class DropdownListBox {
   buildList = () => {
     const list = document.createElement('ul');
     list.classList.add('listbox-dropdown__list');
-    list.classList.add(this.color);
+    list.classList.add(`text-bg-${this.color}`);
     return list;
   };
 
-  setListElement = (element) => {
+  // TODO : not static en fornction d'un array d'objets
+  static setListElement = (element) => {
     const listElement = document.createElement('li');
-    listElement.id = `${this.name}-${element.id}`;
+    // listElement.id = `${this.name}-${element.id}`;
     listElement.classList.add('listbox-dropdown__option');
     listElement.tabIndex = '0';
-    listElement.innerText = element.name;
+    listElement.innerText = element;
     return listElement;
   };
 
-  static buildListboxWrapper = () => {
+  buildListboxWrapper = () => {
     const listboxWrapper = document.createElement('div');
     listboxWrapper.className = 'advanced-search__wrapper';
     const dropdownWrapper = document.createElement('div');
     dropdownWrapper.className = 'dropdown-container';
-    const listbox = document.createElement('div');
-    listbox.className = 'listbox-dropdown';
-    dropdownWrapper.appendChild(listbox);
+    dropdownWrapper.appendChild(this.listbox);
     listboxWrapper.appendChild(dropdownWrapper);
     return listboxWrapper;
+  };
+
+  static buildListBox = () => {
+    const listbox = document.createElement('div');
+    listbox.className = 'listbox-dropdown';
+    return listbox;
   };
 
   static buildHeaderArrow = () => {
