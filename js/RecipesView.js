@@ -4,15 +4,11 @@ export default class RecipesView {
   constructor(data) {
     this.recipes = data;
     this.grid = document.getElementById('grid');
+    this.tagsContainer = document.getElementById('tags-container');
     this.ingredients = [];
     this.ustensils = [];
     this.appliances = [];
     this.dropdowns = [];
-    this.ingredientsDropdown = document.getElementById('ingredients');
-    this.ingredientsInput = document.getElementById('input_ingredients');
-    this.ustensilsDropdown = document.getElementById('ustensils');
-    this.appliancesDropdown = document.getElementById('appliances');
-    this.tagsContainer = document.getElementById('tags-container');
   }
 
   init = () => {
@@ -26,14 +22,9 @@ export default class RecipesView {
         this.grid.appendChild(this.addRow(lastRow));
       }
       const currentRow = this.grid.lastChild;
-      // TODO : destructuring
+      const { name, time, ingredients, description } = recipe;
       currentRow.appendChild(
-        this.setCard(
-          recipe.name,
-          recipe.time,
-          recipe.ingredients,
-          recipe.description
-        )
+        this.setCard(name, time, ingredients, description)
       );
       nextRow = cardsCount % 3 === 0;
       cardsCount += 1;

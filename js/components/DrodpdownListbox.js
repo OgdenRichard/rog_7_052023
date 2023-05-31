@@ -53,6 +53,7 @@ export default class DropdownListBox {
   };
 
   // TODO : not static en fornction d'un array d'objets
+  // TODO : set id from object
   static setListElement = (element) => {
     const listElement = document.createElement('li');
     // listElement.id = `${this.name}-${element.id}`;
