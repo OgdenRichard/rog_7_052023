@@ -2,38 +2,41 @@ export default class DropdownListBox {
   constructor(name, color) {
     this.label = name;
     this.color = color;
-    this.buildListboxWrapper();
+    this.listboxWrapper = this.buildListboxWrapper();
+    this.searchInput = this.buildSearchInput();
     this.buildDropdownHeader();
   }
 
-  buildListboxWrapper = () => {
-    this.listboxWrapper = document.createElement('div');
-    this.listboxWrapper.className = 'advanced-search__wrapper';
+  buildDropdownHeader = () => {
+    const dropdownHeader = document.createElement('div');
+    dropdownHeader.className = 'listbox-dropdown__header';
+    dropdownHeader.classList.add(`text-bg-${this.color}`);
+    this.buildSearchInput();
+    dropdownHeader.appendChild(this.searchInput);
+    dropdownHeader.appendChild(this.buildHeaderArrow());
+  };
+
+  buildSearchInput = () => {
+    const searchInput = document.createElement('input');
+    searchInput.className = 'listbox-dropdown__input';
+    searchInput.classList.add(`text-bg-${this.color}`);
+    searchInput.value = `${this.name.charAt(0).toUpperCase()}${this.name.slice(
+      1
+    )}`;
+    searchInput.placeholder = `Rechercher un ${this.name.slice(0, -1)}`;
+    return searchInput;
+  };
+
+  static buildListboxWrapper = () => {
+    const listboxWrapper = document.createElement('div');
+    listboxWrapper.className = 'advanced-search__wrapper';
     const dropdownWrapper = document.createElement('div');
     dropdownWrapper.className = 'dropdown-container';
     const listbox = document.createElement('div');
     listbox.className = 'listbox-dropdown';
     dropdownWrapper.appendChild(listbox);
-    this.listboxWrapper.appendChild(dropdownWrapper);
-  };
-
-  buildDropdownHeader = () => {
-    this.dropdownHeader = document.createElement('div');
-    this.dropdownHeader.className = 'listbox-dropdown__header';
-    this.dropdownHeader.classList.add(`text-bg-${this.color}`);
-    this.buildSearchInput();
-    this.dropdownHeader.appendChild(this.searchInput);
-    this.dropdownHeader.appendChild(DropdownListBox.buildHeaderArrow());
-  };
-
-  buildSearchInput = () => {
-    this.searchInput = document.createElement('input');
-    this.searchInput.className = 'listbox-dropdown__input';
-    this.searchInput.classList.add(`text-bg-${this.color}`);
-    this.searchInput.value = `${this.name
-      .charAt(0)
-      .toUpperCase()}${this.name.slice(1)}`;
-    this.searchInput.placeholder = `Rechercher un ${this.name.slice(0, -1)}`;
+    listboxWrapper.appendChild(dropdownWrapper);
+    return listboxWrapper;
   };
 
   static buildHeaderArrow = () => {
