@@ -1,11 +1,17 @@
 export default class DropdownListBox {
-  constructor(name, color) {
+  constructor(data, name, color) {
+    this.data = data;
     this.label = name;
     this.color = color;
     this.listboxWrapper = this.buildListboxWrapper();
     this.searchInput = this.buildSearchInput();
-    this.buildDropdownHeader();
+    this.list = this.buildList();
   }
+
+  init = () => {
+    this.listboxWrapper.appendChild(this.buildDropdownHeader());
+    this.listboxWrapper.appendChild(this.list);
+  };
 
   buildDropdownHeader = () => {
     const dropdownHeader = document.createElement('div');
@@ -14,6 +20,7 @@ export default class DropdownListBox {
     this.buildSearchInput();
     dropdownHeader.appendChild(this.searchInput);
     dropdownHeader.appendChild(this.buildHeaderArrow());
+    return dropdownHeader();
   };
 
   buildSearchInput = () => {
@@ -25,6 +32,30 @@ export default class DropdownListBox {
     )}`;
     searchInput.placeholder = `Rechercher un ${this.name.slice(0, -1)}`;
     return searchInput;
+  };
+
+  populateList = () => {
+    if (this.data.length) {
+      this.data.forEach((element) => {
+        this.list.appendChild(this.setListElement(element));
+      });
+    }
+  };
+
+  buildList = () => {
+    const list = document.createElement('ul');
+    list.classList.add('listbox-dropdown__list');
+    list.classList.add(this.color);
+    return list;
+  };
+
+  setListElement = (element) => {
+    const listElement = document.createElement('li');
+    listElement.id = `${this.name}-${element.id}`;
+    listElement.classList.add('listbox-dropdown__option');
+    listElement.tabIndex = '0';
+    listElement.innerText = element.name;
+    return listElement;
   };
 
   static buildListboxWrapper = () => {

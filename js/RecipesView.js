@@ -97,7 +97,6 @@ export default class RecipesView {
   setListElement = (text) => {
     const listElement = document.createElement('li');
     listElement.classList.add('listbox-dropdown__option');
-    // listElement.setAttribute('tabindex', '0');
     listElement.tabIndex = '0';
     listElement.innerText = text;
     return listElement;
@@ -134,13 +133,10 @@ export default class RecipesView {
   setDropdownInputEventListener = (input) => {
     input.addEventListener('click', () => {
       const test = input.getElementsByTagName('input');
-      console.log(`${test[0].value.slice(0, -1)}`);
       test[0].value = '';
       test[0].focus();
       test[0].addEventListener('blur', () => {
-        // event.stopPropagation();
         test[0].value = 'Ingrédients';
-        // console.log('blurred');
       });
     });
   };
