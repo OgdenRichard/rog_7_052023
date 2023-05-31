@@ -32,9 +32,7 @@ export default class DropdownListBox {
     const searchInput = document.createElement('input');
     searchInput.className = 'listbox-dropdown__input';
     searchInput.classList.add(`text-bg-${this.color}`);
-    searchInput.value = `${this.name.charAt(0).toUpperCase()}${this.name.slice(
-      1
-    )}`;
+    searchInput.value = this.setInputValue();
     searchInput.placeholder = `Rechercher un ${this.name.slice(0, -1)}`;
     return searchInput;
   };
@@ -73,6 +71,9 @@ export default class DropdownListBox {
     listboxWrapper.appendChild(dropdownWrapper);
     return listboxWrapper;
   };
+
+  setInputValue = () =>
+    `${this.name.charAt(0).toUpperCase()}${this.name.slice(1)}`;
 
   static buildListBox = () => {
     const listbox = document.createElement('div');
