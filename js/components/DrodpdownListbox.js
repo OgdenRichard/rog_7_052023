@@ -8,10 +8,10 @@ export default class DropdownListBox {
     this.listboxWrapper = this.buildListboxWrapper();
     this.searchInput = this.buildSearchInput();
     this.list = this.buildList();
+    this.render();
   }
 
-  init = () => {
-    /* DropdownListBox.buildListboxWrapper(); */
+  render = () => {
     this.listbox.appendChild(this.buildDropdownHeader());
     this.listbox.appendChild(this.list);
     this.populateList();

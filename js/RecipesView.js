@@ -7,6 +7,7 @@ export default class RecipesView {
     this.ingredients = [];
     this.ustensils = [];
     this.appliances = [];
+    this.dropdowns = [];
     this.ingredientsDropdown = document.getElementById('ingredients');
     this.ingredientsInput = document.getElementById('input_ingredients');
     this.ustensilsDropdown = document.getElementById('ustensils');
@@ -37,31 +38,28 @@ export default class RecipesView {
       nextRow = cardsCount % 3 === 0;
       cardsCount += 1;
     });
-    const ingredientsTest = new DropdownListBox(
+    const ingredientsDropdown = new DropdownListBox(
       this.ingredients,
       'ingrédients',
       'primary'
     );
-    ingredientsTest.init();
-    this.displayAdvancedSearchCategory(
-      this.ingredients,
-      this.ingredientsDropdown,
-      'text-bg-primary'
-    );
-    this.displayAdvancedSearchCategory(
+    const appliancesDropown = new DropdownListBox(
       this.appliances,
-      this.appliancesDropdown,
-      'text-bg-success'
+      'appareils',
+      'success'
     );
-    this.displayAdvancedSearchCategory(
+    const ustensilsDropdown = new DropdownListBox(
       this.ustensils,
-      this.ustensilsDropdown,
-      'text-bg-danger'
+      'ustensiles',
+      'danger'
     );
-    this.setDropdownEventListeners(this.ingredientsDropdown, 'btn-primary');
+    this.dropdowns.push(ingredientsDropdown);
+    this.dropdowns.push(appliancesDropown);
+    this.dropdowns.push(ustensilsDropdown);
+    /* this.setDropdownEventListeners(this.ingredientsDropdown, 'btn-primary');
     this.setDropdownEventListeners(this.appliancesDropdown, 'btn-success');
     this.setDropdownEventListeners(this.ustensilsDropdown, 'btn-danger');
-    this.setDropdownInputEventListener(this.ingredientsInput);
+    this.setDropdownInputEventListener(this.ingredientsInput); */
   };
 
   processAccessories = (recipe) => {
