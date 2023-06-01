@@ -9,4 +9,4 @@ const View = new RecipesView(
   Model.ustensilsArray,
   Model.appliancesArray
 );
-View.init();
+View.render();

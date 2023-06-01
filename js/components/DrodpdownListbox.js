@@ -56,10 +56,10 @@ export default class DropdownListBox {
   // TODO : set id from object
   static setListElement = (element) => {
     const listElement = document.createElement('li');
-    // listElement.id = `${this.name}-${element.id}`;
+    listElement.id = `${this.name}-${element.id}`;
     listElement.classList.add('listbox-dropdown__option');
     listElement.tabIndex = '0';
-    listElement.innerText = element;
+    listElement.innerText = element.name;
     return listElement;
   };
 
