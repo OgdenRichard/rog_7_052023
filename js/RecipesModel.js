@@ -13,6 +13,7 @@ export default class RecipesModel {
       this.recipesArray.push({ id, name, time, ingredients, description });
       this.processRecipeIngredients(id, ingredients);
     });
+    RecipesModel.sortByNames(this.ingredientsArray);
     console.log(this.ingredientsArray);
   };
 
@@ -32,6 +33,15 @@ export default class RecipesModel {
         ingredientObject.recipes.push(id);
       }
     });
+  };
+
+  /**
+   * Ascending sort by string
+   * @param {Array} elementsArray
+   * @returns {void}
+   */
+  static sortByNames = (elementsArray) => {
+    elementsArray.sort((a, b) => a.name.localeCompare(b.name));
   };
 
   static firstLetterToUpper = (name) =>
