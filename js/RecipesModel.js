@@ -9,30 +9,57 @@ export default class RecipesModel {
 
   init = () => {
     this.recipes.forEach((recipe) => {
-      const { id, name, time, ingredients, appliance, description } = recipe;
+      const { id, name, time, ingredients, appliance, ustensils, description } =
+        recipe;
       this.recipesArray.push({ id, name, time, ingredients, description });
-      this.processRecipeIngredients(id, ingredients);
-    });
-    RecipesModel.sortByNames(this.ingredientsArray);
-    console.log(this.ingredientsArray);
-  };
-
-  processRecipeIngredients = (id, ingredients) => {
-    ingredients.forEach((ingredient) => {
-      const ingredientObject = this.ingredientsArray.find(
-        (element) =>
-          element.name.toLowerCase() === ingredient.ingredient.toLowerCase()
-      );
-      if (!ingredientObject) {
-        const renamed = RecipesModel.firstLetterToUpper(ingredient.ingredient);
-        this.ingredientsArray.push({
-          name: renamed,
-          recipes: [id],
-        });
-      } else {
-        ingredientObject.recipes.push(id);
+      if (ingredients && ingredients.length) {
+        this.processRecipesIngredients(id, ingredients);
+      }
+      if (ustensils && ustensils.length) {
+        this.processRecipesUstensils(id, ustensils);
+      }
+      if (appliance) {
+        this.processRecipesAppliances(id, appliance);
       }
     });
+    RecipesModel.sortByNames(this.ingredientsArray);
+    RecipesModel.sortByNames(this.ustensilsArray);
+    RecipesModel.sortByNames(this.appliancesArray);
+  };
+
+  processRecipesIngredients = (id, ingredients) => {
+    ingredients.forEach((ingredient) => {
+      RecipesModel.populateItemsArray(
+        id,
+        ingredient.ingredient,
+        this.ingredientsArray
+      );
+    });
+  };
+
+  processRecipesAppliances = (id, appliance) => {
+    RecipesModel.populateItemsArray(id, appliance, this.appliancesArray);
+  };
+
+  processRecipesUstensils = (id, ustensils) => {
+    ustensils.forEach((ustensil) => {
+      RecipesModel.populateItemsArray(id, ustensil, this.ustensilsArray);
+    });
+  };
+
+  static populateItemsArray = (id, itemName, itemArray) => {
+    const itemObject = itemArray.find(
+      (element) => element.name.toLowerCase() === itemName.toLowerCase()
+    );
+    if (!itemObject) {
+      const renamedItem = RecipesModel.firstLetterToUpper(itemName);
+      itemArray.push({
+        name: renamedItem,
+        recipes: [id],
+      });
+    } else {
+      itemObject.recipes.push(id);
+    }
   };
 
   /**
