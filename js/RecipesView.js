@@ -1,35 +1,21 @@
+import RecipesGrid from './components/RecipesGrid.js';
 import DropdownListBox from './components/DrodpdownListbox.js';
 
 export default class RecipesView {
-  constructor(data) {
-    this.recipes = data;
+  constructor(recipes, ingredients, ustensils, appliances) {
+    this.recipes = recipes;
+    this.ingredients = ingredients;
+    this.ustensils = ustensils;
+    this.appliances = appliances;
     this.grid = document.getElementById('grid');
     this.tagsContainer = document.getElementById('tags-container');
-    this.ingredients = [];
-    this.ustensils = [];
-    this.appliances = [];
     this.dropdowns = [];
   }
 
   init = () => {
-    let nextRow = true;
-    let lastRow = false;
-    let cardsCount = 1;
-    this.recipes.forEach((recipe) => {
-      this.processAccessories(recipe);
-      if (nextRow) {
-        lastRow = this.recipes.length - cardsCount < 3;
-        this.grid.appendChild(this.addRow(lastRow));
-      }
-      const currentRow = this.grid.lastChild;
-      const { name, time, ingredients, description } = recipe;
-      currentRow.appendChild(
-        this.setCard(name, time, ingredients, description)
-      );
-      nextRow = cardsCount % 3 === 0;
-      cardsCount += 1;
-    });
-    const ingredientsDropdown = new DropdownListBox(
+    this.recipesGrid = new RecipesGrid(this.recipes);
+    this.recipesGrid.render();
+    /* const ingredientsDropdown = new DropdownListBox(
       this.ingredients,
       'ingrédients',
       'primary'
@@ -50,7 +36,7 @@ export default class RecipesView {
     this.dropdowns.forEach((dropdown) => {
       this.setDropdownEventListeners(dropdown);
       this.setDropdownInputEventListener(dropdown);
-    });
+    }); */
   };
 
   processAccessories = (recipe) => {

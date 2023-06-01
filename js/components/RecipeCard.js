@@ -1,7 +1,7 @@
 export default class RecipeCard {
-  constructor(id, title, time, ingredients, description) {
+  constructor(id, name, time, ingredients, description) {
     this.id = id;
-    this.title = title;
+    this.title = name;
     this.time = time;
     this.ingredients = ingredients;
     this.description = description;
@@ -29,7 +29,7 @@ export default class RecipeCard {
     details.appendChild(this.setDescription());
     body.appendChild(this.setCardHeader());
     body.appendChild(details);
-    card.appendChild(RecipeCard.setCardImg);
+    card.appendChild(RecipeCard.setCardImg());
     card.appendChild(body);
     return card;
   };

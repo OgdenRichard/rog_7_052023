@@ -3,7 +3,7 @@ import RecipeCard from './RecipeCard.js';
 export default class RecipesGrid {
   constructor(recipesData) {
     this.recipesData = recipesData;
-    this.grid = document.getElementById('grid');
+    this.gridContainer = document.getElementById('grid');
     this.recipesCards = [];
   }
 
@@ -13,12 +13,12 @@ export default class RecipesGrid {
     let cardsCount = 1;
     this.recipesData.forEach((recipe) => {
       if (nextRow) {
-        isLastRow = this.recipes.length - cardsCount < 3;
-        this.grid.appendChild(RecipesGrid.addRow(isLastRow));
+        isLastRow = this.recipesData.length - cardsCount < 3;
+        this.gridContainer.appendChild(RecipesGrid.addRow(isLastRow));
       }
-      const currentRow = this.grid.lastChild;
-      const { name, time, ingredients, description } = recipe;
-      const card = new RecipeCard(name, time, ingredients, description);
+      const currentRow = this.gridContainer.lastChild;
+      const { id, name, time, ingredients, description } = recipe;
+      const card = new RecipeCard(id, name, time, ingredients, description);
       this.recipesCards.push(card);
       currentRow.appendChild(card.article);
       nextRow = cardsCount % 3 === 0;

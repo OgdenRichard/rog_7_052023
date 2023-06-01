@@ -5,6 +5,7 @@ export default class RecipesModel {
     this.ingredientsArray = [];
     this.appliancesArray = [];
     this.ustensilsArray = [];
+    this.init();
   }
 
   init = () => {
