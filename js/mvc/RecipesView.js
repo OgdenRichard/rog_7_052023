@@ -1,5 +1,5 @@
-import RecipesGrid from './components/RecipesGrid.js';
-import DropdownListBox from './components/DrodpdownListbox.js';
+import RecipesGrid from '../components/RecipesGrid.js';
+import DropdownListBox from '../components/DrodpdownListbox.js';
 
 export default class RecipesView {
   constructor(recipes, ingredients, ustensils, appliances) {

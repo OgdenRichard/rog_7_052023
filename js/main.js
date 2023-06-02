@@ -1,12 +1,5 @@
-import recipes from './recipes.js';
-import RecipesView from './RecipesView.js';
-import RecipesModel from './RecipesModel.js';
+import RecipesController from './mvc/RecipesController.js';
 
-const Model = new RecipesModel(recipes);
-const View = new RecipesView(
-  Model.recipesArray,
-  Model.ingredientsArray,
-  Model.ustensilsArray,
-  Model.appliancesArray
-);
-View.render();
+const controller = new RecipesController();
+
+controller.init();
