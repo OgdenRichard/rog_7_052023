@@ -14,7 +14,13 @@ export default class RecipesController {
     );
   }
 
+  refreshView = (data) => {
+    this.view.refreshGridTest(data);
+  };
+
   init = () => {
     this.view.render();
+    this.view.mainSearchTrigger(this.model.processMainSearchValue);
+    this.model.bindProcessedData(this.refreshView);
   };
 }

@@ -9,6 +9,7 @@ export default class RecipesView {
     this.appliances = appliances;
     this.grid = document.getElementById('grid');
     this.tagsContainer = document.getElementById('tags-container');
+    this.mainSearchInput = document.getElementById('search-main');
   }
 
   render = () => {
@@ -37,24 +38,17 @@ export default class RecipesView {
     RecipesView.setDropdownInputEventListener(this.ustensilsDropdown);
   };
 
-  processAccessories = (recipe) => {
-    if (recipe.ingredients) {
-      recipe.ingredients.forEach((ingredient) => {
-        if (!this.ingredients.includes(ingredient.ingredient)) {
-          this.ingredients.push(ingredient.ingredient);
-        }
-      });
-    }
-    if (recipe.appliance && !this.appliances.includes(recipe.appliance)) {
-      this.appliances.push(recipe.appliance);
-    }
-    if (recipe.ustensils) {
-      recipe.ustensils.forEach((ustensil) => {
-        if (!this.ustensils.includes(ustensil)) {
-          this.ustensils.push(ustensil);
-        }
-      });
-    }
+  mainSearchTrigger = (handler) => {
+    this.mainSearchInput.addEventListener('keyup', () => {
+      const inputValue = this.mainSearchInput.value;
+      if (inputValue.length >= 3) {
+        handler(inputValue);
+      }
+    });
+  };
+
+  refreshGridTest = (testStr) => {
+    console.log(testStr);
   };
 
   setDropdownEventListeners = (dropdown) => {

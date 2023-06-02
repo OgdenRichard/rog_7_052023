@@ -38,6 +38,10 @@ export default class RecipesModel {
     });
   };
 
+  bindProcessedData = (callback) => {
+    this.onMainSearchResult = callback;
+  };
+
   processRecipesAppliances = (id, appliance) => {
     RecipesModel.populateItemsArray(id, appliance, this.appliancesArray);
   };
@@ -46,6 +50,14 @@ export default class RecipesModel {
     ustensils.forEach((ustensil) => {
       RecipesModel.populateItemsArray(id, ustensil, this.ustensilsArray);
     });
+  };
+
+  processMainSearchValue = (inputValue) => {
+    this.sendProcessedData(`String "${inputValue}" traitée par le Model`);
+  };
+
+  sendProcessedData = (testStr) => {
+    this.onMainSearchResult(`${testStr} et renvoyée à la view`);
   };
 
   static populateItemsArray = (id, itemName, itemArray) => {
