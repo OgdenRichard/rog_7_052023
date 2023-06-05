@@ -4,6 +4,9 @@ import RecipesView from './RecipesView.js';
 import RecipesModel from './RecipesModel.js';
 
 export default class RecipesController {
+  /**
+   * @constructor
+   */
   constructor() {
     this.model = new RecipesModel(recipes);
     this.view = new RecipesView(
@@ -14,10 +17,20 @@ export default class RecipesController {
     );
   }
 
+  /**
+   * @callback for RecipesModel.bindProcessedData
+   * @param {Array} data
+   * @returns {void}
+   */
   refreshView = (data) => {
     this.view.refreshGridTest(data);
   };
 
+  /**
+   * Launch view rendering on page load
+   * Bind event handlers and callbacks between RecipesModel and RecipesView
+   * @returns {void}
+   */
   init = () => {
     this.view.render();
     this.view.mainSearchTrigger(this.model.processMainSearchValue);
