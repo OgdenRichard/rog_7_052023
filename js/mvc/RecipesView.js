@@ -1,7 +1,15 @@
+/* eslint-disable import/extensions */
 import RecipesGrid from '../components/RecipesGrid.js';
 import DropdownListBox from '../components/DrodpdownListbox.js';
 
 export default class RecipesView {
+  /**
+   * @param {Array} recipes
+   * @param {Array} ingredients
+   * @param {Array} ustensils
+   * @param {Array} appliances
+   * @constructor
+   */
   constructor(recipes, ingredients, ustensils, appliances) {
     this.recipes = recipes;
     this.ingredients = ingredients;
@@ -12,6 +20,10 @@ export default class RecipesView {
     this.mainSearchInput = document.getElementById('search-main');
   }
 
+  /**
+   * View initialization and render
+   * @returns {void}
+   */
   render = () => {
     this.recipesGrid = new RecipesGrid(this.recipes);
     this.recipesGrid.render();
@@ -38,6 +50,10 @@ export default class RecipesView {
     RecipesView.setDropdownInputEventListener(this.ustensilsDropdown);
   };
 
+  /**
+   * Fires Model callback
+   * @callback handler
+   */
   mainSearchTrigger = (handler) => {
     this.mainSearchInput.addEventListener('keyup', () => {
       const inputValue = this.mainSearchInput.value;
@@ -47,10 +63,20 @@ export default class RecipesView {
     });
   };
 
+  /**
+   * test :callback fired by RecipesModel
+   * @param {Stri} testStr
+   */
   refreshGridTest = (testStr) => {
     console.log(testStr);
   };
 
+  /**
+   * Set event listeners for each dropdown
+   * Fires data filtering by tag in Model
+   * @param {Object} dropdown
+   * @returns {void}
+   */
   setDropdownEventListeners = (dropdown) => {
     const options = dropdown.list.getElementsByClassName(
       'listbox-dropdown__option'
@@ -72,6 +98,11 @@ export default class RecipesView {
     });
   };
 
+  /**
+   * Swap generic value with placeholder on click on dropdown or focus out
+   * @param {Object} dropdown
+   * @returns {void}
+   */
   static setDropdownInputEventListener = (dropdown) => {
     const inputContainer = dropdown.searchInput.parentNode;
     inputContainer.addEventListener('click', () => {
@@ -83,6 +114,12 @@ export default class RecipesView {
     });
   };
 
+  /**
+   * Set a tag button to append to tag container
+   * @param {String} text
+   * @param {String} color
+   * @returns {HTMLElement}
+   */
   static setTagButton = (text, color) => {
     const button = document.createElement('button');
     button.type = 'button';
