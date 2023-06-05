@@ -1,4 +1,10 @@
 export default class DropdownListBox {
+  /**
+   * @constructor
+   * @param {Array} data
+   * @param {String} name
+   * @param {String} color
+   */
   constructor(data, name, color) {
     this.data = data;
     this.name = name;
@@ -11,6 +17,10 @@ export default class DropdownListBox {
     this.render();
   }
 
+  /**
+   * Render dropdown in DOM
+   * @returns {void}
+   */
   render = () => {
     this.listbox.appendChild(this.buildDropdownHeader());
     this.listbox.appendChild(this.list);
@@ -18,6 +28,10 @@ export default class DropdownListBox {
     this.searchWrapper.appendChild(this.listboxWrapper);
   };
 
+  /**
+   * Set listbox header with arrow
+   * @returns {HTMLElement}
+   */
   buildDropdownHeader = () => {
     const dropdownHeader = document.createElement('div');
     dropdownHeader.className = 'listbox-dropdown__header';
@@ -28,6 +42,10 @@ export default class DropdownListBox {
     return dropdownHeader;
   };
 
+  /**
+   * Set search input for dropdown
+   * @returns {HTMLElement}
+   */
   buildSearchInput = () => {
     const searchInput = document.createElement('input');
     searchInput.className = 'listbox-dropdown__input';
@@ -37,14 +55,22 @@ export default class DropdownListBox {
     return searchInput;
   };
 
+  /**
+   * Inject data in list elements
+   * @returns {void}
+   */
   populateList = () => {
     if (this.data.length) {
       this.data.forEach((element) => {
-        this.list.appendChild(DropdownListBox.setListElement(element));
+        this.list.appendChild(this.setListElement(element));
       });
     }
   };
 
+  /**
+   * Set list
+   * @returns {HTMLElement}
+   */
   buildList = () => {
     const list = document.createElement('ul');
     list.classList.add('listbox-dropdown__list');
@@ -52,9 +78,11 @@ export default class DropdownListBox {
     return list;
   };
 
-  // TODO : not static en fornction d'un array d'objets
-  // TODO : set id from object
-  static setListElement = (element) => {
+  /**
+   * Set list element populated with data
+   * @returns {HTMLElement}
+   */
+  setListElement = (element) => {
     const listElement = document.createElement('li');
     listElement.id = `${this.name}-${element.id}`;
     listElement.classList.add('listbox-dropdown__option');
@@ -63,6 +91,10 @@ export default class DropdownListBox {
     return listElement;
   };
 
+  /**
+   * Set wrappers for dropdown
+   * @returns {HTMLElement}
+   */
   buildListboxWrapper = () => {
     const listboxWrapper = document.createElement('div');
     listboxWrapper.className = 'advanced-search__wrapper';
@@ -73,15 +105,27 @@ export default class DropdownListBox {
     return listboxWrapper;
   };
 
+  /**
+   * Set first letter to upper case
+   * @returns {String}
+   */
   setInputValue = () =>
     `${this.name.charAt(0).toUpperCase()}${this.name.slice(1)}`;
 
+  /**
+   * Set listbox element
+   * @returns {HTMLElement}
+   */
   static buildListBox = () => {
     const listbox = document.createElement('div');
     listbox.className = 'listbox-dropdown';
     return listbox;
   };
 
+  /**
+   * Set arrow for listbox header
+   * @returns {HTMLElement}
+   */
   static buildHeaderArrow = () => {
     const arrowContainer = document.createElement('div');
     arrowContainer.className = 'arrow-container';

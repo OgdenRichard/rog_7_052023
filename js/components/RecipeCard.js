@@ -1,4 +1,12 @@
 export default class RecipeCard {
+  /**
+   * @constructor
+   * @param {Number} id
+   * @param {String} name
+   * @param {Number} time
+   * @param {Array} ingredients
+   * @param {String} description
+   */
   constructor(id, name, time, ingredients, description) {
     this.id = id;
     this.title = name;
@@ -8,6 +16,10 @@ export default class RecipeCard {
     this.article = this.setRecipe();
   }
 
+  /**
+   * Set recipe element wrapped in article
+   * @returns {HTMLElement}
+   */
   setRecipe = () => {
     const article = document.createElement('article');
     article.id = this.id;
@@ -18,6 +30,10 @@ export default class RecipeCard {
     return article;
   };
 
+  /**
+   * Set Bootstrap card element
+   * @returns {HTMLElement}
+   */
   setCard = () => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -34,6 +50,10 @@ export default class RecipeCard {
     return card;
   };
 
+  /**
+   * Set header for card body
+   * @returns {HTMLElement}
+   */
   setCardHeader = () => {
     const header = document.createElement('div');
     const name = document.createElement('h5');
@@ -48,6 +68,10 @@ export default class RecipeCard {
     return header;
   };
 
+  /**
+   * Set description list for ingredients
+   * @returns {HtmlElement}
+   */
   setIngredients = () => {
     const container = document.createElement('div');
     container.className = 'card-ingredients';
@@ -70,6 +94,10 @@ export default class RecipeCard {
     return container;
   };
 
+  /**
+   * Set description element
+   * @returns {HtmlElement}
+   */
   setDescription = () => {
     const container = document.createElement('div');
     container.className = 'card-recipe';
@@ -77,6 +105,10 @@ export default class RecipeCard {
     return container;
   };
 
+  /**
+   * Set generic image for card elemnt
+   * @returns {HtmlElement}
+   */
   static setCardImg = () => {
     const img = document.createElement('img');
     img.className = 'card-img-top';

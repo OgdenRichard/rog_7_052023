@@ -4,11 +4,11 @@ import DropdownListBox from '../components/DrodpdownListbox.js';
 
 export default class RecipesView {
   /**
+   * @constructor
    * @param {Array} recipes
    * @param {Array} ingredients
    * @param {Array} ustensils
    * @param {Array} appliances
-   * @constructor
    */
   constructor(recipes, ingredients, ustensils, appliances) {
     this.recipes = recipes;
