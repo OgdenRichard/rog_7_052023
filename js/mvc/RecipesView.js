@@ -65,10 +65,22 @@ export default class RecipesView {
 
   /**
    * test :callback fired by RecipesModel
-   * @param {Stri} testStr
+   * @param {Array} recipesArray
    */
-  refreshGridTest = (testStr) => {
-    console.log(testStr);
+  refreshGridTest = (recipesArray) => {
+    let cardsIndex = this.recipesGrid.recipesCards.length;
+    while (cardsIndex--) {
+      let index = recipesArray.length;
+      let found = false;
+      const card = this.recipesGrid.recipesCards[cardsIndex];
+      while (index-- && !found) {
+        const currentId = recipesArray[index].id;
+        if (card.id === currentId) {
+          found = true;
+        }
+      }
+      card.article.style.display = found ? 'block' : 'none';
+    }
   };
 
   /**

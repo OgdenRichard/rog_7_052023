@@ -22,7 +22,7 @@ export default class RecipeCard {
    */
   setRecipe = () => {
     const article = document.createElement('article');
-    article.id = this.id;
+    article.id = `rcp-${this.id}`;
     article.className = 'col';
     article.classList.add('col-xl-4');
     article.classList.add('col-md-6');

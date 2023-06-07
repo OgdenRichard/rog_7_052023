@@ -6,9 +6,13 @@ export default class RecipesModel {
   constructor(recipes) {
     this.recipes = recipes;
     this.recipesArray = [];
+    this.dismissedRecipes = [];
     this.ingredientsArray = [];
+    this.dismissedIngredients = [];
     this.appliancesArray = [];
+    this.dismissedAppliances = [];
     this.ustensilsArray = [];
+    this.dismissedUstensils = [];
     this.init();
   }
 
@@ -85,13 +89,51 @@ export default class RecipesModel {
   };
 
   /**
-   * Event handler test
+   * Main search event handler
    * @param {String} inputValue
    * @returns {void}
    */
   processMainSearchValue = (inputValue) => {
-    this.sendProcessedData(`String "${inputValue}" traitée par le Model`);
+    const filteredRecipes = RecipesModel.searchItemsArray(
+      this.recipesArray,
+      inputValue
+    );
+    this.onMainSearchResult(filteredRecipes);
+    // console.log(filteredRecipes);
+    // this.sendProcessedData(`String "${inputValue}" traitée par le Model`);
   };
+
+  static searchItemsArray = (itemsArray, stringVal) => {
+    let index = itemsArray.length;
+    const filteredArray = [];
+    while (index--) {
+      if (
+        RecipesModel.searchString(
+          itemsArray[index].name.toLowerCase(),
+          stringVal.toLowerCase()
+        )
+      ) {
+        filteredArray.push(itemsArray[index]);
+      }
+    }
+    return filteredArray;
+  };
+
+  searchWithinRecipeData = (recipe, stringVal) => {
+    if (
+      RecipesModel.searchString(
+        recipe.name.toLowerCase(),
+        stringVal.toLowerCase()
+      )
+    ) {
+      // TODO add to visible array or hidden recipes
+      console.log(`${recipe.name} contient la valeur ${stringVal}`);
+    }
+    // else : search in ingredients
+    // else search in description
+  };
+
+  static searchString = (stringVal, needle) => stringVal.includes(needle);
 
   /**
    * Callback binding test
