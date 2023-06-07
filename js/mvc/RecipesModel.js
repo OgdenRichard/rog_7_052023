@@ -99,8 +99,6 @@ export default class RecipesModel {
       inputValue
     );
     this.onMainSearchResult(filteredRecipes);
-    // console.log(filteredRecipes);
-    // this.sendProcessedData(`String "${inputValue}" traitée par le Model`);
   };
 
   static searchItemsArray = (itemsArray, stringVal) => {

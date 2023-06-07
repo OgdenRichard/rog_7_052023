@@ -71,15 +71,16 @@ export default class RecipesView {
     let cardsIndex = this.recipesGrid.recipesCards.length;
     while (cardsIndex--) {
       let index = recipesArray.length;
-      let found = false;
+      let cardDisplay = false;
       const card = this.recipesGrid.recipesCards[cardsIndex];
-      while (index-- && !found) {
+      while (index--) {
         const currentId = recipesArray[index].id;
         if (card.id === currentId) {
-          found = true;
+          cardDisplay = true;
+          break;
         }
       }
-      card.article.style.display = found ? 'block' : 'none';
+      card.article.style.display = cardDisplay ? 'block' : 'none';
     }
   };
 
