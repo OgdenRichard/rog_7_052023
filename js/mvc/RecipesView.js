@@ -55,10 +55,17 @@ export default class RecipesView {
    * @callback handler
    */
   mainSearchTrigger = (handler) => {
-    this.mainSearchInput.addEventListener('keyup', () => {
+    this.mainSearchInput.addEventListener('keyup', (event) => {
       const inputValue = this.mainSearchInput.value;
-      if (inputValue.length >= 3) {
+      // TODO : utiliser keydown pour gérer Backspace et Suppr
+      if (inputValue.length + 1 > 3) {
         handler(inputValue);
+      } else if (inputValue.length + 1 === 3 && event.key === 'Backspace') {
+        this.refreshGridTest(this.recipes);
+      } else if (event.key === 'Delete') {
+        const t = event.target;
+        // console.log(inputValue.length);
+        console.log(t.value[t.selectionStart]);
       }
     });
   };
