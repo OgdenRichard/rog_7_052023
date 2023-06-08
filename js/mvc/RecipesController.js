@@ -23,7 +23,7 @@ export default class RecipesController {
    * @returns {void}
    */
   refreshView = (data) => {
-    this.view.refreshGridTest(data);
+    this.view.refreshGridFromSearchResult(data);
   };
 
   /**
