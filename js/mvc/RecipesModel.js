@@ -94,41 +94,47 @@ export default class RecipesModel {
    * @returns {void}
    */
   processMainSearchValue = (inputValue) => {
-    const filteredRecipes = RecipesModel.searchItemsArray(
+    const matchesByName = RecipesModel.searchItemsArray(
       this.recipesArray,
-      inputValue
+      inputValue,
+      'name'
     );
-    this.onMainSearchResult(filteredRecipes);
+    const matchesByDescription = RecipesModel.searchItemsArray(
+      matchesByName.remaining,
+      inputValue,
+      'description'
+    );
+    console.log(matchesByName.filtered);
+    this.addMatches(matchesByName.filtered, matchesByDescription.filtered);
+    console.log(matchesByName.filtered);
+    this.onMainSearchResult(matchesByName.filtered);
   };
 
-  static searchItemsArray = (itemsArray, stringVal) => {
+  addMatches = (mainArray, matchesArray) => {
+    let index = matchesArray.length;
+    while (index) {
+      index -= 1;
+      mainArray.push(matchesArray[index]);
+    }
+  };
+
+  static searchItemsArray = (itemsArray, stringVal, property) => {
     let index = itemsArray.length;
     const filteredArray = [];
+    const remainingArray = [];
     while (index--) {
       if (
         RecipesModel.searchString(
-          itemsArray[index].name.toLowerCase(),
+          itemsArray[index][property].toLowerCase(),
           stringVal.toLowerCase()
         )
       ) {
         filteredArray.push(itemsArray[index]);
+      } else {
+        remainingArray.push(itemsArray[index]);
       }
     }
-    return filteredArray;
-  };
-
-  searchWithinRecipeData = (recipe, stringVal) => {
-    if (
-      RecipesModel.searchString(
-        recipe.name.toLowerCase(),
-        stringVal.toLowerCase()
-      )
-    ) {
-      // TODO add to visible array or hidden recipes
-      console.log(`${recipe.name} contient la valeur ${stringVal}`);
-    }
-    // else : search in ingredients
-    // else search in description
+    return { filtered: filteredArray, remaining: remainingArray };
   };
 
   static searchString = (stringVal, needle) => stringVal.includes(needle);
