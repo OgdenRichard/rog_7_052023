@@ -5,10 +5,11 @@ export default class DropdownListBox {
    * @param {String} name
    * @param {String} color
    */
-  constructor(data, name, color) {
+  constructor(data, name, color, id) {
     this.data = data;
     this.name = name;
     this.color = color;
+    this.id = id;
     this.searchWrapper = document.getElementById('advanced-search');
     this.listbox = DropdownListBox.buildListBox();
     this.listboxWrapper = this.buildListboxWrapper();
@@ -73,6 +74,7 @@ export default class DropdownListBox {
    */
   buildList = () => {
     const list = document.createElement('ul');
+    list.id = `${this.id}-list`;
     list.classList.add('listbox-dropdown__list');
     list.classList.add(`text-bg-${this.color}`);
     return list;

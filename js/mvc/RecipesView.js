@@ -30,21 +30,24 @@ export default class RecipesView {
     this.ingredientsDropdown = new DropdownListBox(
       this.ingredients,
       'ingrédients',
-      'primary'
+      'primary',
+      'igr'
     );
     this.setDropdownEventListeners(this.ingredientsDropdown);
     RecipesView.setDropdownInputEventListener(this.ingredientsDropdown);
     this.appliancesDropdown = new DropdownListBox(
       this.appliances,
       'appareils',
-      'success'
+      'success',
+      'app'
     );
     this.setDropdownEventListeners(this.appliancesDropdown);
     RecipesView.setDropdownInputEventListener(this.appliancesDropdown);
     this.ustensilsDropdown = new DropdownListBox(
       this.ustensils,
       'ustensiles',
-      'danger'
+      'danger',
+      'ust'
     );
     this.setDropdownEventListeners(this.ustensilsDropdown);
     RecipesView.setDropdownInputEventListener(this.ustensilsDropdown);
@@ -91,6 +94,10 @@ export default class RecipesView {
       }
       card.article.style.display = cardDisplay ? 'block' : 'none';
     }
+  };
+
+  refreshDropdown = (dropdown, elementsArray) => {
+    let dropdownIndex = dropdown.length;
   };
 
   /**
