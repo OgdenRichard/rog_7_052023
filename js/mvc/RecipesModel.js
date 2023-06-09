@@ -99,18 +99,10 @@ export default class RecipesModel {
       inputValue,
       'name'
     );
-    const matchesByDescription = RecipesModel.searchItemsArray(
-      matchesByName.remaining,
-      inputValue,
-      'description'
-    );
-    console.log(matchesByName.filtered);
-    this.addMatches(matchesByName.filtered, matchesByDescription.filtered);
-    console.log(matchesByName.filtered);
-    this.onMainSearchResult(matchesByName.filtered);
+    this.onMainSearchResult(matchesByName);
   };
 
-  addMatches = (mainArray, matchesArray) => {
+  static addMatches = (mainArray, matchesArray) => {
     let index = matchesArray.length;
     while (index) {
       index -= 1;
@@ -118,23 +110,27 @@ export default class RecipesModel {
     }
   };
 
-  static searchItemsArray = (itemsArray, stringVal, property) => {
+  static searchItemsArray = (itemsArray, stringVal) => {
     let index = itemsArray.length;
-    const filteredArray = [];
-    const remainingArray = [];
-    while (index--) {
+    const filteredRecipes = [];
+    while (index) {
+      index -= 1;
       if (
         RecipesModel.searchString(
-          itemsArray[index][property].toLowerCase(),
+          itemsArray[index].name.toLowerCase(),
           stringVal.toLowerCase()
-        )
+        ) ||
+        RecipesModel.searchString(
+          itemsArray[index].description.toLowerCase(),
+          stringVal.toLowerCase()
+        ) /* ||
+        RecipesModel.browseIngredients() */
       ) {
-        filteredArray.push(itemsArray[index]);
-      } else {
-        remainingArray.push(itemsArray[index]);
+        filteredRecipes.push(itemsArray[index]);
+        // this.trimIngredientsArray();
       }
     }
-    return { filtered: filteredArray, remaining: remainingArray };
+    return filteredRecipes;
   };
 
   static searchString = (stringVal, needle) => stringVal.includes(needle);
