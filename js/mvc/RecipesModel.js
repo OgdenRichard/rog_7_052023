@@ -6,13 +6,9 @@ export default class RecipesModel {
   constructor(recipes) {
     this.recipes = recipes;
     this.recipesArray = [];
-    this.dismissedRecipes = [];
     this.ingredientsArray = [];
-    this.dismissedIngredients = [];
     this.appliancesArray = [];
-    this.dismissedAppliances = [];
     this.ustensilsArray = [];
-    this.dismissedUstensils = [];
     this.init();
   }
 
@@ -94,23 +90,15 @@ export default class RecipesModel {
    * @returns {void}
    */
   processMainSearchValue = (inputValue) => {
-    const matchesByName = RecipesModel.searchItemsArray(
+    const matchingRecipes = RecipesModel.searchMatchingRecipes(
       this.recipesArray,
       inputValue,
       'name'
     );
-    this.onMainSearchResult(matchesByName);
+    this.onMainSearchResult(matchingRecipes);
   };
 
-  static addMatches = (mainArray, matchesArray) => {
-    let index = matchesArray.length;
-    while (index) {
-      index -= 1;
-      mainArray.push(matchesArray[index]);
-    }
-  };
-
-  static searchItemsArray = (itemsArray, stringVal) => {
+  static searchMatchingRecipes = (itemsArray, stringVal) => {
     let index = itemsArray.length;
     const filteredRecipes = [];
     while (index) {
@@ -123,14 +111,30 @@ export default class RecipesModel {
         RecipesModel.searchString(
           itemsArray[index].description.toLowerCase(),
           stringVal.toLowerCase()
-        ) /* ||
-        RecipesModel.browseIngredients() */
+        ) ||
+        RecipesModel.browseRecipeIngredients(
+          itemsArray[index].ingredients,
+          stringVal
+        )
       ) {
         filteredRecipes.push(itemsArray[index]);
         // this.trimIngredientsArray();
       }
     }
     return filteredRecipes;
+  };
+
+  static browseRecipeIngredients = (ingredients, stringVal) => {
+    let index = ingredients.length;
+    let matchFound = false;
+    while (index && !matchFound) {
+      index -= 1;
+      matchFound = RecipesModel.searchString(
+        ingredients[index].ingredient.toLowerCase(),
+        stringVal.toLowerCase()
+      );
+    }
+    return matchFound;
   };
 
   static searchString = (stringVal, needle) => stringVal.includes(needle);
