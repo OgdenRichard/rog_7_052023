@@ -35,6 +35,7 @@ export default class RecipesModel {
     RecipesModel.sortByNames(this.ingredientsArray);
     RecipesModel.sortByNames(this.ustensilsArray);
     RecipesModel.sortByNames(this.appliancesArray);
+    console.log(this.ingredientsArray);
   };
 
   /**
@@ -101,6 +102,7 @@ export default class RecipesModel {
   static searchMatchingRecipes = (itemsArray, stringVal) => {
     let index = itemsArray.length;
     const filteredRecipes = [];
+    const matchingIngredients = [];
     while (index) {
       index -= 1;
       if (
@@ -118,9 +120,14 @@ export default class RecipesModel {
         )
       ) {
         filteredRecipes.push(itemsArray[index]);
-        // this.trimIngredientsArray();
+        // TODO structurer matchingIngredients comme this.ingredients
+        RecipesModel.trimIngredientsArray(
+          matchingIngredients,
+          itemsArray[index].ingredients
+        );
       }
     }
+    console.log(matchingIngredients);
     return filteredRecipes;
   };
 
@@ -135,6 +142,27 @@ export default class RecipesModel {
       );
     }
     return matchFound;
+  };
+
+  static trimIngredientsArray = (mainArray, newIngredients) => {
+    let index = newIngredients.length;
+    while (index) {
+      index -= 1;
+      let matchFound = false;
+      let mainIndex = mainArray.length;
+      while (mainIndex) {
+        mainIndex -= 1;
+        matchFound =
+          newIngredients[index].ingredient.toLowerCase() ===
+          mainArray[mainIndex].toLowerCase();
+        if (matchFound) {
+          break;
+        }
+      }
+      if (!matchFound) {
+        mainArray.push(newIngredients[index].ingredient);
+      }
+    }
   };
 
   static searchString = (stringVal, needle) => stringVal.includes(needle);
