@@ -35,7 +35,6 @@ export default class RecipesModel {
     RecipesModel.sortByNames(this.ingredientsArray);
     RecipesModel.sortByNames(this.ustensilsArray);
     RecipesModel.sortByNames(this.appliancesArray);
-    console.log(this.ingredientsArray);
   };
 
   /**
@@ -95,7 +94,7 @@ export default class RecipesModel {
    * @returns {void}
    */
   processMainSearchValue = (inputValue) => {
-    const matchingRecipes = RecipesModel.searchMatchingRecipes(
+    const matchingRecipes = this.searchMatchingRecipes(
       this.recipesArray,
       inputValue,
       'name'
@@ -104,7 +103,7 @@ export default class RecipesModel {
     this.onFilteredIngredients(matchingRecipes.ingredients);
   };
 
-  static searchMatchingRecipes = (itemsArray, stringVal) => {
+  searchMatchingRecipes = (itemsArray, stringVal) => {
     let index = itemsArray.length;
     const filteredRecipes = [];
     const matchingIngredients = [];
@@ -131,8 +130,20 @@ export default class RecipesModel {
         );
       }
     }
-    //console.log(matchingIngredients);
-    return { recipes: filteredRecipes, ingredients: matchingIngredients };
+    const filteredAppliances = RecipesModel.setArrayFromRecipesIds(
+      filteredRecipes,
+      this.appliancesArray
+    );
+    const filteredUstensils = RecipesModel.setArrayFromRecipesIds(
+      filteredRecipes,
+      this.ustensilsArray
+    );
+    return {
+      recipes: filteredRecipes,
+      ingredients: matchingIngredients,
+      appliances: filteredAppliances,
+      ustensils: filteredUstensils,
+    };
   };
 
   static browseRecipeIngredients = (ingredients, stringVal) => {
@@ -160,6 +171,7 @@ export default class RecipesModel {
           newIngredients[index].ingredient.toLowerCase() ===
           mainArray[mainIndex].name.toLowerCase();
         if (matchFound) {
+          // TODO : splice ?
           break;
         }
       }
@@ -170,6 +182,32 @@ export default class RecipesModel {
         mainArray.push({ name: renamed });
       }
     }
+  };
+
+  static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
+    let itemsIndex = itemsArray.length;
+    const filteredItems = [];
+    while (itemsIndex) {
+      itemsIndex -= 1;
+      const itemRecipes = itemsArray[itemsIndex].recipes;
+      for (let index = 0; index < itemRecipes.length; index += 1) {
+        const itemRecipeId = itemRecipes[index];
+        let recipesIndex = recipesArray.length;
+        let matchFound = false;
+        while (recipesIndex) {
+          recipesIndex -= 1;
+          if (itemRecipeId === recipesArray[recipesIndex].id) {
+            matchFound = true;
+            filteredItems.push(itemsArray[itemsIndex]);
+            break;
+          }
+        }
+        if (matchFound) {
+          break;
+        }
+      }
+    }
+    return filteredItems;
   };
 
   static searchString = (stringVal, needle) => stringVal.includes(needle);

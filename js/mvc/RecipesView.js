@@ -18,9 +18,6 @@ export default class RecipesView {
     this.grid = document.getElementById('grid');
     this.tagsContainer = document.getElementById('tags-container');
     this.mainSearchInput = document.getElementById('search-main');
-    console.log(this.ingredients);
-    console.log(this.ustensils);
-    console.log(this.appliances);
   }
 
   /**
@@ -102,8 +99,8 @@ export default class RecipesView {
   };
 
   refreshIngredientsDropdown = (ingredientsArray) => {
-    this.ingredientsList = document.getElementById('igr-list');
-    const dropdownElements = this.ingredientsList.getElementsByClassName(
+    const ingredientsList = document.getElementById('igr-list');
+    const dropdownElements = ingredientsList.getElementsByClassName(
       'listbox-dropdown__option'
     );
     this.refreshDropdown(dropdownElements, ingredientsArray);
