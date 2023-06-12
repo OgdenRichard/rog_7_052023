@@ -18,6 +18,9 @@ export default class RecipesView {
     this.grid = document.getElementById('grid');
     this.tagsContainer = document.getElementById('tags-container');
     this.mainSearchInput = document.getElementById('search-main');
+    console.log(this.ingredients);
+    console.log(this.ustensils);
+    console.log(this.appliances);
   }
 
   /**
@@ -89,6 +92,7 @@ export default class RecipesView {
         const currentId = recipesArray[index].id;
         if (card.id === currentId) {
           cardDisplay = true;
+          recipesArray.splice(index, 1);
           break;
         }
       }
@@ -96,9 +100,34 @@ export default class RecipesView {
     }
   };
 
+  refreshIngredientsDropdown = (ingredientsArray) => {
+    this.ingredientsList = document.getElementById('igr-list');
+    const dropdownElements = this.ingredientsList.getElementsByClassName(
+      'listbox-dropdown__option'
+    );
+    this.refreshDropdown(dropdownElements, ingredientsArray);
+  };
+
   refreshDropdown = (dropdown, elementsArray) => {
     let dropdownIndex = dropdown.length;
-
+    while (dropdownIndex) {
+      dropdownIndex -= 1;
+      let index = elementsArray.length;
+      let display = false;
+      const domElement = dropdown[dropdownIndex];
+      while (index) {
+        index -= 1;
+        if (
+          domElement.innerText.toLowerCase() ===
+          elementsArray[index].toLowerCase()
+        ) {
+          display = true;
+          elementsArray.splice(index, 1);
+          break;
+        }
+      }
+      domElement.style.display = display ? 'block' : 'none';
+    }
   };
 
   /**

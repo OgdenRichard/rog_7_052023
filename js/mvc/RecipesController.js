@@ -26,6 +26,10 @@ export default class RecipesController {
     this.view.refreshGridFromSearchResult(data);
   };
 
+  refreshIngredients = (ingredientsArray) => {
+    this.view.refreshIngredientsDropdown(ingredientsArray);
+  };
+
   /**
    * Launch view rendering on page load
    * Bind event handlers and callbacks between RecipesModel and RecipesView
@@ -35,5 +39,6 @@ export default class RecipesController {
     this.view.render();
     this.view.mainSearchTrigger(this.model.processMainSearchValue);
     this.model.bindProcessedData(this.refreshView);
+    this.model.bindIngredientsSearch(this.refreshIngredients);
   };
 }

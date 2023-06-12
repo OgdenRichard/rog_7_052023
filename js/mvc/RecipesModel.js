@@ -47,6 +47,10 @@ export default class RecipesModel {
     this.onMainSearchResult = callback;
   };
 
+  bindIngredientsSearch = (callback) => {
+    this.onFilteredIngredients = callback;
+  };
+
   /**
    * Populate ingredientsArray property with formatted data
    * @param {Number} id
@@ -96,7 +100,8 @@ export default class RecipesModel {
       inputValue,
       'name'
     );
-    this.onMainSearchResult(matchingRecipes);
+    this.onMainSearchResult(matchingRecipes.recipes);
+    this.onFilteredIngredients(matchingRecipes.ingredients);
   };
 
   static searchMatchingRecipes = (itemsArray, stringVal) => {
@@ -127,8 +132,8 @@ export default class RecipesModel {
         );
       }
     }
-    console.log(matchingIngredients);
-    return filteredRecipes;
+    //console.log(matchingIngredients);
+    return { recipes: filteredRecipes, ingredients: matchingIngredients };
   };
 
   static browseRecipeIngredients = (ingredients, stringVal) => {
