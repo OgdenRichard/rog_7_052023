@@ -19,11 +19,11 @@ export default class RecipesController {
 
   /**
    * @callback for RecipesModel.bindProcessedData
-   * @param {Array} data
+   * @param {Object} processRecipesUstensils
    * @returns {void}
    */
-  refreshView = (data) => {
-    this.view.refreshGridFromSearchResult(data);
+  refreshView = (result) => {
+    this.view.refreshFromMainSearch(result);
   };
 
   refreshIngredients = (ingredientsArray) => {
@@ -39,6 +39,5 @@ export default class RecipesController {
     this.view.render();
     this.view.mainSearchTrigger(this.model.processMainSearchValue);
     this.model.bindProcessedData(this.refreshView);
-    this.model.bindIngredientsSearch(this.refreshIngredients);
   };
 }

@@ -70,8 +70,10 @@ export default class RecipesView {
         (event.key === 'Delete' && t.selectionStart < 3) ||
         (event.key === 'Backspace' && t.selectionStart === 3)
       ) {
-        this.refreshGridFromSearchResult(this.recipes);
-        this.refreshIngredientsDropdown(this.ingredients);
+        this.refreshGrid(this.recipes);
+        this.refreshIngredients(this.ingredients);
+        this.refreshAppliances(this.appliances);
+        this.refreshUstensils(this.ustensils);
       }
     });
   };
@@ -80,13 +82,22 @@ export default class RecipesView {
    * test :callback fired by RecipesModel
    * @param {Array} recipesArray
    */
-  refreshGridFromSearchResult = (recipesArray) => {
+  refreshFromMainSearch = (searchResult) => {
+    this.refreshGrid(searchResult.recipes);
+    this.refreshIngredients(searchResult.ingredients);
+    this.refreshAppliances(searchResult.appliances);
+    this.refreshUstensils(searchResult.ustensils);
+  };
+
+  refreshGrid = (recipesArray) => {
     let cardsIndex = this.recipesGrid.recipesCards.length;
-    while (cardsIndex--) {
+    while (cardsIndex) {
+      cardsIndex -= 1;
       let index = recipesArray.length;
       let cardDisplay = false;
       const card = this.recipesGrid.recipesCards[cardsIndex];
-      while (index--) {
+      while (index) {
+        index -= 1;
         const currentId = recipesArray[index].id;
         if (card.id === currentId) {
           cardDisplay = true;
@@ -98,12 +109,28 @@ export default class RecipesView {
     }
   };
 
-  refreshIngredientsDropdown = (ingredientsArray) => {
+  refreshIngredients = (ingredientsArray) => {
     const ingredientsList = document.getElementById('igr-list');
     const dropdownElements = ingredientsList.getElementsByClassName(
       'listbox-dropdown__option'
     );
     this.refreshDropdown(dropdownElements, ingredientsArray);
+  };
+
+  refreshAppliances = (appliancesArray) => {
+    const appliancesList = document.getElementById('apl-list');
+    const dropdownElements = appliancesList.getElementsByClassName(
+      'listbox-dropdown__option'
+    );
+    this.refreshDropdown(dropdownElements, appliancesArray);
+  };
+
+  refreshUstensils = (ustensilsArray) => {
+    const ustensilsList = document.getElementById('ust-list');
+    const dropdownElements = ustensilsList.getElementsByClassName(
+      'listbox-dropdown__option'
+    );
+    this.refreshDropdown(dropdownElements, ustensilsArray);
   };
 
   refreshDropdown = (dropdown, elementsArray) => {

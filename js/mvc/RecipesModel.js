@@ -99,8 +99,8 @@ export default class RecipesModel {
       inputValue,
       'name'
     );
-    this.onMainSearchResult(matchingRecipes.recipes);
-    this.onFilteredIngredients(matchingRecipes.ingredients);
+    this.onMainSearchResult(matchingRecipes);
+    // this.onFilteredIngredients(matchingRecipes.ingredients);
   };
 
   searchMatchingRecipes = (itemsArray, stringVal) => {
