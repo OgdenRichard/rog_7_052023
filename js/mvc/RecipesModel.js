@@ -193,6 +193,7 @@ export default class RecipesModel {
     if (!itemObject) {
       const renamedItem = RecipesModel.firstLetterToUpper(itemName);
       itemArray.push({
+        id: itemArray.length,
         name: renamedItem,
         recipes: [id],
       });

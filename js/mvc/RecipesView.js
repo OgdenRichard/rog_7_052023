@@ -39,7 +39,7 @@ export default class RecipesView {
       this.appliances,
       'appareils',
       'success',
-      'app'
+      'apl'
     );
     this.setDropdownEventListeners(this.appliancesDropdown);
     RecipesView.setDropdownInputEventListener(this.appliancesDropdown);
@@ -98,6 +98,7 @@ export default class RecipesView {
 
   refreshDropdown = (dropdown, elementsArray) => {
     let dropdownIndex = dropdown.length;
+
   };
 
   /**
