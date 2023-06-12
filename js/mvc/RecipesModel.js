@@ -125,7 +125,6 @@ export default class RecipesModel {
         )
       ) {
         filteredRecipes.push(itemsArray[index]);
-        // TODO structurer matchingIngredients comme this.ingredients
         RecipesModel.trimIngredientsArray(
           matchingIngredients,
           itemsArray[index].ingredients
@@ -159,13 +158,16 @@ export default class RecipesModel {
         mainIndex -= 1;
         matchFound =
           newIngredients[index].ingredient.toLowerCase() ===
-          mainArray[mainIndex].toLowerCase();
+          mainArray[mainIndex].name.toLowerCase();
         if (matchFound) {
           break;
         }
       }
       if (!matchFound) {
-        mainArray.push(newIngredients[index].ingredient);
+        const renamed = RecipesModel.firstLetterToUpper(
+          newIngredients[index].ingredient
+        );
+        mainArray.push({ name: renamed });
       }
     }
   };

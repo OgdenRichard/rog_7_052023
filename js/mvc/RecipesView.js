@@ -74,6 +74,7 @@ export default class RecipesView {
         (event.key === 'Backspace' && t.selectionStart === 3)
       ) {
         this.refreshGridFromSearchResult(this.recipes);
+        this.refreshIngredientsDropdown(this.ingredients);
       }
     });
   };
@@ -117,10 +118,7 @@ export default class RecipesView {
       const domElement = dropdown[dropdownIndex];
       while (index) {
         index -= 1;
-        if (
-          domElement.innerText.toLowerCase() ===
-          elementsArray[index].toLowerCase()
-        ) {
+        if (domElement.innerText === elementsArray[index].name) {
           display = true;
           elementsArray.splice(index, 1);
           break;
