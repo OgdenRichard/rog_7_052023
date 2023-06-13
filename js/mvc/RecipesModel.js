@@ -100,7 +100,24 @@ export default class RecipesModel {
       'name'
     );
     this.onMainSearchResult(matchingRecipes);
-    // this.onFilteredIngredients(matchingRecipes.ingredients);
+  };
+
+  processDropdownSearch = (inputValue) => {
+    const result = [];
+    let index = this.ingredientsArray.length;
+    while (index) {
+      index -= 1;
+      const ingredient = this.ingredientsArray[index];
+      if (
+        RecipesModel.searchString(
+          ingredient.name.toLowerCase(),
+          inputValue.toLowerCase()
+        )
+      ) {
+        result.push(ingredient);
+      }
+    }
+    this.onFilteredIngredients(result);
   };
 
   searchMatchingRecipes = (itemsArray, stringVal) => {
@@ -211,15 +228,6 @@ export default class RecipesModel {
   };
 
   static searchString = (stringVal, needle) => stringVal.includes(needle);
-
-  /**
-   * Callback binding test
-   * @param {String} testStr
-   * @returns {void}
-   */
-  sendProcessedData = (testStr) => {
-    this.onMainSearchResult(`${testStr} et renvoyée à la view`);
-  };
 
   /**
    * Process data to fill property array

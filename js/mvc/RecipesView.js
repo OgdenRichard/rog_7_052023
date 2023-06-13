@@ -34,7 +34,7 @@ export default class RecipesView {
       'igr'
     );
     this.setDropdownEventListeners(this.ingredientsDropdown);
-    RecipesView.setDropdownInputEventListener(this.ingredientsDropdown);
+    RecipesView.setDropdownInputEventListeners(this.ingredientsDropdown);
     this.appliancesDropdown = new DropdownListBox(
       this.appliances,
       'appareils',
@@ -42,7 +42,7 @@ export default class RecipesView {
       'apl'
     );
     this.setDropdownEventListeners(this.appliancesDropdown);
-    RecipesView.setDropdownInputEventListener(this.appliancesDropdown);
+    RecipesView.setDropdownInputEventListeners(this.appliancesDropdown);
     this.ustensilsDropdown = new DropdownListBox(
       this.ustensils,
       'ustensiles',
@@ -50,7 +50,7 @@ export default class RecipesView {
       'ust'
     );
     this.setDropdownEventListeners(this.ustensilsDropdown);
-    RecipesView.setDropdownInputEventListener(this.ustensilsDropdown);
+    RecipesView.setDropdownInputEventListeners(this.ustensilsDropdown);
   };
 
   /**
@@ -78,15 +78,22 @@ export default class RecipesView {
     });
   };
 
+  ingredientsSearchTrigger = (handler) => {
+    const input = this.ingredientsDropdown.searchInput;
+    input.addEventListener('keyup', () => {
+      handler(input.value);
+    });
+  };
+
   /**
-   * test :callback fired by RecipesModel
-   * @param {Array} recipesArray
+   * Refresh display from main search results
+   * @param {Object} searchResult
    */
   refreshFromMainSearch = (searchResult) => {
     this.refreshGrid(searchResult.recipes);
-    this.refreshIngredients(searchResult.ingredients);
-    this.refreshAppliances(searchResult.appliances);
-    this.refreshUstensils(searchResult.ustensils);
+    RecipesView.refreshIngredients(searchResult.ingredients);
+    RecipesView.refreshAppliances(searchResult.appliances);
+    RecipesView.refreshUstensils(searchResult.ustensils);
   };
 
   refreshGrid = (recipesArray) => {
@@ -109,31 +116,31 @@ export default class RecipesView {
     }
   };
 
-  refreshIngredients = (ingredientsArray) => {
+  static refreshIngredients = (ingredientsArray) => {
     const ingredientsList = document.getElementById('igr-list');
     const dropdownElements = ingredientsList.getElementsByClassName(
       'listbox-dropdown__option'
     );
-    this.refreshDropdown(dropdownElements, ingredientsArray);
+    RecipesView.refreshDropdown(dropdownElements, ingredientsArray);
   };
 
-  refreshAppliances = (appliancesArray) => {
+  static refreshAppliances = (appliancesArray) => {
     const appliancesList = document.getElementById('apl-list');
     const dropdownElements = appliancesList.getElementsByClassName(
       'listbox-dropdown__option'
     );
-    this.refreshDropdown(dropdownElements, appliancesArray);
+    RecipesView.refreshDropdown(dropdownElements, appliancesArray);
   };
 
-  refreshUstensils = (ustensilsArray) => {
+  static refreshUstensils = (ustensilsArray) => {
     const ustensilsList = document.getElementById('ust-list');
     const dropdownElements = ustensilsList.getElementsByClassName(
       'listbox-dropdown__option'
     );
-    this.refreshDropdown(dropdownElements, ustensilsArray);
+    RecipesView.refreshDropdown(dropdownElements, ustensilsArray);
   };
 
-  refreshDropdown = (dropdown, elementsArray) => {
+  static refreshDropdown = (dropdown, elementsArray) => {
     let dropdownIndex = dropdown.length;
     while (dropdownIndex) {
       dropdownIndex -= 1;
@@ -184,7 +191,7 @@ export default class RecipesView {
    * @param {Object} dropdown
    * @returns {void}
    */
-  static setDropdownInputEventListener = (dropdown) => {
+  static setDropdownInputEventListeners = (dropdown) => {
     const inputContainer = dropdown.searchInput.parentNode;
     inputContainer.addEventListener('click', () => {
       dropdown.searchInput.focus();

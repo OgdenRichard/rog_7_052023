@@ -27,7 +27,7 @@ export default class RecipesController {
   };
 
   refreshIngredients = (ingredientsArray) => {
-    this.view.refreshIngredientsDropdown(ingredientsArray);
+    RecipesView.refreshIngredients(ingredientsArray);
   };
 
   /**
@@ -38,6 +38,8 @@ export default class RecipesController {
   init = () => {
     this.view.render();
     this.view.mainSearchTrigger(this.model.processMainSearchValue);
+    this.view.ingredientsSearchTrigger(this.model.processDropdownSearch);
     this.model.bindProcessedData(this.refreshView);
+    this.model.bindIngredientsSearch(this.refreshIngredients);
   };
 }
