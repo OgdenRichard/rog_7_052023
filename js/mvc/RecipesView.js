@@ -70,10 +70,14 @@ export default class RecipesView {
         (event.key === 'Delete' && t.selectionStart < 3) ||
         (event.key === 'Backspace' && t.selectionStart === 3)
       ) {
-        this.refreshGrid(this.recipes);
-        RecipesView.refreshIngredients(this.ingredients);
-        RecipesView.refreshAppliances(this.appliances);
-        RecipesView.refreshUstensils(this.ustensils);
+        const recipes = [...this.recipes];
+        const ingredients = [...this.ingredients];
+        const appliances = [...this.appliances];
+        const ustensils = [...this.ustensils];
+        this.refreshGrid(recipes);
+        RecipesView.refreshIngredients(ingredients);
+        RecipesView.refreshAppliances(appliances);
+        RecipesView.refreshUstensils(ustensils);
       }
     });
   };
