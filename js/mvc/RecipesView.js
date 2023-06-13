@@ -71,9 +71,9 @@ export default class RecipesView {
         (event.key === 'Backspace' && t.selectionStart === 3)
       ) {
         this.refreshGrid(this.recipes);
-        this.refreshIngredients(this.ingredients);
-        this.refreshAppliances(this.appliances);
-        this.refreshUstensils(this.ustensils);
+        RecipesView.refreshIngredients(this.ingredients);
+        RecipesView.refreshAppliances(this.appliances);
+        RecipesView.refreshUstensils(this.ustensils);
       }
     });
   };
