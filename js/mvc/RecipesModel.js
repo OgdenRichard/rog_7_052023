@@ -9,6 +9,10 @@ export default class RecipesModel {
     this.ingredientsArray = [];
     this.appliancesArray = [];
     this.ustensilsArray = [];
+    this.filteredRecipes = [];
+    this.filteredIngredients = [];
+    this.filteredAppliances = [];
+    this.filteredUstensils = [];
     this.init();
   }
 
@@ -103,25 +107,40 @@ export default class RecipesModel {
   };
 
   processDropdownSearch = (inputValue) => {
-    const result = [];
-    let index = this.ingredientsArray.length;
+    console.log(this.filteredIngredients.length);
+    const sourceArray = this.filteredIngredients.length
+      ? this.filteredIngredients
+      : this.ingredientsArray;
+    if (inputValue.length) {
+      let result = [];
+      result = this.searchMatchingDropdownItems(sourceArray, inputValue);
+      this.onFilteredIngredients(result);
+    } else {
+      this.onFilteredIngredients(sourceArray);
+    }
+  };
+
+  searchMatchingDropdownItems = (sourceArray, stringVal) => {
+    const searchResult = [];
+    let index = sourceArray.length;
     while (index) {
       index -= 1;
-      const ingredient = this.ingredientsArray[index];
+      const ingredient = sourceArray[index];
       if (
         RecipesModel.searchString(
           ingredient.name.toLowerCase(),
-          inputValue.toLowerCase()
+          stringVal.toLowerCase()
         )
       ) {
-        result.push(ingredient);
+        searchResult.push(ingredient);
       }
     }
-    this.onFilteredIngredients(result);
+    return searchResult;
   };
 
   searchMatchingRecipes = (itemsArray, stringVal) => {
     let index = itemsArray.length;
+    this.filteredIngredients = [];
     const filteredRecipes = [];
     const matchingIngredients = [];
     while (index) {
@@ -155,6 +174,7 @@ export default class RecipesModel {
       filteredRecipes,
       this.ustensilsArray
     );
+    this.filteredIngredients = matchingIngredients;
     return {
       recipes: filteredRecipes,
       ingredients: matchingIngredients,

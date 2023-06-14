@@ -85,7 +85,14 @@ export default class RecipesView {
   ingredientsSearchTrigger = (handler) => {
     const input = this.ingredientsDropdown.searchInput;
     input.addEventListener('keyup', () => {
-      handler(input.value);
+      if (input.value.length > 0) {
+        handler(input.value);
+      }
+    });
+    input.addEventListener('blur', (event) => {
+      event.stopPropagation();
+      //const ingredients = [...this.ingredients];
+      handler('');
     });
   };
 
@@ -125,7 +132,8 @@ export default class RecipesView {
     const dropdownElements = ingredientsList.getElementsByClassName(
       'listbox-dropdown__option'
     );
-    RecipesView.refreshDropdown(dropdownElements, ingredientsArray);
+    const ingredients = [...ingredientsArray];
+    RecipesView.refreshDropdown(dropdownElements, ingredients);
   };
 
   static refreshAppliances = (appliancesArray) => {
@@ -197,12 +205,14 @@ export default class RecipesView {
    */
   static setDropdownInputEventListeners = (dropdown) => {
     const inputContainer = dropdown.searchInput.parentNode;
-    inputContainer.addEventListener('click', () => {
+    inputContainer.addEventListener('click', (event) => {
+      event.stopPropagation();
       dropdown.searchInput.focus();
       dropdown.searchInput.value = '';
-      dropdown.searchInput.addEventListener('blur', () => {
-        dropdown.searchInput.value = dropdown.setInputValue();
-      });
+    });
+    dropdown.searchInput.addEventListener('blur', (event) => {
+      event.stopPropagation();
+      dropdown.searchInput.value = dropdown.setInputValue();
     });
   };
 
