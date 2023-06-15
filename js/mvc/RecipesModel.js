@@ -98,11 +98,21 @@ export default class RecipesModel {
    * @returns {void}
    */
   processMainSearchValue = (inputValue, clear = false) => {
-    const matchingRecipes = this.searchMatchingRecipes(
-      this.recipesArray,
-      inputValue
-    );
-    this.onMainSearchResult(matchingRecipes);
+    if (!clear) {
+      const matchingRecipes = this.searchMatchingRecipes(inputValue);
+      this.onMainSearchResult(matchingRecipes);
+    } else {
+      this.filteredRecipes = [];
+      this.filteredIngredients = [];
+      this.filteredAppliances = [];
+      this.filteredUstensils = [];
+      this.onMainSearchResult({
+        recipes: this.recipesArray,
+        ingredients: this.ingredientsArray,
+        appliances: this.appliancesArray,
+        ustensils: this.ustensilsArray,
+      });
+    }
   };
 
   processDropdownSearch = (idPrefix, inputValue) => {
