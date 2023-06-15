@@ -70,6 +70,7 @@ export default class RecipesView {
         (event.key === 'Delete' && t.selectionStart < 3) ||
         (event.key === 'Backspace' && t.selectionStart === 3)
       ) {
+        // TODO : clear filtered arrays in Model | if no  tags
         const recipes = [...this.recipes];
         this.refreshGrid(recipes);
         RecipesView.refreshIngredients(this.ingredients);
@@ -82,11 +83,11 @@ export default class RecipesView {
   ingredientsSearchTrigger = (handler) => {
     const input = this.ingredientsDropdown.searchInput;
     input.addEventListener('keyup', () => {
-      handler(input.value);
+      handler('ingredients', input.value);
     });
     input.addEventListener('blur', (event) => {
       event.stopPropagation();
-      handler('');
+      handler('ingredients', '');
     });
   };
 
@@ -121,6 +122,7 @@ export default class RecipesView {
     }
   };
 
+  // TODO : DRY méthode unique
   static refreshIngredients = (ingredientsArray) => {
     const ingredients = [...ingredientsArray];
     const ingredientsList = document.getElementById('igr-list');

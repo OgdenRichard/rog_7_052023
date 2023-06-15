@@ -106,16 +106,32 @@ export default class RecipesModel {
     this.onMainSearchResult(matchingRecipes);
   };
 
-  processDropdownSearch = (inputValue) => {
-    console.log(this.filteredIngredients.length);
-    const sourceArray = this.filteredIngredients.length
-      ? this.filteredIngredients
-      : this.ingredientsArray;
+  processDropdownSearch = (dropdownName, inputValue) => {
+    let sourceArray = [];
+    switch (dropdownName) {
+      case 'ingredients':
+        sourceArray = this.filteredIngredients.length
+          ? this.filteredIngredients
+          : this.ingredientsArray;
+        break;
+      case 'appliances':
+        sourceArray = this.filteredAppliances.length
+          ? this.filteredAppliances
+          : this.appliancesArray;
+        break;
+      case 'ustensils':
+        sourceArray = this.filteredUstensils.length
+          ? this.filteredUstensils
+          : this.ustensilsArray;
+        break;
+      default:
+        break;
+    }
     if (inputValue.length) {
       let result = [];
       result = this.searchMatchingDropdownItems(sourceArray, inputValue);
       this.onFilteredIngredients(result);
-    } else {
+    } else if (sourceArray.length) {
       this.onFilteredIngredients(sourceArray);
     }
   };
@@ -141,8 +157,9 @@ export default class RecipesModel {
   searchMatchingRecipes = (itemsArray, stringVal) => {
     let index = itemsArray.length;
     this.filteredIngredients = [];
+    this.filteredAppliances = [];
+    this.filteredUstensils = [];
     const filteredRecipes = [];
-    const matchingIngredients = [];
     while (index) {
       index -= 1;
       if (
@@ -161,25 +178,24 @@ export default class RecipesModel {
       ) {
         filteredRecipes.push(itemsArray[index]);
         RecipesModel.trimIngredientsArray(
-          matchingIngredients,
+          this.filteredIngredients,
           itemsArray[index].ingredients
         );
       }
     }
-    const filteredAppliances = RecipesModel.setArrayFromRecipesIds(
+    this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
       filteredRecipes,
       this.appliancesArray
     );
-    const filteredUstensils = RecipesModel.setArrayFromRecipesIds(
+    this.filteredUstensils = RecipesModel.setArrayFromRecipesIds(
       filteredRecipes,
       this.ustensilsArray
     );
-    this.filteredIngredients = matchingIngredients;
     return {
       recipes: filteredRecipes,
-      ingredients: matchingIngredients,
-      appliances: filteredAppliances,
-      ustensils: filteredUstensils,
+      ingredients: this.filteredIngredients,
+      appliances: this.filteredAppliances,
+      ustensils: this.filteredUstensils,
     };
   };
 
