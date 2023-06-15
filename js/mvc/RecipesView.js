@@ -60,6 +60,7 @@ export default class RecipesView {
         (event.key === 'Delete' && t.selectionStart < 3) ||
         (event.key === 'Backspace' && t.selectionStart === 3)
       ) {
+        console.log(t.value.length);
         // TODO : clear filtered arrays in Model | if no  tags
         const recipes = [...this.recipes];
         this.refreshGrid(recipes);
