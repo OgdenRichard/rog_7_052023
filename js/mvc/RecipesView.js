@@ -85,10 +85,10 @@ export default class RecipesView {
    * @param {Object} searchResult
    */
   refreshFromMainSearch = (searchResult) => {
-    this.refreshGrid(searchResult.recipes);
-    RecipesView.refreshDropdownItems(searchResult.ingredients, 'igr');
-    RecipesView.refreshDropdownItems(searchResult.appliances, 'apl');
-    RecipesView.refreshDropdownItems(searchResult.ustensils, 'ust');
+    this.refreshGrid([...searchResult.recipes]);
+    RecipesView.refreshDropdownItems([...searchResult.ingredients], 'igr');
+    RecipesView.refreshDropdownItems([...searchResult.appliances], 'apl');
+    RecipesView.refreshDropdownItems([...searchResult.ustensils], 'ust');
   };
 
   refreshGrid = (recipesArray) => {
@@ -112,12 +112,11 @@ export default class RecipesView {
   };
 
   static refreshDropdownItems = (resultArray, idPrefix) => {
-    const data = [...resultArray];
     const list = document.getElementById(`${idPrefix}-list`);
     const listElements = list.getElementsByClassName(
       'listbox-dropdown__option'
     );
-    RecipesView.refreshDropdown(listElements, data);
+    RecipesView.refreshDropdown(listElements, [...resultArray]);
   };
 
   static refreshDropdown = (dropdown, elementsArray) => {

@@ -102,10 +102,7 @@ export default class RecipesModel {
       const matchingRecipes = this.searchMatchingRecipes(inputValue);
       this.onMainSearchResult(matchingRecipes);
     } else {
-      this.filteredRecipes = [];
-      this.filteredIngredients = [];
-      this.filteredAppliances = [];
-      this.filteredUstensils = [];
+      this.clearFilters();
       this.onMainSearchResult({
         recipes: this.recipesArray,
         ingredients: this.ingredientsArray,
@@ -145,6 +142,13 @@ export default class RecipesModel {
     }
   };
 
+  clearFilters = () => {
+    this.filteredRecipes = [];
+    this.filteredIngredients = [];
+    this.filteredAppliances = [];
+    this.filteredUstensils = [];
+  };
+
   searchMatchingDropdownItems = (sourceArray, stringVal) => {
     const searchResult = [];
     let index = sourceArray.length;
@@ -169,10 +173,7 @@ export default class RecipesModel {
     // sinon utiliser les recipes de base
     // conditions de reset et actualisation à caler dans eventListener
     let index = this.recipesArray.length;
-    this.filteredRecipes = [];
-    this.filteredIngredients = [];
-    this.filteredAppliances = [];
-    this.filteredUstensils = [];
+    this.clearFilters();
     while (index) {
       index -= 1;
       if (
