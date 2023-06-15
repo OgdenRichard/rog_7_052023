@@ -18,6 +18,7 @@ export default class RecipesView {
     this.grid = document.getElementById('grid');
     this.tagsContainer = document.getElementById('tags-container');
     this.mainSearchInput = document.getElementById('search-main');
+    this.dropdowns = [];
   }
 
   /**
@@ -27,30 +28,19 @@ export default class RecipesView {
   render = () => {
     this.recipesGrid = new RecipesGrid(this.recipes);
     this.recipesGrid.render();
-    this.ingredientsDropdown = new DropdownListBox(
-      this.ingredients,
-      'ingrédients',
-      'primary',
-      'igr'
+    this.dropdowns.push(
+      new DropdownListBox(this.ingredients, 'ingrédients', 'primary', 'igr')
     );
-    this.setDropdownEventListeners(this.ingredientsDropdown);
-    RecipesView.setDropdownInputEventListeners(this.ingredientsDropdown);
-    this.appliancesDropdown = new DropdownListBox(
-      this.appliances,
-      'appareils',
-      'success',
-      'apl'
+    this.dropdowns.push(
+      new DropdownListBox(this.appliances, 'appareils', 'success', 'apl')
     );
-    this.setDropdownEventListeners(this.appliancesDropdown);
-    RecipesView.setDropdownInputEventListeners(this.appliancesDropdown);
-    this.ustensilsDropdown = new DropdownListBox(
-      this.ustensils,
-      'ustensiles',
-      'danger',
-      'ust'
+    this.dropdowns.push(
+      new DropdownListBox(this.ustensils, 'ustensiles', 'danger', 'ust')
     );
-    this.setDropdownEventListeners(this.ustensilsDropdown);
-    RecipesView.setDropdownInputEventListeners(this.ustensilsDropdown);
+    this.dropdowns.forEach((dropdown) => {
+      this.setDropdownOptionsEventListeners(dropdown);
+      RecipesView.setDropdownInputEventListeners(dropdown);
+    });
   };
 
   /**
@@ -73,21 +63,25 @@ export default class RecipesView {
         // TODO : clear filtered arrays in Model | if no  tags
         const recipes = [...this.recipes];
         this.refreshGrid(recipes);
-        RecipesView.refreshIngredients(this.ingredients);
-        RecipesView.refreshAppliances(this.appliances);
-        RecipesView.refreshUstensils(this.ustensils);
+        RecipesView.refreshDropdownItems(this.ingredients, 'igr');
+        RecipesView.refreshDropdownItems(this.appliances, 'apl');
+        RecipesView.refreshDropdownItems(this.ustensils, 'ust');
       }
     });
   };
 
   ingredientsSearchTrigger = (handler) => {
-    const input = this.ingredientsDropdown.searchInput;
-    input.addEventListener('keyup', () => {
-      handler('ingredients', input.value);
-    });
-    input.addEventListener('blur', (event) => {
-      event.stopPropagation();
-      handler('ingredients', '');
+    this.dropdowns.forEach((dropdown) => {
+      const input = dropdown.searchInput;
+      if (dropdown.idPrefix) {
+        input.addEventListener('keyup', () => {
+          handler(dropdown.idPrefix, input.value);
+        });
+        input.addEventListener('blur', (event) => {
+          event.stopPropagation();
+          handler(dropdown.idPrefix, '');
+        });
+      }
     });
   };
 
@@ -97,9 +91,9 @@ export default class RecipesView {
    */
   refreshFromMainSearch = (searchResult) => {
     this.refreshGrid(searchResult.recipes);
-    RecipesView.refreshIngredients(searchResult.ingredients);
-    RecipesView.refreshAppliances(searchResult.appliances);
-    RecipesView.refreshUstensils(searchResult.ustensils);
+    RecipesView.refreshDropdownItems(searchResult.ingredients, 'igr');
+    RecipesView.refreshDropdownItems(searchResult.appliances, 'apl');
+    RecipesView.refreshDropdownItems(searchResult.ustensils, 'ust');
   };
 
   refreshGrid = (recipesArray) => {
@@ -122,32 +116,13 @@ export default class RecipesView {
     }
   };
 
-  // TODO : DRY méthode unique
-  static refreshIngredients = (ingredientsArray) => {
-    const ingredients = [...ingredientsArray];
-    const ingredientsList = document.getElementById('igr-list');
-    const dropdownElements = ingredientsList.getElementsByClassName(
+  static refreshDropdownItems = (resultArray, idPrefix) => {
+    const data = [...resultArray];
+    const list = document.getElementById(`${idPrefix}-list`);
+    const listElements = list.getElementsByClassName(
       'listbox-dropdown__option'
     );
-    RecipesView.refreshDropdown(dropdownElements, ingredients);
-  };
-
-  static refreshAppliances = (appliancesArray) => {
-    const appliances = [...appliancesArray];
-    const appliancesList = document.getElementById('apl-list');
-    const dropdownElements = appliancesList.getElementsByClassName(
-      'listbox-dropdown__option'
-    );
-    RecipesView.refreshDropdown(dropdownElements, appliances);
-  };
-
-  static refreshUstensils = (ustensilsArray) => {
-    const ustensils = [...ustensilsArray];
-    const ustensilsList = document.getElementById('ust-list');
-    const dropdownElements = ustensilsList.getElementsByClassName(
-      'listbox-dropdown__option'
-    );
-    RecipesView.refreshDropdown(dropdownElements, ustensils);
+    RecipesView.refreshDropdown(listElements, data);
   };
 
   static refreshDropdown = (dropdown, elementsArray) => {
@@ -175,7 +150,7 @@ export default class RecipesView {
    * @param {Object} dropdown
    * @returns {void}
    */
-  setDropdownEventListeners = (dropdown) => {
+  setDropdownOptionsEventListeners = (dropdown) => {
     const options = dropdown.list.getElementsByClassName(
       'listbox-dropdown__option'
     );

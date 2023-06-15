@@ -46,12 +46,12 @@ export default class RecipesModel {
    * @callback callback : Set and fired in RecipesController
    * @returns {void}
    */
-  bindProcessedData = (callback) => {
+  bindMainSearchData = (callback) => {
     this.onMainSearchResult = callback;
   };
 
-  bindIngredientsSearch = (callback) => {
-    this.onFilteredIngredients = callback;
+  bindDropdownSearch = (callback) => {
+    this.onDropdownSearchResult = callback;
   };
 
   /**
@@ -98,6 +98,7 @@ export default class RecipesModel {
    * @returns {void}
    */
   processMainSearchValue = (inputValue) => {
+    // TODO virer le this.recipesArray des arguments : c'est débile
     const matchingRecipes = this.searchMatchingRecipes(
       this.recipesArray,
       inputValue,
@@ -106,20 +107,20 @@ export default class RecipesModel {
     this.onMainSearchResult(matchingRecipes);
   };
 
-  processDropdownSearch = (dropdownName, inputValue) => {
+  processDropdownSearch = (idPrefix, inputValue) => {
     let sourceArray = [];
-    switch (dropdownName) {
-      case 'ingredients':
+    switch (idPrefix) {
+      case 'igr':
         sourceArray = this.filteredIngredients.length
           ? this.filteredIngredients
           : this.ingredientsArray;
         break;
-      case 'appliances':
+      case 'apl':
         sourceArray = this.filteredAppliances.length
           ? this.filteredAppliances
           : this.appliancesArray;
         break;
-      case 'ustensils':
+      case 'ust':
         sourceArray = this.filteredUstensils.length
           ? this.filteredUstensils
           : this.ustensilsArray;
@@ -130,9 +131,9 @@ export default class RecipesModel {
     if (inputValue.length) {
       let result = [];
       result = this.searchMatchingDropdownItems(sourceArray, inputValue);
-      this.onFilteredIngredients(result);
+      this.onDropdownSearchResult(result, idPrefix);
     } else if (sourceArray.length) {
-      this.onFilteredIngredients(sourceArray);
+      this.onDropdownSearchResult(sourceArray, idPrefix);
     }
   };
 
@@ -155,6 +156,10 @@ export default class RecipesModel {
   };
 
   searchMatchingRecipes = (itemsArray, stringVal) => {
+    // TODO appliquer traitement similaire aux dropdowns
+    // si filteredRecipes, filtrer à partir des filteredRecipes
+    // sinon utiliser les recipes de base
+    // conditions de reset et actualisation à caler dans eventListener
     let index = itemsArray.length;
     this.filteredIngredients = [];
     this.filteredAppliances = [];

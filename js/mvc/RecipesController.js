@@ -26,8 +26,8 @@ export default class RecipesController {
     this.view.refreshFromMainSearch(result);
   };
 
-  onFilteredIngredients = (ingredientsArray) => {
-    RecipesView.refreshIngredients(ingredientsArray);
+  static onDropdownSearchResult = (resultArray, idPrefix) => {
+    RecipesView.refreshDropdownItems(resultArray, idPrefix);
   };
 
   /**
@@ -39,7 +39,7 @@ export default class RecipesController {
     this.view.render();
     this.view.mainSearchTrigger(this.model.processMainSearchValue);
     this.view.ingredientsSearchTrigger(this.model.processDropdownSearch);
-    this.model.bindProcessedData(this.onMainSearchResult);
-    this.model.bindIngredientsSearch(this.onFilteredIngredients);
+    this.model.bindMainSearchData(this.onMainSearchResult);
+    this.model.bindDropdownSearch(RecipesController.onDropdownSearchResult);
   };
 }
