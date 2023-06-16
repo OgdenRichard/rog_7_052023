@@ -153,7 +153,7 @@ export default class RecipesView {
    * @param {Object} dropdown
    * @returns {void}
    */
-  setDropdownOptionsEventListeners = (dropdown) => {
+  setDropdownOptionsEventListeners = (dropdown, handler) => {
     const options = dropdown.list.getElementsByClassName(
       'listbox-dropdown__option'
     );

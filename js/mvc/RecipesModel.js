@@ -136,6 +136,15 @@ export default class RecipesModel {
     }
   };
 
+  processTagSearch = (idPrefix, tagValue, clear = false) => {
+    // TODO > implémenter un array des tags actifs
+    // TODO > retirer les nouveaux.tags des filteredArrays des dropdowns ?
+    // TODO >>>> OU : ajouter une prop bool isTag | = dissocier recherche locale dans DPDWN de recherche globale par tag
+    // TODO > implémenter une intersection des recettes entre tags
+    // TODO > filtrer les recettes en fonction de cette intersection
+    // TODO > refiltrer tous les dropdowns en fonction de cette intersection
+  };
+
   clearFilters = () => {
     this.filteredRecipes = [];
     this.filteredIngredients = [];
@@ -220,6 +229,8 @@ export default class RecipesModel {
     return matchFound;
   };
 
+  // TODO : obtenir un array avec des objets oyant la même stucture que this.ingredientsArray
+  // E.G : {id:1,name:'Boudin',recipes:[2,8,9]}
   static trimIngredientsArray = (mainArray, newIngredients) => {
     let index = newIngredients.length;
     while (index) {
