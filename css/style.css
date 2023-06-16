@@ -148,6 +148,13 @@
   z-index: 3;
 }
 
+.listbox-dropdown__list::before {
+  content: attr(title);
+  display: block;
+  font-style: italic;
+  color: lightgrey;
+}
+
 .listbox-dropdown__option {
   font-size: 1em;
   border: none;

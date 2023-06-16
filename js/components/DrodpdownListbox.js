@@ -77,6 +77,7 @@ export default class DropdownListBox {
     list.id = `${this.idPrefix}-list`;
     list.classList.add('listbox-dropdown__list');
     list.classList.add(`text-bg-${this.color}`);
+    // list.title = '';
     return list;
   };
 
