@@ -95,7 +95,7 @@
   cursor: pointer;
 }
 
-.listbox-dropdown__input::placeholder{
+.listbox-dropdown__input::placeholder {
   color: lightgrey;
 }
 
@@ -177,8 +177,14 @@
   content: '\f057';
 }
 
-/* ----------- RECIPES SECTION ----------- */
+/* ------------ NO MATCH MESSAGE ---------- */
 
+.rcp-nomatch {
+  color: rgb(158, 158, 158);
+  display: none;
+}
+
+/* ----------- RECIPES SECTION ----------- */
 
 .gallery_section {
   display: grid;

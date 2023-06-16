@@ -18,6 +18,7 @@ export default class RecipesView {
     this.grid = document.getElementById('grid');
     this.tagsContainer = document.getElementById('tags-container');
     this.mainSearchInput = document.getElementById('search-main');
+    this.nomatchingRecipeMsg = document.getElementById('rcp-nomatch');
     this.dropdowns = [];
   }
 
@@ -85,6 +86,9 @@ export default class RecipesView {
    * @param {Object} searchResult
    */
   refreshFromMainSearch = (searchResult) => {
+    this.nomatchingRecipeMsg.style.display = searchResult.recipes.length
+      ? 'none'
+      : 'block';
     this.refreshGrid([...searchResult.recipes]);
     RecipesView.refreshDropdownItems([...searchResult.ingredients], 'igr');
     RecipesView.refreshDropdownItems([...searchResult.appliances], 'apl');
