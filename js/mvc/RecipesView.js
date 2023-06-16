@@ -49,6 +49,7 @@ export default class RecipesView {
    * @callback handler
    */
   mainSearchTrigger = (handler) => {
+    // TODO gérer touche space?
     this.mainSearchInput.addEventListener('keyup', (event) => {
       const inputValue = event.target.value;
       if (inputValue.length >= 3) {
@@ -67,15 +68,18 @@ export default class RecipesView {
   };
 
   ingredientsSearchTrigger = (handler) => {
+    let clear = false;
     this.dropdowns.forEach((dropdown) => {
       const input = dropdown.searchInput;
       if (dropdown.idPrefix) {
         input.addEventListener('keyup', () => {
-          handler(dropdown.idPrefix, input.value);
+          clear = this.mainSearchInput.value.length < 3;
+          handler(dropdown.idPrefix, input.value, clear);
         });
         input.addEventListener('blur', (event) => {
+          clear = this.mainSearchInput.value.length < 3;
           event.stopPropagation();
-          handler(dropdown.idPrefix, '');
+          handler(dropdown.idPrefix, '', clear);
         });
       }
     });

@@ -112,23 +112,17 @@ export default class RecipesModel {
     }
   };
 
-  processDropdownSearch = (idPrefix, inputValue) => {
+  processDropdownSearch = (idPrefix, inputValue, clear = false) => {
     let sourceArray = [];
     switch (idPrefix) {
       case 'igr':
-        sourceArray = this.filteredIngredients.length
-          ? this.filteredIngredients
-          : this.ingredientsArray;
+        sourceArray = !clear ? this.filteredIngredients : this.ingredientsArray;
         break;
       case 'apl':
-        sourceArray = this.filteredAppliances.length
-          ? this.filteredAppliances
-          : this.appliancesArray;
+        sourceArray = !clear ? this.filteredAppliances : this.appliancesArray;
         break;
       case 'ust':
-        sourceArray = this.filteredUstensils.length
-          ? this.filteredUstensils
-          : this.ustensilsArray;
+        sourceArray = !clear ? this.filteredUstensils : this.ustensilsArray;
         break;
       default:
         break;
