@@ -13,7 +13,9 @@ export default class RecipesModel {
     this.filteredIngredients = [];
     this.filteredAppliances = [];
     this.filteredUstensils = [];
-    this.activeTags = [];
+    this.ingredientsTags = [];
+    this.appliancesTags = [];
+    this.ustensilsTags = [];
     this.init();
   }
 
@@ -142,6 +144,20 @@ export default class RecipesModel {
 
   processTagSearch = (idPrefix, tagValue, clear = false) => {
     console.log(`Added : ${idPrefix} | ${tagValue}`);
+    switch (idPrefix) {
+      case 'igr':
+        this.ingredientsTags.push(tagValue);
+        // TODO méthode updateSearchFromTag
+        break;
+      case 'apl':
+        this.appliancesTags.push(tagValue);
+        break;
+      case 'ust':
+        this.ustensilsTags.push(tagValue);
+        break;
+      default:
+        break;
+    }
     // TODO > implémenter un array des tags actifs
     // TODO > retirer les nouveaux.tags des filteredArrays des dropdowns ?
     // TODO >>>> OU : ajouter une prop bool isTag | = dissocier recherche locale dans DPDWN de recherche globale par tag
@@ -151,7 +167,30 @@ export default class RecipesModel {
   };
 
   removeTagFromSearch = (idPrefix, tagValue, clear = false) => {
-    console.log(`Removed : ${idPrefix} | ${tagValue}`);
+    switch (idPrefix) {
+      case 'igr':
+        this.removeTagFromArray(this.ingredientsTags, tagValue);
+        break;
+      case 'apl':
+        this.removeTagFromArray(this.appliancesTags, tagValue);
+        break;
+      case 'ust':
+        this.removeTagFromArray(this.ustensilsTags, tagValue);
+        break;
+      default:
+        break;
+    }
+  };
+
+  removeTagFromArray = (tagArray, tagName) => {
+    let index = tagArray.length;
+    while (index) {
+      index -= 1;
+      if (tagArray[index] === tagName) {
+        tagArray.splice(index, 1);
+      }
+    }
+    console.log(tagArray);
   };
 
   clearFilters = () => {
@@ -329,6 +368,7 @@ export default class RecipesModel {
         id: itemArray.length,
         name: renamedItem,
         recipes: [id],
+        isTag: false,
       });
     } else {
       itemObject.recipes.push(id);
