@@ -90,6 +90,10 @@ export default class RecipesView {
     this.onAddNewTag = callback;
   };
 
+  bindRemoveTag = (callback) => {
+    this.onRemoveTag = callback;
+  };
+
   /**
    * Refresh display from main search results
    * @param {Object} searchResult
@@ -174,21 +178,9 @@ export default class RecipesView {
         this.onAddNewTag(dropdown.idPrefix, option.innerText);
         button.addEventListener('click', () => {
           option.style.display = 'block';
+          this.onRemoveTag(dropdown.idPrefix, option.innerText);
           this.tagsContainer.removeChild(button);
         });
-      });
-    });
-  };
-
-  tagSearchTrigger = (handler, option = null, color = '') => {
-    option.addEventListener('click', () => {
-      const button = RecipesView.setTagButton(option.innerText, color);
-      handler('test', option.innerText);
-      this.tagsContainer.appendChild(button);
-      option.style.display = 'none';
-      button.addEventListener('click', () => {
-        option.style.display = 'block';
-        this.tagsContainer.removeChild(button);
       });
     });
   };

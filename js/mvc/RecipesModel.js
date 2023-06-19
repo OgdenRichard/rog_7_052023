@@ -141,13 +141,17 @@ export default class RecipesModel {
   };
 
   processTagSearch = (idPrefix, tagValue, clear = false) => {
-    console.log(`${idPrefix} | ${tagValue}`);
+    console.log(`Added : ${idPrefix} | ${tagValue}`);
     // TODO > implémenter un array des tags actifs
     // TODO > retirer les nouveaux.tags des filteredArrays des dropdowns ?
     // TODO >>>> OU : ajouter une prop bool isTag | = dissocier recherche locale dans DPDWN de recherche globale par tag
     // TODO > implémenter une intersection des recettes entre tags
     // TODO > filtrer les recettes en fonction de cette intersection
     // TODO > refiltrer tous les dropdowns en fonction de cette intersection
+  };
+
+  removeTagFromSearch = (idPrefix, tagValue, clear = false) => {
+    console.log(`Removed : ${idPrefix} | ${tagValue}`);
   };
 
   clearFilters = () => {

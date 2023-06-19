@@ -26,8 +26,12 @@ export default class RecipesController {
     this.view.refreshFromMainSearch(result);
   };
 
-  onAddNewTag = (idPrefix, tagValue) => {
-    this.model.processTagSearch(idPrefix, tagValue);
+  onAddNewTag = (idPrefix, tagValue, clear = false) => {
+    this.model.processTagSearch(idPrefix, tagValue, clear);
+  };
+
+  onRemoveTag = (idPrefix, tagValue, clear = false) => {
+    this.model.removeTagFromSearch(idPrefix, tagValue, clear);
   };
 
   static onDropdownSearchResult = (resultArray, idPrefix) => {
@@ -41,9 +45,10 @@ export default class RecipesController {
    */
   init = () => {
     this.view.render();
-    this.view.bindAddNewTag(this.onAddNewTag);
     this.view.mainSearchTrigger(this.model.processMainSearchValue);
     this.view.ingredientsSearchTrigger(this.model.processDropdownSearch);
+    this.view.bindAddNewTag(this.onAddNewTag);
+    this.view.bindRemoveTag(this.onRemoveTag);
     this.model.bindMainSearchData(this.onMainSearchResult);
     this.model.bindDropdownSearch(RecipesController.onDropdownSearchResult);
   };
