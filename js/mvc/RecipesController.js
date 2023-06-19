@@ -26,6 +26,10 @@ export default class RecipesController {
     this.view.refreshFromMainSearch(result);
   };
 
+  onAddNewTag = (idPrefix, tagValue) => {
+    this.model.processTagSearch(idPrefix, tagValue);
+  };
+
   static onDropdownSearchResult = (resultArray, idPrefix) => {
     RecipesView.refreshDropdownItems(resultArray, idPrefix);
   };
@@ -37,6 +41,7 @@ export default class RecipesController {
    */
   init = () => {
     this.view.render();
+    this.view.bindAddNewTag(this.onAddNewTag);
     this.view.mainSearchTrigger(this.model.processMainSearchValue);
     this.view.ingredientsSearchTrigger(this.model.processDropdownSearch);
     this.model.bindMainSearchData(this.onMainSearchResult);

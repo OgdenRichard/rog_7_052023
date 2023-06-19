@@ -13,6 +13,7 @@ export default class RecipesModel {
     this.filteredIngredients = [];
     this.filteredAppliances = [];
     this.filteredUstensils = [];
+    this.activeTags = [];
     this.init();
   }
 
@@ -140,6 +141,7 @@ export default class RecipesModel {
   };
 
   processTagSearch = (idPrefix, tagValue, clear = false) => {
+    console.log(`${idPrefix} | ${tagValue}`);
     // TODO > implémenter un array des tags actifs
     // TODO > retirer les nouveaux.tags des filteredArrays des dropdowns ?
     // TODO >>>> OU : ajouter une prop bool isTag | = dissocier recherche locale dans DPDWN de recherche globale par tag

@@ -67,6 +67,7 @@ export default class RecipesView {
     });
   };
 
+  // TODO : rename
   ingredientsSearchTrigger = (handler) => {
     let clear = false;
     this.dropdowns.forEach((dropdown) => {
@@ -83,6 +84,10 @@ export default class RecipesView {
         });
       }
     });
+  };
+
+  bindAddNewTag = (callback) => {
+    this.onAddNewTag = callback;
   };
 
   /**
@@ -153,7 +158,7 @@ export default class RecipesView {
    * @param {Object} dropdown
    * @returns {void}
    */
-  setDropdownOptionsEventListeners = (dropdown, handler) => {
+  setDropdownOptionsEventListeners = (dropdown) => {
     const options = dropdown.list.getElementsByClassName(
       'listbox-dropdown__option'
     );
@@ -166,10 +171,24 @@ export default class RecipesView {
         );
         this.tagsContainer.appendChild(button);
         option.style.display = 'none';
+        this.onAddNewTag(dropdown.idPrefix, option.innerText);
         button.addEventListener('click', () => {
           option.style.display = 'block';
           this.tagsContainer.removeChild(button);
         });
+      });
+    });
+  };
+
+  tagSearchTrigger = (handler, option = null, color = '') => {
+    option.addEventListener('click', () => {
+      const button = RecipesView.setTagButton(option.innerText, color);
+      handler('test', option.innerText);
+      this.tagsContainer.appendChild(button);
+      option.style.display = 'none';
+      button.addEventListener('click', () => {
+        option.style.display = 'block';
+        this.tagsContainer.removeChild(button);
       });
     });
   };
