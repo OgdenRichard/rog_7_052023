@@ -129,7 +129,10 @@ export default class RecipesModel {
     }
     if (inputValue.length) {
       let result = [];
-      result = this.searchMatchingDropdownItems(sourceArray, inputValue);
+      result = RecipesModel.searchMatchingDropdownItems(
+        sourceArray,
+        inputValue
+      );
       this.onDropdownSearchResult(result, idPrefix);
     } else if (sourceArray.length) {
       this.onDropdownSearchResult(sourceArray, idPrefix);
@@ -152,19 +155,19 @@ export default class RecipesModel {
     this.filteredUstensils = [];
   };
 
-  searchMatchingDropdownItems = (sourceArray, stringVal) => {
+  static searchMatchingDropdownItems = (sourceArray, stringVal) => {
     const searchResult = [];
     let index = sourceArray.length;
     while (index) {
       index -= 1;
-      const ingredient = sourceArray[index];
+      const item = sourceArray[index];
       if (
         RecipesModel.searchString(
-          ingredient.name.toLowerCase(),
+          item.name.toLowerCase(),
           stringVal.toLowerCase()
         )
       ) {
-        searchResult.push(ingredient);
+        searchResult.push(item);
       }
     }
     return searchResult;
@@ -194,7 +197,7 @@ export default class RecipesModel {
         )
       ) {
         this.filteredRecipes.push(this.recipes[index]);
-        RecipesModel.trimIngredientsArray(
+        this.trimIngredientsArray(
           this.filteredIngredients,
           this.recipesArray[index].ingredients
         );
@@ -229,9 +232,7 @@ export default class RecipesModel {
     return matchFound;
   };
 
-  // TODO : obtenir un array avec des objets oyant la même stucture que this.ingredientsArray
-  // E.G : {id:1,name:'Boudin',recipes:[2,8,9]}
-  static trimIngredientsArray = (mainArray, newIngredients) => {
+  trimIngredientsArray = (mainArray, newIngredients) => {
     let index = newIngredients.length;
     while (index) {
       index -= 1;
@@ -243,17 +244,35 @@ export default class RecipesModel {
           newIngredients[index].ingredient.toLowerCase() ===
           mainArray[mainIndex].name.toLowerCase();
         if (matchFound) {
-          // TODO : splice ?
           break;
         }
       }
       if (!matchFound) {
-        const renamed = RecipesModel.firstLetterToUpper(
+        /* const renamed = RecipesModel.firstLetterToUpper(
+          newIngredients[index].ingredient
+        ); */
+        const ingredient = this.getItemDetails(
+          this.ingredientsArray,
           newIngredients[index].ingredient
         );
-        mainArray.push({ name: renamed });
+        // mainArray.push({ name: renamed });
+        if (ingredient) {
+          mainArray.push(ingredient);
+        }
       }
     }
+  };
+
+  getItemDetails = (sourceArray, stringVal) => {
+    let index = sourceArray.length;
+    while (index) {
+      index -= 1;
+      const item = sourceArray[index];
+      if (item.name.toLowerCase() === stringVal.toLowerCase()) {
+        return item;
+      }
+    }
+    return false;
   };
 
   static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
