@@ -146,15 +146,18 @@ export default class RecipesModel {
     switch (idPrefix) {
       case 'igr':
         this.ingredientsTags.push(tagValue);
-        this.updateDropdownItemFromTag(this.filteredIngredients, tagValue);
+        this.updateTagItemStatus(this.filteredIngredients, tagValue);
+        this.updateTagItemStatus(this.ingredientsArray, tagValue);
         break;
       case 'apl':
         this.appliancesTags.push(tagValue);
-        this.updateDropdownItemFromTag(this.filteredAppliances, tagValue);
+        this.updateTagItemStatus(this.filteredAppliances, tagValue);
+        this.updateTagItemStatus(this.appliancesArray, tagValue);
         break;
       case 'ust':
         this.ustensilsTags.push(tagValue);
-        this.updateDropdownItemFromTag(this.filteredUstensils, tagValue);
+        this.updateTagItemStatus(this.filteredUstensils, tagValue);
+        this.updateTagItemStatus(this.ustensilsArray, tagValue);
         break;
       default:
         break;
@@ -171,23 +174,18 @@ export default class RecipesModel {
     switch (idPrefix) {
       case 'igr':
         this.removeTagFromArray(this.ingredientsTags, tagValue);
-        this.updateDropdownItemFromTag(
-          this.filteredIngredients,
-          tagValue,
-          false
-        );
+        this.updateTagItemStatus(this.filteredIngredients, tagValue, false);
+        this.updateTagItemStatus(this.ingredientsArray, tagValue, false);
         break;
       case 'apl':
         this.removeTagFromArray(this.appliancesTags, tagValue);
-        this.updateDropdownItemFromTag(
-          this.filteredAppliances,
-          tagValue,
-          false
-        );
+        this.updateTagItemStatus(this.filteredAppliances, tagValue, false);
+        this.updateTagItemStatus(this.appliancesArray, tagValue, false);
         break;
       case 'ust':
         this.removeTagFromArray(this.ustensilsTags, tagValue);
-        this.updateDropdownItemFromTag(this.filteredUstensils, tagValue, false);
+        this.updateTagItemStatus(this.filteredUstensils, tagValue, false);
+        this.updateTagItemStatus(this.ustensilsArray, tagValue, false);
         break;
       default:
         break;
@@ -205,7 +203,7 @@ export default class RecipesModel {
     }
   };
 
-  updateDropdownItemFromTag = (itemsArray, tagName, add = true) => {
+  updateTagItemStatus = (itemsArray, tagName, add = true) => {
     let index = itemsArray.length;
     while (index) {
       index -= 1;

@@ -133,7 +133,7 @@ export default class RecipesView {
     const listElements = list.getElementsByClassName(
       'listbox-dropdown__option'
     );
-    list.title = resultArray.length ? '' : 'Aucun élément correspondant';
+    list.title = resultArray.length ? '' : 'Aucun élément';
     RecipesView.refreshDropdown(listElements, [...resultArray]);
   };
 
