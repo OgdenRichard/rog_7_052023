@@ -143,34 +143,37 @@ export default class RecipesModel {
   };
 
   processTagSearch = (idPrefix, tagValue, clear = false) => {
+    let tag = null;
+    const filteredRecipesIds = [];
     switch (idPrefix) {
       case 'igr':
-        this.ingredientsTags.push(tagValue);
         this.updateTagItemStatus(this.filteredIngredients, tagValue);
-        this.updateTagItemStatus(this.ingredientsArray, tagValue);
+        tag = this.updateTagItemStatus(this.ingredientsArray, tagValue);
+        this.ingredientsTags.push(tag);
         break;
       case 'apl':
-        this.appliancesTags.push(tagValue);
         this.updateTagItemStatus(this.filteredAppliances, tagValue);
-        this.updateTagItemStatus(this.appliancesArray, tagValue);
+        tag = this.updateTagItemStatus(this.appliancesArray, tagValue);
+        this.appliancesTags.push(tag);
         break;
       case 'ust':
-        this.ustensilsTags.push(tagValue);
         this.updateTagItemStatus(this.filteredUstensils, tagValue);
-        this.updateTagItemStatus(this.ustensilsArray, tagValue);
+        tag = this.updateTagItemStatus(this.ustensilsArray, tagValue);
+        this.ustensilsTags.push(tag);
         break;
       default:
         break;
     }
-    // TODO > implémenter un array des tags actifs
-    // TODO > retirer les nouveaux.tags des filteredArrays des dropdowns ?
-    // TODO >>>> OU : ajouter une prop bool isTag | = dissocier recherche locale dans DPDWN de recherche globale par tag
+    this.mergeTagsRecipesIds(this.ingredientsTags, filteredRecipesIds);
+    this.mergeTagsRecipesIds(this.appliancesTags, filteredRecipesIds);
+    this.mergeTagsRecipesIds(this.ustensilsTags, filteredRecipesIds);
     // TODO > implémenter une intersection des recettes entre tags
     // TODO > filtrer les recettes en fonction de cette intersection
     // TODO > refiltrer tous les dropdowns en fonction de cette intersection
   };
 
   removeTagFromSearch = (idPrefix, tagValue, clear = false) => {
+    const filteredRecipesIds = [];
     switch (idPrefix) {
       case 'igr':
         this.removeTagFromArray(this.ingredientsTags, tagValue);
@@ -190,13 +193,16 @@ export default class RecipesModel {
       default:
         break;
     }
+    this.mergeTagsRecipesIds(this.ingredientsTags, filteredRecipesIds);
+    this.mergeTagsRecipesIds(this.appliancesTags, filteredRecipesIds);
+    this.mergeTagsRecipesIds(this.ustensilsTags, filteredRecipesIds);
   };
 
   removeTagFromArray = (tagArray, tagName) => {
     let index = tagArray.length;
     while (index) {
       index -= 1;
-      if (tagArray[index] === tagName) {
+      if (tagArray[index].name === tagName) {
         tagArray.splice(index, 1);
         break;
       }
@@ -205,14 +211,38 @@ export default class RecipesModel {
 
   updateTagItemStatus = (itemsArray, tagName, add = true) => {
     let index = itemsArray.length;
+    let result = {};
     while (index) {
       index -= 1;
       if (itemsArray[index].name === tagName) {
         itemsArray[index].isTag = add;
+        result.name = itemsArray[index].name;
+        result.recipes = itemsArray[index].recipes;
         break;
       }
     }
+    return result;
   };
+
+  mergeTagsRecipesIds = (sourceArray, filteredIds) => {
+    sourceArray.forEach((element) => {
+      let index = element.recipes.length;
+      while (index) {
+        index -= 1;
+        let found = false;
+        let idsIndex = filteredIds.length;
+        while (idsIndex && !found) {
+          idsIndex -= 1;
+          found = element.recipes[index] === filteredIds[idsIndex];
+        }
+        if (!found) {
+          filteredIds.push(element.recipes[index]);
+        }
+      }
+    });
+  };
+
+  refreshFiltersFromTags = () => {};
 
   clearFilters = () => {
     this.filteredRecipes = [];
