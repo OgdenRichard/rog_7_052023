@@ -146,7 +146,10 @@ export default class RecipesView {
       const domElement = dropdown[dropdownIndex];
       while (index) {
         index -= 1;
-        if (domElement.innerText === elementsArray[index].name) {
+        if (
+          domElement.innerText === elementsArray[index].name &&
+          !elementsArray[index].isTag
+        ) {
           display = true;
           elementsArray.splice(index, 1);
           break;

@@ -143,17 +143,18 @@ export default class RecipesModel {
   };
 
   processTagSearch = (idPrefix, tagValue, clear = false) => {
-    console.log(`Added : ${idPrefix} | ${tagValue}`);
     switch (idPrefix) {
       case 'igr':
         this.ingredientsTags.push(tagValue);
-        // TODO méthode updateSearchFromTag
+        this.updateDropdownItemFromTag(this.filteredIngredients, tagValue);
         break;
       case 'apl':
         this.appliancesTags.push(tagValue);
+        this.updateDropdownItemFromTag(this.filteredAppliances, tagValue);
         break;
       case 'ust':
         this.ustensilsTags.push(tagValue);
+        this.updateDropdownItemFromTag(this.filteredUstensils, tagValue);
         break;
       default:
         break;
@@ -170,12 +171,23 @@ export default class RecipesModel {
     switch (idPrefix) {
       case 'igr':
         this.removeTagFromArray(this.ingredientsTags, tagValue);
+        this.updateDropdownItemFromTag(
+          this.filteredIngredients,
+          tagValue,
+          false
+        );
         break;
       case 'apl':
         this.removeTagFromArray(this.appliancesTags, tagValue);
+        this.updateDropdownItemFromTag(
+          this.filteredAppliances,
+          tagValue,
+          false
+        );
         break;
       case 'ust':
         this.removeTagFromArray(this.ustensilsTags, tagValue);
+        this.updateDropdownItemFromTag(this.filteredUstensils, tagValue, false);
         break;
       default:
         break;
@@ -188,9 +200,20 @@ export default class RecipesModel {
       index -= 1;
       if (tagArray[index] === tagName) {
         tagArray.splice(index, 1);
+        break;
       }
     }
-    console.log(tagArray);
+  };
+
+  updateDropdownItemFromTag = (itemsArray, tagName, add = true) => {
+    let index = itemsArray.length;
+    while (index) {
+      index -= 1;
+      if (itemsArray[index].name === tagName) {
+        itemsArray[index].isTag = add;
+        break;
+      }
+    }
   };
 
   clearFilters = () => {
