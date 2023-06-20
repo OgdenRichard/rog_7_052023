@@ -16,6 +16,7 @@ export default class RecipesModel {
     this.ingredientsTags = [];
     this.appliancesTags = [];
     this.ustensilsTags = [];
+    this.tagsRecipesIds = [];
     this.init();
   }
 
@@ -105,6 +106,7 @@ export default class RecipesModel {
       const matchingRecipes = this.searchMatchingRecipes(inputValue);
       this.onMainSearchResult(matchingRecipes);
     } else {
+      this.filteredRecipes = [];
       this.clearFilters();
       this.onMainSearchResult({
         recipes: this.recipesArray,
@@ -144,36 +146,38 @@ export default class RecipesModel {
 
   processTagSearch = (idPrefix, tagValue, clear = false) => {
     let tag = null;
-    const filteredRecipesIds = [];
+    this.clearFilters();
     switch (idPrefix) {
       case 'igr':
         this.updateTagItemStatus(this.filteredIngredients, tagValue);
         tag = this.updateTagItemStatus(this.ingredientsArray, tagValue);
         this.ingredientsTags.push(tag);
+        this.mergeTagsRecipesIds(this.ingredientsTags);
         break;
       case 'apl':
         this.updateTagItemStatus(this.filteredAppliances, tagValue);
         tag = this.updateTagItemStatus(this.appliancesArray, tagValue);
         this.appliancesTags.push(tag);
+        this.mergeTagsRecipesIds(this.appliancesTags);
         break;
       case 'ust':
         this.updateTagItemStatus(this.filteredUstensils, tagValue);
         tag = this.updateTagItemStatus(this.ustensilsArray, tagValue);
         this.ustensilsTags.push(tag);
+        this.mergeTagsRecipesIds(this.ustensilsTags);
         break;
       default:
         break;
     }
-    this.mergeTagsRecipesIds(this.ingredientsTags, filteredRecipesIds);
-    this.mergeTagsRecipesIds(this.appliancesTags, filteredRecipesIds);
-    this.mergeTagsRecipesIds(this.ustensilsTags, filteredRecipesIds);
+    console.log(`Add tag result : ${this.tagsRecipesIds}`);
+    this.refreshFiltersFromTags();
     // TODO > implémenter une intersection des recettes entre tags
     // TODO > filtrer les recettes en fonction de cette intersection
     // TODO > refiltrer tous les dropdowns en fonction de cette intersection
   };
 
   removeTagFromSearch = (idPrefix, tagValue, clear = false) => {
-    const filteredRecipesIds = [];
+    this.tagsRecipesIds = [];
     switch (idPrefix) {
       case 'igr':
         this.removeTagFromArray(this.ingredientsTags, tagValue);
@@ -193,9 +197,12 @@ export default class RecipesModel {
       default:
         break;
     }
-    this.mergeTagsRecipesIds(this.ingredientsTags, filteredRecipesIds);
-    this.mergeTagsRecipesIds(this.appliancesTags, filteredRecipesIds);
-    this.mergeTagsRecipesIds(this.ustensilsTags, filteredRecipesIds);
+    this.mergeTagsRecipesIds(this.ingredientsTags);
+    this.mergeTagsRecipesIds(this.appliancesTags);
+    this.mergeTagsRecipesIds(this.ustensilsTags);
+    // TODO gérer le cas des tags 'vidés'
+    console.log(`Removal result : ${this.tagsRecipesIds}`);
+    this.refreshFiltersFromTags();
   };
 
   removeTagFromArray = (tagArray, tagName) => {
@@ -224,28 +231,56 @@ export default class RecipesModel {
     return result;
   };
 
-  mergeTagsRecipesIds = (sourceArray, filteredIds) => {
+  mergeTagsRecipesIds = (sourceArray) => {
     sourceArray.forEach((element) => {
       let index = element.recipes.length;
       while (index) {
         index -= 1;
         let found = false;
-        let idsIndex = filteredIds.length;
+        let idsIndex = this.tagsRecipesIds.length;
         while (idsIndex && !found) {
           idsIndex -= 1;
-          found = element.recipes[index] === filteredIds[idsIndex];
+          found = element.recipes[index] === this.tagsRecipesIds[idsIndex];
         }
         if (!found) {
-          filteredIds.push(element.recipes[index]);
+          this.tagsRecipesIds.push(element.recipes[index]);
         }
       }
     });
   };
 
-  refreshFiltersFromTags = () => {};
+  refreshFiltersFromTags = () => {
+    const recipesArray = this.filteredRecipes.length
+      ? this.filteredRecipes
+      : this.recipesArray;
+    const tempRecipes = [];
+    let index = recipesArray.length;
+    while (index) {
+      index -= 1;
+      let idsIndex = this.tagsRecipesIds.length;
+      while (idsIndex) {
+        idsIndex -= 1;
+        if (recipesArray[index].id === this.tagsRecipesIds[idsIndex]) {
+          tempRecipes.push(recipesArray[index]);
+          this.trimIngredientsArray(
+            this.filteredIngredients,
+            recipesArray[index].ingredients
+          );
+        }
+      }
+    }
+    // this.filteredRecipes = tempRecipes;
+    this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
+      tempRecipes,
+      this.appliancesArray
+    );
+    this.filteredUstensils = RecipesModel.setArrayFromRecipesIds(
+      tempRecipes,
+      this.ustensilsArray
+    );
+  };
 
   clearFilters = () => {
-    this.filteredRecipes = [];
     this.filteredIngredients = [];
     this.filteredAppliances = [];
     this.filteredUstensils = [];
@@ -275,6 +310,8 @@ export default class RecipesModel {
     // sinon utiliser les recipes de base
     // conditions de reset et actualisation à caler dans eventListener
     let index = this.recipesArray.length;
+    // TODO : si tag(s), utiliser les filteredRecipes from tags!
+    this.filteredRecipes = [];
     this.clearFilters();
     while (index) {
       index -= 1;
@@ -328,6 +365,7 @@ export default class RecipesModel {
     return matchFound;
   };
 
+  // TODO : supprimer argument mainArray, utiliser this.filtered ingredients
   trimIngredientsArray = (mainArray, newIngredients) => {
     let index = newIngredients.length;
     while (index) {
@@ -344,14 +382,10 @@ export default class RecipesModel {
         }
       }
       if (!matchFound) {
-        /* const renamed = RecipesModel.firstLetterToUpper(
-          newIngredients[index].ingredient
-        ); */
         const ingredient = this.getItemDetails(
           this.ingredientsArray,
           newIngredients[index].ingredient
         );
-        // mainArray.push({ name: renamed });
         if (ingredient) {
           mainArray.push(ingredient);
         }
