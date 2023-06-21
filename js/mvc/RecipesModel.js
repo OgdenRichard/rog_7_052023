@@ -5,6 +5,7 @@ export default class RecipesModel {
    */
   constructor(recipes) {
     this.recipes = recipes;
+    this.mainSearchValue = '';
     this.recipesArray = [];
     this.ingredientsArray = [];
     this.appliancesArray = [];
@@ -102,8 +103,9 @@ export default class RecipesModel {
    * @returns {void}
    */
   processMainSearchValue = (inputValue, clear = false) => {
+    this.mainSearchValue = inputValue.toLowerCase();
     if (!clear) {
-      const matchingRecipes = this.searchMatchingRecipes(inputValue);
+      const matchingRecipes = this.searchMatchingRecipes();
       this.onMainSearchResult(matchingRecipes);
     } else {
       this.filteredRecipes = [];
@@ -170,7 +172,7 @@ export default class RecipesModel {
         break;
     }
     console.log(`Add tag result : ${this.tagsRecipesIds}`);
-    this.refreshFiltersFromTags();
+    this.refreshDisplayFromTags();
     // TODO > implémenter une intersection des recettes entre tags
     // TODO > filtrer les recettes en fonction de cette intersection
     // TODO > refiltrer tous les dropdowns en fonction de cette intersection
@@ -202,7 +204,7 @@ export default class RecipesModel {
     this.mergeTagsRecipesIds(this.ustensilsTags);
     // TODO gérer le cas des tags 'vidés'
     console.log(`Removal result : ${this.tagsRecipesIds}`);
-    this.refreshFiltersFromTags();
+    this.refreshDisplayFromTags();
   };
 
   removeTagFromArray = (tagArray, tagName) => {
@@ -249,7 +251,7 @@ export default class RecipesModel {
     });
   };
 
-  refreshFiltersFromTags = () => {
+  refreshDisplayFromTags = () => {
     const recipesArray = this.filteredRecipes.length
       ? this.filteredRecipes
       : this.recipesArray;
@@ -278,6 +280,11 @@ export default class RecipesModel {
       tempRecipes,
       this.ustensilsArray
     );
+    console.log(this.filteredRecipes);
+    console.log(tempRecipes);
+    console.log(this.filteredIngredients);
+    console.log(this.filteredAppliances);
+    console.log(this.filteredUstensils);
   };
 
   clearFilters = () => {
@@ -304,7 +311,7 @@ export default class RecipesModel {
     return searchResult;
   };
 
-  searchMatchingRecipes = (stringVal) => {
+  searchMatchingRecipes = () => {
     // TODO appliquer traitement similaire aux dropdowns
     // si filteredRecipes, filtrer à partir des filteredRecipes
     // sinon utiliser les recipes de base
@@ -318,15 +325,15 @@ export default class RecipesModel {
       if (
         RecipesModel.searchString(
           this.recipesArray[index].name.toLowerCase(),
-          stringVal.toLowerCase()
+          this.mainSearchValue
         ) ||
         RecipesModel.searchString(
           this.recipesArray[index].description.toLowerCase(),
-          stringVal.toLowerCase()
+          this.mainSearchValue
         ) ||
-        RecipesModel.browseRecipeIngredients(
+        this.browseRecipeIngredients(
           this.recipesArray[index].ingredients,
-          stringVal
+          this.mainSearchValue
         )
       ) {
         this.filteredRecipes.push(this.recipes[index]);
@@ -352,14 +359,14 @@ export default class RecipesModel {
     };
   };
 
-  static browseRecipeIngredients = (ingredients, stringVal) => {
+  browseRecipeIngredients = (ingredients) => {
     let index = ingredients.length;
     let matchFound = false;
     while (index && !matchFound) {
       index -= 1;
       matchFound = RecipesModel.searchString(
         ingredients[index].ingredient.toLowerCase(),
-        stringVal.toLowerCase()
+        this.mainSearchValue
       );
     }
     return matchFound;
