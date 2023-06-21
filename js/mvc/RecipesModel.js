@@ -59,6 +59,10 @@ export default class RecipesModel {
     this.onDropdownSearchResult = callback;
   };
 
+  bindTagSearch = (callback) => {
+    this.onTagSearchResult = callback;
+  };
+
   /**
    * Populate ingredientsArray property with formatted data
    * @param {Number} id
@@ -172,10 +176,7 @@ export default class RecipesModel {
         break;
     }
     console.log(`Add tag result : ${this.tagsRecipesIds}`);
-    this.refreshDisplayFromTags();
-    // TODO > implémenter une intersection des recettes entre tags
-    // TODO > filtrer les recettes en fonction de cette intersection
-    // TODO > refiltrer tous les dropdowns en fonction de cette intersection
+    this.onTagSearchResult(this.refreshDisplayFromTags());
   };
 
   removeTagFromSearch = (idPrefix, tagValue, clear = false) => {
@@ -280,11 +281,17 @@ export default class RecipesModel {
       tempRecipes,
       this.ustensilsArray
     );
-    console.log(this.filteredRecipes);
+    /* console.log(this.filteredRecipes);
     console.log(tempRecipes);
     console.log(this.filteredIngredients);
     console.log(this.filteredAppliances);
-    console.log(this.filteredUstensils);
+    console.log(this.filteredUstensils); */
+    return {
+      recipes: tempRecipes,
+      ingredients: this.filteredIngredients,
+      appliances: this.filteredAppliances,
+      ustensils: this.filteredUstensils,
+    };
   };
 
   clearFilters = () => {
@@ -372,7 +379,6 @@ export default class RecipesModel {
     return matchFound;
   };
 
-  // TODO : supprimer argument mainArray, utiliser this.filtered ingredients
   trimIngredientsArray = (mainArray, newIngredients) => {
     let index = newIngredients.length;
     while (index) {
