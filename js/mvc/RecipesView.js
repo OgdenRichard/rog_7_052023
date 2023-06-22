@@ -67,25 +67,6 @@ export default class RecipesView {
     });
   };
 
-  // TODO : rename
-  ingredientsSearchTrigger = (handler) => {
-    let clear = false;
-    this.dropdowns.forEach((dropdown) => {
-      const input = dropdown.searchInput;
-      if (dropdown.idPrefix) {
-        input.addEventListener('keyup', () => {
-          clear = this.mainSearchInput.value.length < 3;
-          handler(dropdown.idPrefix, input.value, clear);
-        });
-        input.addEventListener('blur', (event) => {
-          clear = this.mainSearchInput.value.length < 3;
-          event.stopPropagation();
-          handler(dropdown.idPrefix, '', clear);
-        });
-      }
-    });
-  };
-
   bindAddNewTag = (callback) => {
     this.onAddNewTag = callback;
   };
@@ -159,6 +140,46 @@ export default class RecipesView {
     }
   };
 
+  // TODO : rename
+  ingredientsSearchTrigger = (handler) => {
+    let clear = false;
+    this.dropdowns.forEach((dropdown) => {
+      const input = dropdown.searchInput;
+      if (dropdown.idPrefix) {
+        input.addEventListener('keyup', () => {
+          clear = this.mainSearchInput.value.length < 3;
+          handler(dropdown.idPrefix, input.value, clear);
+        });
+        input.addEventListener('blur', (event) => {
+          clear = this.mainSearchInput.value.length < 3;
+          event.stopPropagation();
+          handler(dropdown.idPrefix, '', clear);
+        });
+      }
+    });
+  };
+
+  /**
+   * Swap generic value with placeholder on click on dropdown or focus out
+   * @param {Object} dropdown
+   * @returns {void}
+   */
+  static setDropdownInputEventListeners = (dropdown) => {
+    const inputContainer = dropdown.searchInput.parentNode;
+    inputContainer.addEventListener('click', (event) => {
+      event.stopPropagation();
+      dropdown.searchInput.focus();
+      dropdown.searchInput.value = '';
+    });
+    dropdown.searchInput.addEventListener('focus', () => {
+      dropdown.searchInput.value = '';
+    });
+    dropdown.searchInput.addEventListener('blur', (event) => {
+      event.stopPropagation();
+      dropdown.searchInput.value = dropdown.setInputValue();
+    });
+  };
+
   /**
    * Set event listeners for each dropdown
    * Fires data filtering by tag in Model
@@ -185,27 +206,6 @@ export default class RecipesView {
           this.tagsContainer.removeChild(button);
         });
       });
-    });
-  };
-
-  /**
-   * Swap generic value with placeholder on click on dropdown or focus out
-   * @param {Object} dropdown
-   * @returns {void}
-   */
-  static setDropdownInputEventListeners = (dropdown) => {
-    const inputContainer = dropdown.searchInput.parentNode;
-    inputContainer.addEventListener('click', (event) => {
-      event.stopPropagation();
-      dropdown.searchInput.focus();
-      dropdown.searchInput.value = '';
-    });
-    dropdown.searchInput.addEventListener('focus', () => {
-      dropdown.searchInput.value = '';
-    });
-    dropdown.searchInput.addEventListener('blur', (event) => {
-      event.stopPropagation();
-      dropdown.searchInput.value = dropdown.setInputValue();
     });
   };
 
