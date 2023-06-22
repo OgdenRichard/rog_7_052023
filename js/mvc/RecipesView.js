@@ -38,10 +38,7 @@ export default class RecipesView {
     this.dropdowns.push(
       new DropdownListBox(this.ustensils, 'ustensiles', 'danger', 'ust')
     );
-    this.dropdowns.forEach((dropdown) => {
-      this.setDropdownOptionsEventListeners(dropdown);
-      RecipesView.setDropdownInputEventListeners(dropdown);
-    });
+    this.setDropdownsTriggers();
   };
 
   /**
@@ -67,6 +64,10 @@ export default class RecipesView {
     });
   };
 
+  bindDropdownTextSearch = (callback) => {
+    this.onDropdownTextSearch = callback;
+  };
+
   bindAddNewTag = (callback) => {
     this.onAddNewTag = callback;
   };
@@ -84,9 +85,9 @@ export default class RecipesView {
       ? 'none'
       : 'block';
     this.refreshGrid([...searchResult.recipes]);
-    RecipesView.refreshDropdownItems([...searchResult.ingredients], 'igr');
-    RecipesView.refreshDropdownItems([...searchResult.appliances], 'apl');
-    RecipesView.refreshDropdownItems([...searchResult.ustensils], 'ust');
+    this.refreshDropdownItems([...searchResult.ingredients], 'igr');
+    this.refreshDropdownItems([...searchResult.appliances], 'apl');
+    this.refreshDropdownItems([...searchResult.ustensils], 'ust');
   };
 
   refreshGrid = (recipesArray) => {
@@ -109,22 +110,30 @@ export default class RecipesView {
     }
   };
 
-  static refreshDropdownItems = (resultArray, idPrefix) => {
-    const list = document.getElementById(`${idPrefix}-list`);
-    const listElements = list.getElementsByClassName(
-      'listbox-dropdown__option'
-    );
-    list.title = resultArray.length ? '' : 'Aucun élément';
-    RecipesView.refreshDropdown(listElements, [...resultArray]);
+  refreshDropdownItems = (resultArray, idPrefix) => {
+    let currentDropdown = null;
+    this.dropdowns.forEach((dropdown) => {
+      if (dropdown.idPrefix === idPrefix) {
+        currentDropdown = dropdown;
+      }
+    });
+    if (currentDropdown) {
+      const { list } = currentDropdown;
+      const listElements = list.getElementsByClassName(
+        'listbox-dropdown__option'
+      );
+      list.title = resultArray.length ? '' : 'Aucun élément';
+      RecipesView.refreshDropdown(listElements, [...resultArray]);
+    }
   };
 
-  static refreshDropdown = (dropdown, elementsArray) => {
-    let dropdownIndex = dropdown.length;
-    while (dropdownIndex) {
-      dropdownIndex -= 1;
+  static refreshDropdown = (list, elementsArray) => {
+    let listIndex = list.length;
+    while (listIndex) {
+      listIndex -= 1;
       let index = elementsArray.length;
       let display = false;
-      const domElement = dropdown[dropdownIndex];
+      const domElement = list[listIndex];
       while (index) {
         index -= 1;
         if (
@@ -140,8 +149,54 @@ export default class RecipesView {
     }
   };
 
+  setDropdownsTriggers = () => {
+    let clear = false;
+    this.dropdowns.forEach((dropdown) => {
+      const input = dropdown.searchInput;
+      const inputContainer = dropdown.searchInput.parentNode;
+      const options = dropdown.list.getElementsByClassName(
+        'listbox-dropdown__option'
+      );
+      if (dropdown.idPrefix) {
+        input.addEventListener('keyup', () => {
+          clear = this.mainSearchInput.value.length < 3;
+          this.onDropdownTextSearch(dropdown.idPrefix, input.value, clear);
+        });
+        /* input.addEventListener('blur', () => {
+          clear = this.mainSearchInput.value.length < 3;
+          dropdown.searchInput.value = dropdown.setInputValue();
+          this.onDropdownTextSearch(dropdown.idPrefix, '', clear);
+        }); */
+        input.addEventListener('focus', () => {
+          dropdown.searchInput.value = '';
+        });
+        inputContainer.addEventListener('click', () => {
+          dropdown.searchInput.focus();
+          dropdown.searchInput.value = '';
+        });
+        for (let index = 0; index < options.length; index += 1) {
+          const option = options[index];
+          option.addEventListener('click', () => {
+            const button = RecipesView.setTagButton(
+              option.innerText,
+              dropdown.color
+            );
+            this.tagsContainer.appendChild(button);
+            option.style.display = 'none';
+            this.onAddNewTag(dropdown.idPrefix, option.innerText);
+            button.addEventListener('click', () => {
+              option.style.display = 'block';
+              //this.onRemoveTag(dropdown.idPrefix, option.innerText);
+              this.tagsContainer.removeChild(button);
+            });
+          });
+        }
+      }
+    });
+  };
+
   // TODO : rename
-  ingredientsSearchTrigger = (handler) => {
+  /* ingredientsSearchTrigger = (handler) => {
     let clear = false;
     this.dropdowns.forEach((dropdown) => {
       const input = dropdown.searchInput;
@@ -157,14 +212,14 @@ export default class RecipesView {
         });
       }
     });
-  };
+  }; */
 
   /**
    * Swap generic value with placeholder on click on dropdown or focus out
    * @param {Object} dropdown
    * @returns {void}
    */
-  static setDropdownInputEventListeners = (dropdown) => {
+  /* static setDropdownInputEventListeners = (dropdown) => {
     const inputContainer = dropdown.searchInput.parentNode;
     inputContainer.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -178,7 +233,7 @@ export default class RecipesView {
       event.stopPropagation();
       dropdown.searchInput.value = dropdown.setInputValue();
     });
-  };
+  }; */
 
   /**
    * Set event listeners for each dropdown
@@ -186,7 +241,7 @@ export default class RecipesView {
    * @param {Object} dropdown
    * @returns {void}
    */
-  setDropdownOptionsEventListeners = (dropdown) => {
+  /* setDropdownOptionsEventListeners = (dropdown) => {
     const options = dropdown.list.getElementsByClassName(
       'listbox-dropdown__option'
     );
@@ -207,7 +262,7 @@ export default class RecipesView {
         });
       });
     });
-  };
+  }; */
 
   /**
    * Set a tag button to append to tag container
