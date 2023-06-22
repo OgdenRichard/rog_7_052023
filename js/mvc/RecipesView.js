@@ -158,21 +158,22 @@ export default class RecipesView {
         'listbox-dropdown__option'
       );
       if (dropdown.idPrefix) {
-        input.addEventListener('keyup', () => {
+        inputContainer.addEventListener('click', () => {
+          input.focus();
+          input.value = '';
+        });
+        input.addEventListener('focus', () => {
+          input.value = '';
+          // TODO utiliser plutôt RecipeModel.mainSearchValue ?
           clear = this.mainSearchInput.value.length < 3;
           this.onDropdownTextSearch(dropdown.idPrefix, input.value, clear);
         });
-        /* input.addEventListener('blur', () => {
-          clear = this.mainSearchInput.value.length < 3;
-          dropdown.searchInput.value = dropdown.setInputValue();
-          this.onDropdownTextSearch(dropdown.idPrefix, '', clear);
-        }); */
-        input.addEventListener('focus', () => {
-          dropdown.searchInput.value = '';
+        input.addEventListener('focusout', () => {
+          input.value = dropdown.setInputValue();
         });
-        inputContainer.addEventListener('click', () => {
-          dropdown.searchInput.focus();
-          dropdown.searchInput.value = '';
+        input.addEventListener('keyup', () => {
+          clear = this.mainSearchInput.value.length < 3;
+          this.onDropdownTextSearch(dropdown.idPrefix, input.value, clear);
         });
         for (let index = 0; index < options.length; index += 1) {
           const option = options[index];
