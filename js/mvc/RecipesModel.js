@@ -310,7 +310,8 @@ export default class RecipesModel {
         RecipesModel.searchString(
           item.name.toLowerCase(),
           stringVal.toLowerCase()
-        )
+        ) &&
+        !item.isTag
       ) {
         searchResult.push(item);
       }
@@ -411,7 +412,7 @@ export default class RecipesModel {
     while (index) {
       index -= 1;
       const item = sourceArray[index];
-      if (item.name.toLowerCase() === stringVal.toLowerCase()) {
+      if (item.name.toLowerCase() === stringVal.toLowerCase() && !item.isTag) {
         return item;
       }
     }
@@ -421,18 +422,20 @@ export default class RecipesModel {
   static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
     let itemsIndex = itemsArray.length;
     const filteredItems = [];
+    // TODO : vérifier pertinence du check isTag
     while (itemsIndex) {
       itemsIndex -= 1;
       const itemRecipes = itemsArray[itemsIndex].recipes;
       for (let index = 0; index < itemRecipes.length; index += 1) {
+        const item = itemsArray[itemsIndex];
         const itemRecipeId = itemRecipes[index];
         let recipesIndex = recipesArray.length;
         let matchFound = false;
         while (recipesIndex) {
           recipesIndex -= 1;
-          if (itemRecipeId === recipesArray[recipesIndex].id) {
+          if (itemRecipeId === recipesArray[recipesIndex].id && !item.isTag) {
             matchFound = true;
-            filteredItems.push(itemsArray[itemsIndex]);
+            filteredItems.push(item);
             break;
           }
         }
@@ -449,7 +452,7 @@ export default class RecipesModel {
   /**
    * Process data to fill property array
    * Avoid duplicates
-   * Sort items by name alphavetically
+   * Sort items by name alphabetically
    * Set first letter to uppercase
    * @param {Number} id
    * @param {String} itemName
