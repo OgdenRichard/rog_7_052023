@@ -188,7 +188,7 @@ export default class RecipesView {
             this.onAddNewTag(dropdown.idPrefix, option.innerText);
             button.addEventListener('click', () => {
               option.style.display = 'block';
-              //this.onRemoveTag(dropdown.idPrefix, option.innerText);
+              this.onRemoveTag(dropdown.idPrefix, option.innerText);
               this.tagsContainer.removeChild(button);
             });
           });

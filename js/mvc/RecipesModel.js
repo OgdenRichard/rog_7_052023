@@ -156,83 +156,126 @@ export default class RecipesModel {
     this.clearFilters();
     switch (idPrefix) {
       case 'igr':
-        this.updateTagItemStatus(this.filteredIngredients, tagValue);
-        tag = this.updateTagItemStatus(this.ingredientsArray, tagValue);
+        this.updateTagItemStatus(this.filteredIngredients, tagValue, idPrefix);
+        tag = this.updateTagItemStatus(
+          this.ingredientsArray,
+          tagValue,
+          idPrefix
+        );
         this.activeTags.push(tag);
         break;
       case 'apl':
-        this.updateTagItemStatus(this.filteredAppliances, tagValue);
-        tag = this.updateTagItemStatus(this.appliancesArray, tagValue);
+        this.updateTagItemStatus(this.filteredAppliances, tagValue, idPrefix);
+        tag = this.updateTagItemStatus(
+          this.appliancesArray,
+          tagValue,
+          idPrefix
+        );
         this.activeTags.push(tag);
         break;
       case 'ust':
-        this.updateTagItemStatus(this.filteredUstensils, tagValue);
-        tag = this.updateTagItemStatus(this.ustensilsArray, tagValue);
+        this.updateTagItemStatus(this.filteredUstensils, tagValue, idPrefix);
+        tag = this.updateTagItemStatus(this.ustensilsArray, tagValue, idPrefix);
         this.activeTags.push(tag);
         break;
       default:
         break;
     }
-    this.mergeTagsRecipesIds(tag);
+    this.restrictByTagRecipesIds(tag);
+    console.log(this.tagsRecipesIds);
     this.onTagSearchResult(this.refreshDisplayFromTags());
   };
 
   removeTagFromSearch = (idPrefix, tagValue, clear = false) => {
-    this.tagsRecipesIds = [];
+    let tag = null;
     switch (idPrefix) {
       case 'igr':
-        this.removeTagFromArray(this.ingredientsTags, tagValue);
-        this.updateTagItemStatus(this.filteredIngredients, tagValue, false);
-        this.updateTagItemStatus(this.ingredientsArray, tagValue, false);
+        this.updateTagItemStatus(
+          this.filteredIngredients,
+          tagValue,
+          idPrefix,
+          false
+        );
+        tag = this.updateTagItemStatus(
+          this.ingredientsArray,
+          tagValue,
+          idPrefix,
+          false
+        );
         break;
       case 'apl':
-        this.removeTagFromArray(this.appliancesTags, tagValue);
-        this.updateTagItemStatus(this.filteredAppliances, tagValue, false);
-        this.updateTagItemStatus(this.appliancesArray, tagValue, false);
+        this.updateTagItemStatus(
+          this.filteredAppliances,
+          tagValue,
+          idPrefix,
+          false
+        );
+        tag = this.updateTagItemStatus(
+          this.activeTags,
+          tagValue,
+          idPrefix,
+          false
+        );
         break;
       case 'ust':
-        this.removeTagFromArray(this.ustensilsTags, tagValue);
-        this.updateTagItemStatus(this.filteredUstensils, tagValue, false);
-        this.updateTagItemStatus(this.ustensilsArray, tagValue, false);
+        this.updateTagItemStatus(
+          this.filteredUstensils,
+          tagValue,
+          idPrefix,
+          false
+        );
+        tag = this.updateTagItemStatus(
+          this.ustensilsArray,
+          tagValue,
+          idPrefix,
+          false
+        );
         break;
       default:
         break;
     }
+    if (tag) {
+      this.removeTagFromArray(this.activeTags, tagValue);
+      console.log(tag);
+      console.log(this.tagsRecipesIds);
+    }
     // TODO gérer le cas des tags vides
-    this.mergeTagsRecipesIds(this.ingredientsTags);
-    this.mergeTagsRecipesIds(this.appliancesTags);
-    this.mergeTagsRecipesIds(this.ustensilsTags);
-    console.log(`Removal result : ${this.tagsRecipesIds}`);
-    this.refreshDisplayFromTags();
+    /* this.restrictByTagRecipesIds(this.ingredientsTags);
+    this.restrictByTagRecipesIds(this.appliancesTags);
+    this.restrictByTagRecipesIds(this.ustensilsTags);
+    this.refreshDisplayFromTags(); */
   };
 
   removeTagFromArray = (tagArray, tagName) => {
+    let tag = null;
     let index = tagArray.length;
     while (index) {
       index -= 1;
       if (tagArray[index].name === tagName) {
-        tagArray.splice(index, 1);
+        tag = tagArray.splice(index, 1);
         break;
       }
     }
+    return tag;
   };
 
-  updateTagItemStatus = (itemsArray, tagName, add = true) => {
+  updateTagItemStatus = (itemsArray, tagName, type, add = true) => {
     let index = itemsArray.length;
-    let result = {};
+    const tag = {};
     while (index) {
       index -= 1;
       if (itemsArray[index].name === tagName) {
         itemsArray[index].isTag = add;
-        result.name = itemsArray[index].name;
-        result.recipes = itemsArray[index].recipes;
+        tag.name = itemsArray[index].name;
+        tag.type = type;
+        tag.recipes = itemsArray[index].recipes;
         break;
       }
     }
-    return result;
+    return tag;
   };
 
-  mergeTagsRecipesIds = (sourceArray) => {
+  restrictByTagRecipesIds = (sourceArray) => {
     let rcpIndex = this.tagsRecipesIds.length;
     const newRecipes = sourceArray.recipes;
     if (rcpIndex) {
