@@ -163,9 +163,10 @@ export default class RecipesView {
           input.value = '';
         });
         input.addEventListener('focus', () => {
+          const tags = document.getElementsByClassName('tag');
           input.value = '';
-          // TODO utiliser plutôt RecipeModel.mainSearchValue ?
-          clear = this.mainSearchInput.value.length < 3;
+          // TODO utiliser plutôt RecipeModel.mainSearchValue && activeTags.length?
+          clear = this.mainSearchInput.value.length < 3 && !tags.length;
           this.onDropdownTextSearch(dropdown.idPrefix, input.value, clear);
         });
         input.addEventListener('focusout', () => {

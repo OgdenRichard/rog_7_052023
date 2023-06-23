@@ -18,6 +18,7 @@ export default class RecipesModel {
     this.appliancesTags = [];
     this.ustensilsTags = [];
     this.tagsRecipesIds = [];
+    this.activeTags = [];
     this.init();
   }
 
@@ -157,24 +158,25 @@ export default class RecipesModel {
       case 'igr':
         this.updateTagItemStatus(this.filteredIngredients, tagValue);
         tag = this.updateTagItemStatus(this.ingredientsArray, tagValue);
-        this.ingredientsTags.push(tag);
-        this.mergeTagsRecipesIds(this.ingredientsTags);
+        this.activeTags.push(tag);
+        // this.mergeTagsRecipesIds(this.ingredientsTags);
         break;
       case 'apl':
         this.updateTagItemStatus(this.filteredAppliances, tagValue);
         tag = this.updateTagItemStatus(this.appliancesArray, tagValue);
-        this.appliancesTags.push(tag);
-        this.mergeTagsRecipesIds(this.appliancesTags);
+        this.activeTags.push(tag);
+        // this.mergeTagsRecipesIds(this.appliancesTags);
         break;
       case 'ust':
         this.updateTagItemStatus(this.filteredUstensils, tagValue);
         tag = this.updateTagItemStatus(this.ustensilsArray, tagValue);
-        this.ustensilsTags.push(tag);
-        this.mergeTagsRecipesIds(this.ustensilsTags);
+        this.activeTags.push(tag);
+        // this.mergeTagsRecipesIds(this.ustensilsTags);
         break;
       default:
         break;
     }
+    this.mergeTagsRecipesIds(this.activeTags);
     console.log(`Add tag result : ${this.tagsRecipesIds}`);
     this.onTagSearchResult(this.refreshDisplayFromTags());
   };
@@ -200,10 +202,10 @@ export default class RecipesModel {
       default:
         break;
     }
+    // TODO gérer le cas des tags vides
     this.mergeTagsRecipesIds(this.ingredientsTags);
     this.mergeTagsRecipesIds(this.appliancesTags);
     this.mergeTagsRecipesIds(this.ustensilsTags);
-    // TODO gérer le cas des tags 'vidés'
     console.log(`Removal result : ${this.tagsRecipesIds}`);
     this.refreshDisplayFromTags();
   };
@@ -281,11 +283,6 @@ export default class RecipesModel {
       tempRecipes,
       this.ustensilsArray
     );
-    /* console.log(this.filteredRecipes);
-    console.log(tempRecipes);
-    console.log(this.filteredIngredients);
-    console.log(this.filteredAppliances);
-    console.log(this.filteredUstensils); */
     return {
       recipes: tempRecipes,
       ingredients: this.filteredIngredients,
