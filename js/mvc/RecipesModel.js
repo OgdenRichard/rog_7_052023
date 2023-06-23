@@ -159,25 +159,21 @@ export default class RecipesModel {
         this.updateTagItemStatus(this.filteredIngredients, tagValue);
         tag = this.updateTagItemStatus(this.ingredientsArray, tagValue);
         this.activeTags.push(tag);
-        // this.mergeTagsRecipesIds(this.ingredientsTags);
         break;
       case 'apl':
         this.updateTagItemStatus(this.filteredAppliances, tagValue);
         tag = this.updateTagItemStatus(this.appliancesArray, tagValue);
         this.activeTags.push(tag);
-        // this.mergeTagsRecipesIds(this.appliancesTags);
         break;
       case 'ust':
         this.updateTagItemStatus(this.filteredUstensils, tagValue);
         tag = this.updateTagItemStatus(this.ustensilsArray, tagValue);
         this.activeTags.push(tag);
-        // this.mergeTagsRecipesIds(this.ustensilsTags);
         break;
       default:
         break;
     }
-    this.mergeTagsRecipesIds(this.activeTags);
-    console.log(`Add tag result : ${this.tagsRecipesIds}`);
+    this.mergeTagsRecipesIds(tag);
     this.onTagSearchResult(this.refreshDisplayFromTags());
   };
 
@@ -237,21 +233,30 @@ export default class RecipesModel {
   };
 
   mergeTagsRecipesIds = (sourceArray) => {
-    sourceArray.forEach((element) => {
-      let index = element.recipes.length;
-      while (index) {
-        index -= 1;
+    let rcpIndex = this.tagsRecipesIds.length;
+    const newRecipes = sourceArray.recipes;
+    if (rcpIndex) {
+      while (rcpIndex) {
+        rcpIndex -= 1;
         let found = false;
-        let idsIndex = this.tagsRecipesIds.length;
-        while (idsIndex && !found) {
-          idsIndex -= 1;
-          found = element.recipes[index] === this.tagsRecipesIds[idsIndex];
+        for (let index = 0; index < newRecipes.length; index += 1) {
+          const recipe = newRecipes[index];
+          found = recipe === this.tagsRecipesIds[rcpIndex];
+          if (found) {
+            break;
+          }
         }
         if (!found) {
-          this.tagsRecipesIds.push(element.recipes[index]);
+          this.tagsRecipesIds.splice(rcpIndex, 1);
         }
       }
-    });
+    } else {
+      let index = newRecipes.length;
+      while (index) {
+        index -= 1;
+        this.tagsRecipesIds.push(newRecipes[index]);
+      }
+    }
   };
 
   refreshDisplayFromTags = () => {
