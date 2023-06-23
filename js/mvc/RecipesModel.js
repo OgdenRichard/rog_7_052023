@@ -236,14 +236,27 @@ export default class RecipesModel {
     }
     if (tag) {
       this.removeTagFromArray(this.activeTags, tagValue);
-      console.log(tag);
+      /*  console.log(tag);
+      console.log(this.tagsRecipesIds); */
+      this.restaureTagRecipesIds();
       console.log(this.tagsRecipesIds);
+      this.onTagSearchResult(this.refreshDisplayFromTags());
     }
     // TODO gérer le cas des tags vides
     /* this.restrictByTagRecipesIds(this.ingredientsTags);
     this.restrictByTagRecipesIds(this.appliancesTags);
     this.restrictByTagRecipesIds(this.ustensilsTags);
     this.refreshDisplayFromTags(); */
+  };
+
+  restaureTagRecipesIds = () => {
+    // c'est pas gagné.
+    let tagsIndex = this.activeTags.length;
+    this.tagsRecipesIds = [];
+    while (tagsIndex) {
+      tagsIndex -= 1;
+      this.restrictByTagRecipesIds(this.activeTags[tagsIndex]);
+    }
   };
 
   removeTagFromArray = (tagArray, tagName) => {
