@@ -81,7 +81,7 @@ export default class RecipesView {
    * Refresh display from main search results
    * @param {Object} searchResult
    */
-  refreshFromMainSearch = (searchResult) => {
+  refreshFromCrossedSearch = (searchResult) => {
     this.nomatchingRecipeMsg.style.display = searchResult.recipes.length
       ? 'none'
       : 'block';

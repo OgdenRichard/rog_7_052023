@@ -23,19 +23,19 @@ export default class RecipesController {
    * @returns {void}
    */
   onMainSearchResult = (result) => {
-    this.view.refreshFromMainSearch(result);
-  };
-
-  onDropdownSearchResult = (resultArray, idPrefix) => {
-    this.view.refreshDropdownItems(resultArray, idPrefix);
+    this.view.refreshFromCrossedSearch(result);
   };
 
   onTagSearchResult = (result) => {
-    this.view.refreshFromMainSearch(result);
+    this.view.refreshFromCrossedSearch(result);
   };
 
   onDropdownTextSearch = (idPrefix, inputValue, clear = false) => {
     this.model.processDropdownSearch(idPrefix, inputValue, clear);
+  };
+
+  onDropdownSearchResult = (resultArray, idPrefix) => {
+    this.view.refreshDropdownItems(resultArray, idPrefix);
   };
 
   onAddNewTag = (idPrefix, tagValue, clear = false) => {

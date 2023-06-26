@@ -14,9 +14,6 @@ export default class RecipesModel {
     this.filteredIngredients = [];
     this.filteredAppliances = [];
     this.filteredUstensils = [];
-    this.ingredientsTags = [];
-    this.appliancesTags = [];
-    this.ustensilsTags = [];
     this.tagsRecipesIds = [];
     this.activeTags = [];
     this.init();
@@ -111,6 +108,9 @@ export default class RecipesModel {
     this.mainSearchValue = inputValue.toLowerCase();
     if (this.mainSearchValue.length) {
       const matchingRecipes = this.searchMatchingRecipes();
+      /* if (this.tagsRecipesIds.length) {
+        this.refreshDisplayFromTags();
+      } */
       this.onMainSearchResult(matchingRecipes);
     } else {
       this.filteredRecipes = [];
@@ -372,8 +372,8 @@ export default class RecipesModel {
   };
 
   searchMatchingRecipes = () => {
-    let index = this.recipesArray.length;
     // TODO : si tag(s), utiliser les filteredRecipes from tags!
+    let index = this.recipesArray.length;
     this.filteredRecipes = [];
     this.clearFilters();
     while (index) {
@@ -407,6 +407,7 @@ export default class RecipesModel {
       this.filteredRecipes,
       this.ustensilsArray
     );
+    // todo : supprimer return
     return {
       recipes: this.filteredRecipes,
       ingredients: this.filteredIngredients,
