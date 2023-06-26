@@ -151,7 +151,7 @@ export default class RecipesModel {
     }
   };
 
-  processTagSearch = (idPrefix, tagValue, clear = false) => {
+  processTagSearch = (idPrefix, tagValue) => {
     let tag = null;
     this.clearFilters();
     switch (idPrefix) {
@@ -185,7 +185,7 @@ export default class RecipesModel {
     this.onTagSearchResult(this.refreshDisplayFromTags());
   };
 
-  removeTagFromSearch = (idPrefix, tagValue, clear = false) => {
+  removeTagFromSearch = (idPrefix, tagValue) => {
     let tag = null;
     switch (idPrefix) {
       case 'igr':
@@ -210,7 +210,7 @@ export default class RecipesModel {
           false
         );
         tag = this.updateTagItemStatus(
-          this.activeTags,
+          this.appliancesArray,
           tagValue,
           idPrefix,
           false
