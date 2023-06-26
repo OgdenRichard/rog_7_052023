@@ -59,7 +59,8 @@ export default class RecipesView {
         (event.key === 'Delete' && t.selectionStart < 3) ||
         (event.key === 'Backspace' && t.selectionStart === 3)
       ) {
-        handler('', true);
+        // TODO : revoir conditions pour select multichars & backspace
+        handler('');
       }
     });
   };

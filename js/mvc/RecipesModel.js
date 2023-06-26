@@ -107,9 +107,9 @@ export default class RecipesModel {
    * @param {String} inputValue
    * @returns {void}
    */
-  processMainSearchValue = (inputValue, clear = false) => {
+  processMainSearchValue = (inputValue) => {
     this.mainSearchValue = inputValue.toLowerCase();
-    if (!clear) {
+    if (this.mainSearchValue.length) {
       const matchingRecipes = this.searchMatchingRecipes();
       this.onMainSearchResult(matchingRecipes);
     } else {
@@ -182,7 +182,6 @@ export default class RecipesModel {
         break;
     }
     this.restrictByTagRecipesIds(tag);
-    console.log(this.tagsRecipesIds);
     this.onTagSearchResult(this.refreshDisplayFromTags());
   };
 
@@ -236,21 +235,16 @@ export default class RecipesModel {
     }
     if (tag) {
       this.removeTagFromArray(this.activeTags, tagValue);
-      /*  console.log(tag);
-      console.log(this.tagsRecipesIds); */
       this.restaureTagRecipesIds();
-      // console.log(this.tagsRecipesIds);
-      this.onTagSearchResult(this.refreshDisplayFromTags());
+      if (this.activeTags.length) {
+        this.onTagSearchResult(this.refreshDisplayFromTags());
+      } else {
+        this.processMainSearchValue(this.mainSearchValue);
+      }
     }
-    // TODO gérer le cas des tags vides
-    /* this.restrictByTagRecipesIds(this.ingredientsTags);
-    this.restrictByTagRecipesIds(this.appliancesTags);
-    this.restrictByTagRecipesIds(this.ustensilsTags);
-    this.refreshDisplayFromTags(); */
   };
 
   restaureTagRecipesIds = () => {
-    // c'est pas gagné.
     let tagsIndex = this.activeTags.length;
     this.tagsRecipesIds = [];
     while (tagsIndex) {
@@ -260,6 +254,7 @@ export default class RecipesModel {
   };
 
   removeTagFromArray = (tagArray, tagName) => {
+    // TODO supprimer return?
     let tag = null;
     let index = tagArray.length;
     while (index) {
@@ -335,7 +330,6 @@ export default class RecipesModel {
         }
       }
     }
-    // this.filteredRecipes = tempRecipes;
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
       tempRecipes,
       this.appliancesArray
@@ -378,10 +372,6 @@ export default class RecipesModel {
   };
 
   searchMatchingRecipes = () => {
-    // TODO appliquer traitement similaire aux dropdowns
-    // si filteredRecipes, filtrer à partir des filteredRecipes
-    // sinon utiliser les recipes de base
-    // conditions de reset et actualisation à caler dans eventListener
     let index = this.recipesArray.length;
     // TODO : si tag(s), utiliser les filteredRecipes from tags!
     this.filteredRecipes = [];
