@@ -254,7 +254,7 @@ export default class RecipesModel {
   };
 
   removeTagFromArray = (tagArray, tagName) => {
-    // TODO supprimer return?
+    // TODO supprimer return
     let tag = null;
     let index = tagArray.length;
     while (index) {
