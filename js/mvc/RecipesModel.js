@@ -141,10 +141,7 @@ export default class RecipesModel {
         )
       ) {
         this.filteredRecipes.push(recipes[index]);
-        this.trimIngredientsArray(
-          this.filteredIngredients,
-          recipes[index].ingredients
-        );
+        this.trimIngredientsArray(recipes[index].ingredients);
       }
     }
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
@@ -366,10 +363,7 @@ export default class RecipesModel {
         idsIndex -= 1;
         if (recipesArray[index].id === this.tagsRecipesIds[idsIndex]) {
           this.tagRecipes.push(recipesArray[index]);
-          this.trimIngredientsArray(
-            this.filteredIngredients,
-            recipesArray[index].ingredients
-          );
+          this.trimIngredientsArray(recipesArray[index].ingredients);
         }
       }
     }
@@ -441,17 +435,17 @@ export default class RecipesModel {
     return matchFound;
   };
 
-  trimIngredientsArray = (mainArray, newIngredients) => {
+  trimIngredientsArray = (newIngredients) => {
     let index = newIngredients.length;
     while (index) {
       index -= 1;
       let matchFound = false;
-      let mainIndex = mainArray.length;
+      let mainIndex = this.filteredIngredients.length;
       while (mainIndex) {
         mainIndex -= 1;
         matchFound =
           newIngredients[index].ingredient.toLowerCase() ===
-          mainArray[mainIndex].name.toLowerCase();
+          this.filteredIngredients[mainIndex].name.toLowerCase();
         if (matchFound) {
           break;
         }
@@ -462,7 +456,7 @@ export default class RecipesModel {
           newIngredients[index].ingredient
         );
         if (ingredient) {
-          mainArray.push(ingredient);
+          this.filteredIngredients.push(ingredient);
         }
       }
     }
