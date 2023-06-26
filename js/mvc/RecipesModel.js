@@ -239,7 +239,7 @@ export default class RecipesModel {
       /*  console.log(tag);
       console.log(this.tagsRecipesIds); */
       this.restaureTagRecipesIds();
-      console.log(this.tagsRecipesIds);
+      // console.log(this.tagsRecipesIds);
       this.onTagSearchResult(this.refreshDisplayFromTags());
     }
     // TODO gérer le cas des tags vides
