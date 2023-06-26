@@ -107,19 +107,9 @@ export default class RecipesModel {
    */
   processMainSearchValue = (inputValue) => {
     this.mainSearchValue = inputValue.toLowerCase();
-    /* if (this.mainSearchValue.length) { */
+    this.refreshTagsRecipes();
     const matchingRecipes = this.searchMatchingRecipes();
     this.onMainSearchResult(matchingRecipes);
-    /* } else {
-      this.filteredRecipes = [];
-      this.clearFilters();
-      this.onMainSearchResult({
-        recipes: this.tagRecipes.length ? this.tagRecipes : this.recipesArray,
-        ingredients: this.ingredientsArray,
-        appliances: this.appliancesArray,
-        ustensils: this.ustensilsArray,
-      });
-    } */
   };
 
   processDropdownSearch = (idPrefix, inputValue, clear = false) => {
@@ -343,6 +333,26 @@ export default class RecipesModel {
       appliances: this.filteredAppliances,
       ustensils: this.filteredUstensils,
     };
+  };
+
+  refreshTagsRecipes = () => {
+    if (this.activeTags.length) {
+      this.tagRecipes = [];
+      let tagsIndex = this.tagsRecipesIds.length;
+      while (tagsIndex) {
+        tagsIndex -= 1;
+        let found = false;
+        let rcpIndex = this.recipesArray.length;
+        while (rcpIndex && !found) {
+          rcpIndex -= 1;
+          found =
+            this.recipesArray[rcpIndex].id === this.tagsRecipesIds[tagsIndex];
+          if (found) {
+            this.tagRecipes.push(this.recipesArray[rcpIndex]);
+          }
+        }
+      }
+    }
   };
 
   clearFilters = () => {
