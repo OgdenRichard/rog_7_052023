@@ -7,12 +7,13 @@ export default class RecipesModel {
     this.recipes = recipes;
     this.mainSearchValue = '';
     this.recipesArray = [];
-    this.ingredientsArray = [];
-    this.appliancesArray = [];
-    this.ustensilsArray = [];
     this.filteredRecipes = [];
+    this.tagRecipes = [];
+    this.ingredientsArray = [];
     this.filteredIngredients = [];
+    this.appliancesArray = [];
     this.filteredAppliances = [];
+    this.ustensilsArray = [];
     this.filteredUstensils = [];
     this.tagsRecipesIds = [];
     this.activeTags = [];
@@ -106,22 +107,19 @@ export default class RecipesModel {
    */
   processMainSearchValue = (inputValue) => {
     this.mainSearchValue = inputValue.toLowerCase();
-    if (this.mainSearchValue.length) {
-      const matchingRecipes = this.searchMatchingRecipes();
-      /* if (this.tagsRecipesIds.length) {
-        this.refreshDisplayFromTags();
-      } */
-      this.onMainSearchResult(matchingRecipes);
-    } else {
+    /* if (this.mainSearchValue.length) { */
+    const matchingRecipes = this.searchMatchingRecipes();
+    this.onMainSearchResult(matchingRecipes);
+    /* } else {
       this.filteredRecipes = [];
       this.clearFilters();
       this.onMainSearchResult({
-        recipes: this.recipesArray,
+        recipes: this.tagRecipes.length ? this.tagRecipes : this.recipesArray,
         ingredients: this.ingredientsArray,
         appliances: this.appliancesArray,
         ustensils: this.ustensilsArray,
       });
-    }
+    } */
   };
 
   processDropdownSearch = (idPrefix, inputValue, clear = false) => {
@@ -239,6 +237,7 @@ export default class RecipesModel {
       if (this.activeTags.length) {
         this.onTagSearchResult(this.refreshDisplayFromTags());
       } else {
+        this.tagRecipes = [];
         this.processMainSearchValue(this.mainSearchValue);
       }
     }
@@ -314,7 +313,7 @@ export default class RecipesModel {
     const recipesArray = this.filteredRecipes.length
       ? this.filteredRecipes
       : this.recipesArray;
-    const tempRecipes = [];
+    this.tagRecipes = [];
     let index = recipesArray.length;
     while (index) {
       index -= 1;
@@ -322,7 +321,7 @@ export default class RecipesModel {
       while (idsIndex) {
         idsIndex -= 1;
         if (recipesArray[index].id === this.tagsRecipesIds[idsIndex]) {
-          tempRecipes.push(recipesArray[index]);
+          this.tagRecipes.push(recipesArray[index]);
           this.trimIngredientsArray(
             this.filteredIngredients,
             recipesArray[index].ingredients
@@ -331,15 +330,15 @@ export default class RecipesModel {
       }
     }
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
-      tempRecipes,
+      this.tagRecipes,
       this.appliancesArray
     );
     this.filteredUstensils = RecipesModel.setArrayFromRecipesIds(
-      tempRecipes,
+      this.tagRecipes,
       this.ustensilsArray
     );
     return {
-      recipes: tempRecipes,
+      recipes: this.tagRecipes,
       ingredients: this.filteredIngredients,
       appliances: this.filteredAppliances,
       ustensils: this.filteredUstensils,
@@ -372,30 +371,32 @@ export default class RecipesModel {
   };
 
   searchMatchingRecipes = () => {
-    // TODO : si tag(s), utiliser les filteredRecipes from tags!
-    let index = this.recipesArray.length;
+    const recipes = this.tagRecipes.length
+      ? this.tagRecipes
+      : this.recipesArray;
+    let index = recipes.length;
     this.filteredRecipes = [];
     this.clearFilters();
     while (index) {
       index -= 1;
       if (
         RecipesModel.searchString(
-          this.recipesArray[index].name.toLowerCase(),
+          recipes[index].name.toLowerCase(),
           this.mainSearchValue
         ) ||
         RecipesModel.searchString(
-          this.recipesArray[index].description.toLowerCase(),
+          recipes[index].description.toLowerCase(),
           this.mainSearchValue
         ) ||
         this.browseRecipeIngredients(
-          this.recipesArray[index].ingredients,
+          recipes[index].ingredients,
           this.mainSearchValue
         )
       ) {
-        this.filteredRecipes.push(this.recipes[index]);
+        this.filteredRecipes.push(recipes[index]);
         this.trimIngredientsArray(
           this.filteredIngredients,
-          this.recipesArray[index].ingredients
+          recipes[index].ingredients
         );
       }
     }
@@ -407,7 +408,6 @@ export default class RecipesModel {
       this.filteredRecipes,
       this.ustensilsArray
     );
-    // todo : supprimer return
     return {
       recipes: this.filteredRecipes,
       ingredients: this.filteredIngredients,
