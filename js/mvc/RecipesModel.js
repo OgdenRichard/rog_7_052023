@@ -154,6 +154,74 @@ export default class RecipesModel {
     );
   };
 
+  browseRecipeIngredients = (ingredients) => {
+    let index = ingredients.length;
+    let matchFound = false;
+    while (index && !matchFound) {
+      index -= 1;
+      matchFound = RecipesModel.searchString(
+        ingredients[index].ingredient.toLowerCase(),
+        this.mainSearchValue
+      );
+    }
+    return matchFound;
+  };
+
+  trimIngredientsArray = (newIngredients) => {
+    let index = newIngredients.length;
+    while (index) {
+      index -= 1;
+      let matchFound = false;
+      let mainIndex = this.filteredIngredients.length;
+      while (mainIndex) {
+        mainIndex -= 1;
+        matchFound =
+          newIngredients[index].ingredient.toLowerCase() ===
+          this.filteredIngredients[mainIndex].name.toLowerCase();
+        if (matchFound) {
+          break;
+        }
+      }
+      if (!matchFound) {
+        const ingredient = this.getItemDetails(
+          this.ingredientsArray,
+          newIngredients[index].ingredient
+        );
+        if (ingredient) {
+          this.filteredIngredients.push(ingredient);
+        }
+      }
+    }
+  };
+
+  static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
+    let itemsIndex = itemsArray.length;
+    const filteredItems = [];
+    // TODO : vérifier pertinence du check isTag
+    while (itemsIndex) {
+      itemsIndex -= 1;
+      const itemRecipes = itemsArray[itemsIndex].recipes;
+      for (let index = 0; index < itemRecipes.length; index += 1) {
+        const item = itemsArray[itemsIndex];
+        const itemRecipeId = itemRecipes[index];
+        let recipesIndex = recipesArray.length;
+        let matchFound = false;
+        while (recipesIndex) {
+          recipesIndex -= 1;
+          if (itemRecipeId === recipesArray[recipesIndex].id && !item.isTag) {
+            matchFound = true;
+            filteredItems.push(item);
+            break;
+          }
+        }
+        if (matchFound) {
+          break;
+        }
+      }
+    }
+    return filteredItems;
+  };
+
   processDropdownSearch = (idPrefix, inputValue, clear = false) => {
     let sourceArray = [];
     switch (idPrefix) {
@@ -422,46 +490,6 @@ export default class RecipesModel {
     return searchResult;
   };
 
-  browseRecipeIngredients = (ingredients) => {
-    let index = ingredients.length;
-    let matchFound = false;
-    while (index && !matchFound) {
-      index -= 1;
-      matchFound = RecipesModel.searchString(
-        ingredients[index].ingredient.toLowerCase(),
-        this.mainSearchValue
-      );
-    }
-    return matchFound;
-  };
-
-  trimIngredientsArray = (newIngredients) => {
-    let index = newIngredients.length;
-    while (index) {
-      index -= 1;
-      let matchFound = false;
-      let mainIndex = this.filteredIngredients.length;
-      while (mainIndex) {
-        mainIndex -= 1;
-        matchFound =
-          newIngredients[index].ingredient.toLowerCase() ===
-          this.filteredIngredients[mainIndex].name.toLowerCase();
-        if (matchFound) {
-          break;
-        }
-      }
-      if (!matchFound) {
-        const ingredient = this.getItemDetails(
-          this.ingredientsArray,
-          newIngredients[index].ingredient
-        );
-        if (ingredient) {
-          this.filteredIngredients.push(ingredient);
-        }
-      }
-    }
-  };
-
   getItemDetails = (sourceArray, stringVal) => {
     let index = sourceArray.length;
     while (index) {
@@ -472,34 +500,6 @@ export default class RecipesModel {
       }
     }
     return false;
-  };
-
-  static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
-    let itemsIndex = itemsArray.length;
-    const filteredItems = [];
-    // TODO : vérifier pertinence du check isTag
-    while (itemsIndex) {
-      itemsIndex -= 1;
-      const itemRecipes = itemsArray[itemsIndex].recipes;
-      for (let index = 0; index < itemRecipes.length; index += 1) {
-        const item = itemsArray[itemsIndex];
-        const itemRecipeId = itemRecipes[index];
-        let recipesIndex = recipesArray.length;
-        let matchFound = false;
-        while (recipesIndex) {
-          recipesIndex -= 1;
-          if (itemRecipeId === recipesArray[recipesIndex].id && !item.isTag) {
-            matchFound = true;
-            filteredItems.push(item);
-            break;
-          }
-        }
-        if (matchFound) {
-          break;
-        }
-      }
-    }
-    return filteredItems;
   };
 
   static searchString = (stringVal, needle) => stringVal.includes(needle);
