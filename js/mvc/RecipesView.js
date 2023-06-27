@@ -137,10 +137,7 @@ export default class RecipesView {
       const domElement = list[listIndex];
       while (index) {
         index -= 1;
-        if (
-          domElement.innerText === elementsArray[index].name &&
-          !elementsArray[index].isTag
-        ) {
+        if (domElement.innerText === elementsArray[index].name) {
           display = true;
           elementsArray.splice(index, 1);
           break;

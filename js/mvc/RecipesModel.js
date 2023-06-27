@@ -197,7 +197,6 @@ export default class RecipesModel {
   static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
     let itemsIndex = itemsArray.length;
     const filteredItems = [];
-    // TODO : vérifier pertinence du check isTag
     while (itemsIndex) {
       itemsIndex -= 1;
       const itemRecipes = itemsArray[itemsIndex].recipes;
@@ -208,7 +207,7 @@ export default class RecipesModel {
         let matchFound = false;
         while (recipesIndex) {
           recipesIndex -= 1;
-          if (itemRecipeId === recipesArray[recipesIndex].id && !item.isTag) {
+          if (itemRecipeId === recipesArray[recipesIndex].id) {
             matchFound = true;
             filteredItems.push(item);
             break;
@@ -254,93 +253,67 @@ export default class RecipesModel {
     this.clearFilters();
     switch (idPrefix) {
       case 'igr':
-        this.updateTagItemStatus(this.filteredIngredients, tagValue, idPrefix);
-        tag = this.updateTagItemStatus(
-          this.ingredientsArray,
-          tagValue,
-          idPrefix
-        );
-        this.activeTags.push(tag);
+        if (this.filteredIngredients.length) {
+          this.toggleTag(tagValue, this.filteredIngredients);
+        }
+        tag = this.toggleTag(tagValue, this.ingredientsArray);
         break;
       case 'apl':
-        this.updateTagItemStatus(this.filteredAppliances, tagValue, idPrefix);
-        tag = this.updateTagItemStatus(
-          this.appliancesArray,
-          tagValue,
-          idPrefix
-        );
-        this.activeTags.push(tag);
+        if (this.filteredAppliances.length) {
+          this.toggleTag(tagValue, this.filteredAppliances);
+        }
+        tag = this.toggleTag(tagValue, this.appliancesArray);
         break;
       case 'ust':
-        this.updateTagItemStatus(this.filteredUstensils, tagValue, idPrefix);
-        tag = this.updateTagItemStatus(this.ustensilsArray, tagValue, idPrefix);
-        this.activeTags.push(tag);
-        break;
-      default:
-        break;
-    }
-    this.restrictByTagRecipesIds(tag);
-    this.refreshDisplayFromTags();
-    this.onTagSearchResult({
-      recipes: this.tagRecipes,
-      ingredients: this.filteredIngredients,
-      appliances: this.filteredAppliances,
-      ustensils: this.filteredUstensils,
-    });
-  };
-
-  removeTagFromSearch = (idPrefix, tagValue) => {
-    let tag = null;
-    switch (idPrefix) {
-      case 'igr':
-        this.updateTagItemStatus(
-          this.filteredIngredients,
-          tagValue,
-          idPrefix,
-          false
-        );
-        tag = this.updateTagItemStatus(
-          this.ingredientsArray,
-          tagValue,
-          idPrefix,
-          false
-        );
-        break;
-      case 'apl':
-        this.updateTagItemStatus(
-          this.filteredAppliances,
-          tagValue,
-          idPrefix,
-          false
-        );
-        tag = this.updateTagItemStatus(
-          this.appliancesArray,
-          tagValue,
-          idPrefix,
-          false
-        );
-        break;
-      case 'ust':
-        this.updateTagItemStatus(
-          this.filteredUstensils,
-          tagValue,
-          idPrefix,
-          false
-        );
-        tag = this.updateTagItemStatus(
-          this.ustensilsArray,
-          tagValue,
-          idPrefix,
-          false
-        );
+        if (this.filteredUstensils.length) {
+          this.toggleTag(tagValue, this.filteredUstensils);
+        }
+        tag = this.toggleTag(tagValue, this.ustensilsArray);
         break;
       default:
         break;
     }
     if (tag) {
-      this.dismissTag(tagValue);
-      this.restaureTagRecipesIds();
+      this.activeTags.push(...tag);
+      this.restrictByTagRecipesIds(...tag);
+      this.refreshDisplayFromTags();
+      this.onTagSearchResult({
+        recipes: this.tagRecipes,
+        ingredients: this.filteredIngredients,
+        appliances: this.filteredAppliances,
+        ustensils: this.filteredUstensils,
+      });
+    }
+  };
+
+  removeTagFromSearch = (idPrefix, tagValue) => {
+    let tag = null;
+    tag = this.toggleTag(tagValue, this.activeTags);
+    if (tag) {
+      switch (idPrefix) {
+        case 'igr':
+          if (this.filteredIngredients.length) {
+            this.filteredIngredients.push(...tag);
+          }
+          this.ingredientsArray.push(...tag);
+          break;
+        case 'apl':
+          if (this.filteredAppliances.length) {
+            this.filteredAppliances.push(...tag);
+          }
+          this.appliancesArray.push(...tag);
+          break;
+        case 'ust':
+          if (this.filteredUstensils.length) {
+            this.filteredUstensils.push(...tag);
+          }
+          this.ustensilsArray.push(...tag);
+          break;
+        default:
+          break;
+      }
       if (this.activeTags.length) {
+        this.restaureTagRecipesIds();
         this.refreshDisplayFromTags();
         this.onTagSearchResult({
           recipes: this.tagRecipes,
@@ -349,10 +322,24 @@ export default class RecipesModel {
           ustensils: this.filteredUstensils,
         });
       } else {
+        this.tagsRecipesIds = [];
         this.tagRecipes = [];
         this.processMainSearchValue(this.mainSearchValue);
       }
     }
+  };
+
+  toggleTag = (tagName, sourceArray) => {
+    let tag = null;
+    let index = sourceArray.length;
+    while (index) {
+      index -= 1;
+      if (sourceArray[index].name === tagName) {
+        tag = sourceArray.splice(index, 1);
+        break;
+      }
+    }
+    return tag;
   };
 
   restaureTagRecipesIds = () => {
@@ -362,33 +349,6 @@ export default class RecipesModel {
       tagsIndex -= 1;
       this.restrictByTagRecipesIds(this.activeTags[tagsIndex]);
     }
-  };
-
-  dismissTag = (tagName) => {
-    let index = this.activeTags.length;
-    while (index) {
-      index -= 1;
-      if (this.activeTags[index].name === tagName) {
-        this.activeTags.splice(index, 1);
-        break;
-      }
-    }
-  };
-
-  updateTagItemStatus = (itemsArray, tagName, type, add = true) => {
-    let index = itemsArray.length;
-    const tag = {};
-    while (index) {
-      index -= 1;
-      if (itemsArray[index].name === tagName) {
-        itemsArray[index].isTag = add;
-        tag.name = itemsArray[index].name;
-        tag.type = type;
-        tag.recipes = itemsArray[index].recipes;
-        break;
-      }
-    }
-    return tag;
   };
 
   restrictByTagRecipesIds = (sourceArray) => {
@@ -481,8 +441,7 @@ export default class RecipesModel {
         RecipesModel.searchString(
           item.name.toLowerCase(),
           stringVal.toLowerCase()
-        ) &&
-        !item.isTag
+        )
       ) {
         searchResult.push(item);
       }
@@ -495,7 +454,7 @@ export default class RecipesModel {
     while (index) {
       index -= 1;
       const item = sourceArray[index];
-      if (item.name.toLowerCase() === stringVal.toLowerCase() && !item.isTag) {
+      if (item.name.toLowerCase() === stringVal.toLowerCase()) {
         return item;
       }
     }
@@ -524,7 +483,6 @@ export default class RecipesModel {
         id: itemArray.length,
         name: renamedItem,
         recipes: [id],
-        isTag: false,
       });
     } else {
       itemObject.recipes.push(id);
