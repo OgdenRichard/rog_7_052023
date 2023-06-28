@@ -314,9 +314,10 @@ export default class RecipesModel {
       }
       if (this.activeTags.length) {
         this.restaureTagRecipesIds();
-        this.refreshDisplayFromTags();
+        this.refreshTagsRecipes();
+        this.searchMatchingRecipes();
         this.onTagSearchResult({
-          recipes: this.tagRecipes,
+          recipes: this.filteredRecipes,
           ingredients: this.filteredIngredients,
           appliances: this.filteredAppliances,
           ustensils: this.filteredUstensils,
