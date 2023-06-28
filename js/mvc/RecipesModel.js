@@ -45,23 +45,6 @@ export default class RecipesModel {
   };
 
   /**
-   * Send back processed data to RecipesModel
-   * @callback callback : Set and fired in RecipesController
-   * @returns {void}
-   */
-  bindMainSearchData = (callback) => {
-    this.onMainSearchResult = callback;
-  };
-
-  bindDropdownSearch = (callback) => {
-    this.onDropdownSearchResult = callback;
-  };
-
-  bindTagSearch = (callback) => {
-    this.onTagSearchResult = callback;
-  };
-
-  /**
    * Populate ingredientsArray property with formatted data
    * @param {Number} id
    * @param {Array} ingredients
@@ -97,6 +80,23 @@ export default class RecipesModel {
     ustensils.forEach((ustensil) => {
       RecipesModel.populateItemsArray(id, ustensil, this.ustensilsArray);
     });
+  };
+
+  /**
+   * Send back processed data to RecipesModel
+   * @callback callback : Set and fired in RecipesController
+   * @returns {void}
+   */
+  bindMainSearchData = (callback) => {
+    this.onMainSearchResult = callback;
+  };
+
+  bindDropdownSearch = (callback) => {
+    this.onDropdownSearchResult = callback;
+  };
+
+  bindTagSearch = (callback) => {
+    this.onTagSearchResult = callback;
   };
 
   /**
@@ -182,8 +182,7 @@ export default class RecipesModel {
         }
       }
       if (!matchFound) {
-        const ingredient = this.getItemDetails(
-          this.ingredientsArray,
+        const ingredient = this.getIngredientData(
           newIngredients[index].ingredient
         );
         if (ingredient) {
@@ -191,6 +190,18 @@ export default class RecipesModel {
         }
       }
     }
+  };
+
+  getIngredientData = (stringVal) => {
+    let index = this.ingredientsArray.length;
+    while (index) {
+      index -= 1;
+      const item = this.ingredientsArray[index];
+      if (item.name.toLowerCase() === stringVal.toLowerCase()) {
+        return item;
+      }
+    }
+    return false;
   };
 
   static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
@@ -245,6 +256,24 @@ export default class RecipesModel {
     } else if (sourceArray.length) {
       this.onDropdownSearchResult(sourceArray, idPrefix);
     }
+  };
+
+  static searchMatchingDropdownItems = (sourceArray, stringVal) => {
+    const searchResult = [];
+    let index = sourceArray.length;
+    while (index) {
+      index -= 1;
+      const item = sourceArray[index];
+      if (
+        RecipesModel.searchString(
+          item.name.toLowerCase(),
+          stringVal.toLowerCase()
+        )
+      ) {
+        searchResult.push(item);
+      }
+    }
+    return searchResult;
   };
 
   processTagSearch = (idPrefix, tagValue) => {
@@ -424,36 +453,6 @@ export default class RecipesModel {
     this.filteredIngredients = [];
     this.filteredAppliances = [];
     this.filteredUstensils = [];
-  };
-
-  static searchMatchingDropdownItems = (sourceArray, stringVal) => {
-    const searchResult = [];
-    let index = sourceArray.length;
-    while (index) {
-      index -= 1;
-      const item = sourceArray[index];
-      if (
-        RecipesModel.searchString(
-          item.name.toLowerCase(),
-          stringVal.toLowerCase()
-        )
-      ) {
-        searchResult.push(item);
-      }
-    }
-    return searchResult;
-  };
-
-  getItemDetails = (sourceArray, stringVal) => {
-    let index = sourceArray.length;
-    while (index) {
-      index -= 1;
-      const item = sourceArray[index];
-      if (item.name.toLowerCase() === stringVal.toLowerCase()) {
-        return item;
-      }
-    }
-    return false;
   };
 
   static searchString = (stringVal, needle) => stringVal.includes(needle);
