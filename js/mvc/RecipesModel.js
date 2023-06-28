@@ -8,15 +8,14 @@ export default class RecipesModel {
     this.mainSearchValue = '';
     this.recipesArray = [];
     this.filteredRecipes = [];
-    this.tagRecipes = [];
     this.ingredientsArray = [];
     this.filteredIngredients = [];
     this.appliancesArray = [];
     this.filteredAppliances = [];
     this.ustensilsArray = [];
     this.filteredUstensils = [];
-    this.tagsRecipesIds = [];
     this.activeTags = [];
+    this.tagsRecipes = [];
     this.init();
   }
 
@@ -118,8 +117,8 @@ export default class RecipesModel {
   };
 
   searchMatchingRecipes = () => {
-    const recipes = this.tagRecipes.length
-      ? this.tagRecipes
+    const recipes = this.tagsRecipes.length
+      ? this.tagsRecipes
       : this.recipesArray;
     let index = recipes.length;
     this.filteredRecipes = [];
@@ -275,10 +274,10 @@ export default class RecipesModel {
     }
     if (tag) {
       this.activeTags.push(...tag);
-      this.restrictByTagRecipesIds(...tag);
+      this.restrictByTagsRecipesIds(...tag);
       this.refreshDisplayFromTags();
       this.onTagSearchResult({
-        recipes: this.tagRecipes,
+        recipes: this.tagsRecipes,
         ingredients: this.filteredIngredients,
         appliances: this.filteredAppliances,
         ustensils: this.filteredUstensils,
@@ -313,7 +312,6 @@ export default class RecipesModel {
           break;
       }
       if (this.activeTags.length) {
-        this.restaureTagRecipesIds();
         this.refreshTagsRecipes();
         this.searchMatchingRecipes();
         this.onTagSearchResult({
@@ -323,8 +321,7 @@ export default class RecipesModel {
           ustensils: this.filteredUstensils,
         });
       } else {
-        this.tagsRecipesIds = [];
-        this.tagRecipes = [];
+        this.tagsRecipes = [];
         this.processMainSearchValue(this.mainSearchValue);
       }
     }
@@ -343,17 +340,8 @@ export default class RecipesModel {
     return tag;
   };
 
-  restaureTagRecipesIds = () => {
-    let tagsIndex = this.activeTags.length;
-    this.tagsRecipesIds = [];
-    while (tagsIndex) {
-      tagsIndex -= 1;
-      this.restrictByTagRecipesIds(this.activeTags[tagsIndex]);
-    }
-  };
-
-  restrictByTagRecipesIds = (sourceArray) => {
-    let rcpIndex = this.tagsRecipesIds.length;
+  restrictByTagsRecipesIds = (sourceArray) => {
+    let rcpIndex = this.tagsRecipes.length;
     const newRecipes = sourceArray.recipes;
     if (rcpIndex) {
       while (rcpIndex) {
@@ -361,21 +349,17 @@ export default class RecipesModel {
         let found = false;
         for (let index = 0; index < newRecipes.length; index += 1) {
           const recipe = newRecipes[index];
-          found = recipe === this.tagsRecipesIds[rcpIndex];
+          found = recipe === this.tagsRecipes[rcpIndex].id;
           if (found) {
             break;
           }
         }
         if (!found) {
-          this.tagsRecipesIds.splice(rcpIndex, 1);
+          this.tagsRecipes.splice(rcpIndex, 1);
         }
       }
     } else {
-      let index = newRecipes.length;
-      while (index) {
-        index -= 1;
-        this.tagsRecipesIds.push(newRecipes[index]);
-      }
+      this.addtagsRecipesFromId(newRecipes);
     }
   };
 
@@ -383,44 +367,54 @@ export default class RecipesModel {
     const recipesArray = this.filteredRecipes.length
       ? this.filteredRecipes
       : this.recipesArray;
-    this.tagRecipes = [];
-    let index = recipesArray.length;
-    while (index) {
-      index -= 1;
-      let idsIndex = this.tagsRecipesIds.length;
-      while (idsIndex) {
-        idsIndex -= 1;
-        if (recipesArray[index].id === this.tagsRecipesIds[idsIndex]) {
-          this.tagRecipes.push(recipesArray[index]);
-          this.trimIngredientsArray(recipesArray[index].ingredients);
+    let tagsIndex = this.tagsRecipes.length;
+    while (tagsIndex) {
+      tagsIndex -= 1;
+      let found = false;
+      let rcpIndex = recipesArray.length;
+      while (rcpIndex && !found) {
+        rcpIndex -= 1;
+        found = recipesArray[rcpIndex].id === this.tagsRecipes[tagsIndex].id;
+        if (found) {
+          this.trimIngredientsArray(recipesArray[rcpIndex].ingredients);
         }
+      }
+      if (!found) {
+        this.tagsRecipes.splice(tagsIndex, 1);
       }
     }
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
-      this.tagRecipes,
+      this.tagsRecipes,
       this.appliancesArray
     );
     this.filteredUstensils = RecipesModel.setArrayFromRecipesIds(
-      this.tagRecipes,
+      this.tagsRecipes,
       this.ustensilsArray
     );
   };
 
   refreshTagsRecipes = () => {
     if (this.activeTags.length) {
-      this.tagRecipes = [];
-      let tagsIndex = this.tagsRecipesIds.length;
+      let tagsIndex = this.activeTags.length;
+      this.tagsRecipes = [];
       while (tagsIndex) {
         tagsIndex -= 1;
-        let found = false;
-        let rcpIndex = this.recipesArray.length;
-        while (rcpIndex && !found) {
-          rcpIndex -= 1;
-          found =
-            this.recipesArray[rcpIndex].id === this.tagsRecipesIds[tagsIndex];
-          if (found) {
-            this.tagRecipes.push(this.recipesArray[rcpIndex]);
-          }
+        this.restrictByTagsRecipesIds(this.activeTags[tagsIndex]);
+      }
+    }
+  };
+
+  addtagsRecipesFromId = (sourceArray) => {
+    let tagsIndex = sourceArray.length;
+    while (tagsIndex) {
+      tagsIndex -= 1;
+      let found = false;
+      let rcpIndex = this.recipesArray.length;
+      while (rcpIndex && !found) {
+        rcpIndex -= 1;
+        found = this.recipesArray[rcpIndex].id === sourceArray[tagsIndex];
+        if (found) {
+          this.tagsRecipes.push(this.recipesArray[rcpIndex]);
         }
       }
     }
