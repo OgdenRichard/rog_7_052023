@@ -19,31 +19,60 @@ export default class RecipesController {
 
   /**
    * @callback for RecipesModel.bindProcessedData
-   * @param {Object} processRecipesUstensils
+   * @param {Object} result
    * @returns {void}
    */
   onMainSearchResult = (result) => {
     this.view.refreshFromCrossedSearch(result);
   };
 
+  /**
+   * @callback for RecipesModel.bindTagSearch
+   * @param {Object} result
+   * @returns {void}
+   */
   onTagSearchResult = (result) => {
     this.view.refreshFromCrossedSearch(result);
   };
 
-  onDropdownTextSearch = (idPrefix, inputValue, clear = false) => {
-    this.model.processDropdownSearch(idPrefix, inputValue, clear);
-  };
-
+  /**
+   * @callback for RecipesModel.bindDropdownSearch
+   * @param {Object} result
+   * @returns {void}
+   */
   onDropdownSearchResult = (resultArray, idPrefix) => {
     this.view.refreshDropdownItems(resultArray, idPrefix);
   };
 
-  onAddNewTag = (idPrefix, tagValue, clear = false) => {
-    this.model.processTagSearch(idPrefix, tagValue, clear);
+  /**
+   * @callback for RecipesView.bindDropdownTextSearch
+   * @param {string} idPrefix
+   * @param {string} inputValue
+   * @param {boolean} clear
+   * @returns {void}
+   */
+  onDropdownTextSearch = (idPrefix, inputValue, clear = false) => {
+    this.model.processDropdownSearch(idPrefix, inputValue, clear);
   };
 
-  onRemoveTag = (idPrefix, tagValue, clear = false) => {
-    this.model.removeTagFromSearch(idPrefix, tagValue, clear);
+  /**
+   * @callback for RecipesView.bindAddNewTag
+   * @param {*} idPrefix
+   * @param {*} tagValue
+   * @returns {void}
+   */
+  onAddNewTag = (idPrefix, tagValue) => {
+    this.model.processTagSearch(idPrefix, tagValue);
+  };
+
+  /**
+   * @callback for RecipesView.bindRemoveTag
+   * @param {*} idPrefix
+   * @param {*} tagValue
+   * @returns {void}
+   */
+  onRemoveTag = (idPrefix, tagValue) => {
+    this.model.removeTagFromSearch(idPrefix, tagValue);
   };
 
   /**

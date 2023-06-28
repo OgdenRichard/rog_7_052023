@@ -42,11 +42,34 @@ export default class RecipesView {
   };
 
   /**
+   * Fires dropdown search in RecipesModel
+   * @callback callback
+   */
+  bindDropdownTextSearch = (callback) => {
+    this.onDropdownTextSearch = callback;
+  };
+
+  /**
+   * Fires tag filtering in RecipesModel
+   * @callback callback
+   */
+  bindAddNewTag = (callback) => {
+    this.onAddNewTag = callback;
+  };
+
+  /**
+   * Fires tag filtering or reset in RecipesModel
+   * @callback callback
+   */
+  bindRemoveTag = (callback) => {
+    this.onRemoveTag = callback;
+  };
+
+  /**
    * Fires Model callback
    * @callback handler
    */
   mainSearchTrigger = (handler) => {
-    // TODO gérer touche space?
     this.mainSearchInput.addEventListener('keyup', (event) => {
       const inputValue = event.target.value;
       if (inputValue.length >= 3) {
@@ -59,22 +82,9 @@ export default class RecipesView {
         (event.key === 'Delete' && t.selectionStart < 3) ||
         (event.key === 'Backspace' && t.selectionStart === 3)
       ) {
-        // TODO : revoir conditions pour select multichars & backspace
         handler('');
       }
     });
-  };
-
-  bindDropdownTextSearch = (callback) => {
-    this.onDropdownTextSearch = callback;
-  };
-
-  bindAddNewTag = (callback) => {
-    this.onAddNewTag = callback;
-  };
-
-  bindRemoveTag = (callback) => {
-    this.onRemoveTag = callback;
   };
 
   /**
@@ -91,6 +101,11 @@ export default class RecipesView {
     this.refreshDropdownItems([...searchResult.ustensils], 'ust');
   };
 
+  /**
+   * Refresh recipes cards display
+   * @param {Array} recipesArray
+   * @returns {void}
+   */
   refreshGrid = (recipesArray) => {
     let cardsIndex = this.recipesGrid.recipesCards.length;
     while (cardsIndex) {
@@ -111,6 +126,12 @@ export default class RecipesView {
     }
   };
 
+  /**
+   * Process dropdowns from search / filtering results
+   * @param {Array} resultArray
+   * @param {string} idPrefix
+   * @returns {void}
+   */
   refreshDropdownItems = (resultArray, idPrefix) => {
     let currentDropdown = null;
     this.dropdowns.forEach((dropdown) => {
@@ -128,6 +149,12 @@ export default class RecipesView {
     }
   };
 
+  /**
+   * Toggle display of <li> elements for current dropdown
+   * @param {Array} list
+   * @param {Array} elementsArray
+   * @returns {void}
+   */
   static refreshDropdown = (list, elementsArray) => {
     let listIndex = list.length;
     while (listIndex) {
@@ -147,6 +174,10 @@ export default class RecipesView {
     }
   };
 
+  /**
+   * Set listeners for dropdowns user actions
+   * @returns {void}
+   */
   setDropdownsTriggers = () => {
     let clear = false;
     this.dropdowns.forEach((dropdown) => {
@@ -163,7 +194,6 @@ export default class RecipesView {
         input.addEventListener('focus', () => {
           const tags = document.getElementsByClassName('tag');
           input.value = '';
-          // TODO utiliser plutôt RecipeModel.mainSearchValue && activeTags.length?
           clear = this.mainSearchInput.value.length < 3 && !tags.length;
           this.onDropdownTextSearch(dropdown.idPrefix, input.value, clear);
         });
