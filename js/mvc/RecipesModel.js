@@ -46,7 +46,7 @@ export default class RecipesModel {
 
   /**
    * Populate ingredientsArray property with formatted data
-   * @param {Number} id
+   * @param {number} id
    * @param {Array} ingredients
    * @returns {void}
    */
@@ -62,7 +62,7 @@ export default class RecipesModel {
 
   /**
    * Populate appliancesArray property with formatted data
-   * @param {Number} id
+   * @param {number} id
    * @param {String} appliance
    * @returns {void}
    */
@@ -72,7 +72,7 @@ export default class RecipesModel {
 
   /**
    * Populate ustensilsArray property with formatted data
-   * @param {Number} id
+   * @param {number} id
    * @param {Array} ustensils
    * @returns {void}
    */
@@ -83,7 +83,7 @@ export default class RecipesModel {
   };
 
   /**
-   * Send back processed data to RecipesModel
+   * Send back processed data from Main search to RecipesModel
    * @callback callback : Set and fired in RecipesController
    * @returns {void}
    */
@@ -91,17 +91,27 @@ export default class RecipesModel {
     this.onMainSearchResult = callback;
   };
 
+  /**
+   * Send back processed data from Dropdown search to RecipesModel
+   * @callback callback : Set and fired in RecipesController
+   * @returns {void}
+   */
   bindDropdownSearch = (callback) => {
     this.onDropdownSearchResult = callback;
   };
 
+  /**
+   * Send back processed data from Tag search to RecipesModel
+   * @callback callback : Set and fired in RecipesController
+   * @returns {void}
+   */
   bindTagSearch = (callback) => {
     this.onTagSearchResult = callback;
   };
 
   /**
    * Main search event handler
-   * @param {String} inputValue
+   * @param {string} inputValue
    * @returns {void}
    */
   processMainSearchValue = (inputValue) => {
@@ -116,6 +126,10 @@ export default class RecipesModel {
     });
   };
 
+  /**
+   * Set filtered arrays from main search values and tags filtering
+   * @returns {void}
+   */
   searchMatchingRecipes = () => {
     const recipes = this.tagsRecipes.length
       ? this.tagsRecipes
@@ -153,6 +167,11 @@ export default class RecipesModel {
     );
   };
 
+  /**
+   * Search for matching elements in a recipe ingrediens
+   * @param {string} ingredients
+   * @returns {boolean}
+   */
   browseRecipeIngredients = (ingredients) => {
     let index = ingredients.length;
     let matchFound = false;
@@ -166,6 +185,13 @@ export default class RecipesModel {
     return matchFound;
   };
 
+  /**
+   * Add all recipes ingredients to this.filteredIngredients
+   * Used if any match is found whith main search value in current recipe
+   * Avoid duplicates ingredients
+   * @param {Array} newIngredients
+   * @returns {void}
+   */
   trimIngredientsArray = (newIngredients) => {
     let index = newIngredients.length;
     while (index) {
@@ -192,6 +218,11 @@ export default class RecipesModel {
     }
   };
 
+  /**
+   * Retrieve current ingredient data from ingredientsArray
+   * @param {string} stringVal
+   * @returns {boolean | Object} ingredient object or false if there is no match
+   */
   getIngredientData = (stringVal) => {
     let index = this.ingredientsArray.length;
     while (index) {
@@ -204,6 +235,12 @@ export default class RecipesModel {
     return false;
   };
 
+  /**
+   * Set an array of ustensils or appliances from filtered recipes
+   * @param {Array} recipesArray
+   * @param {Array} itemsArray
+   * @returns {Array}
+   */
   static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
     let itemsIndex = itemsArray.length;
     const filteredItems = [];
@@ -231,6 +268,13 @@ export default class RecipesModel {
     return filteredItems;
   };
 
+  /**
+   * Filter dropdown items from user input
+   * @param {string} idPrefix
+   * @param {string} inputValue
+   * @param {boolean} clear
+   * @returns {void}
+   */
   processDropdownSearch = (idPrefix, inputValue, clear = false) => {
     let sourceArray = [];
     switch (idPrefix) {
@@ -258,6 +302,12 @@ export default class RecipesModel {
     }
   };
 
+  /**
+   * Search for matching items in dropdown array
+   * @param {Array} sourceArray
+   * @param {string} stringVal
+   * @returns {Array}
+   */
   static searchMatchingDropdownItems = (sourceArray, stringVal) => {
     const searchResult = [];
     let index = sourceArray.length;
@@ -276,6 +326,12 @@ export default class RecipesModel {
     return searchResult;
   };
 
+  /**
+   * Perform tag filtering on new tag added
+   * @param {string} idPrefix
+   * @param {string} tagValue
+   * @returns {void}
+   */
   processTagSearch = (idPrefix, tagValue) => {
     let tag = null;
     this.clearFilters();
@@ -304,7 +360,7 @@ export default class RecipesModel {
     if (tag) {
       this.activeTags.push(...tag);
       this.restrictByTagsRecipesIds(...tag);
-      this.refreshDisplayFromTags();
+      this.refreshFiltersFromTags();
       this.onTagSearchResult({
         recipes: this.tagsRecipes,
         ingredients: this.filteredIngredients,
@@ -314,6 +370,12 @@ export default class RecipesModel {
     }
   };
 
+  /**
+   * Refresh tag search on tag removal
+   * @param {string} idPrefix
+   * @param {string} tagValue
+   * @returns {void}
+   */
   removeTagFromSearch = (idPrefix, tagValue) => {
     let tag = null;
     tag = this.toggleTag(tagValue, this.activeTags);
@@ -356,6 +418,12 @@ export default class RecipesModel {
     }
   };
 
+  /**
+   * Search and remove tag from array if any match is found
+   * @param {string} tagName
+   * @param {Array} sourceArray
+   * @returns {null | Object} tag object on match, null otherwise
+   */
   toggleTag = (tagName, sourceArray) => {
     let tag = null;
     let index = sourceArray.length;
@@ -369,9 +437,14 @@ export default class RecipesModel {
     return tag;
   };
 
-  restrictByTagsRecipesIds = (sourceArray) => {
+  /**
+   * Performs array intersection with current tag recipes
+   * @param {Object} tag
+   * @returns {void}
+   */
+  restrictByTagsRecipesIds = (tag) => {
     let rcpIndex = this.tagsRecipes.length;
-    const newRecipes = sourceArray.recipes;
+    const newRecipes = tag.recipes;
     if (rcpIndex) {
       while (rcpIndex) {
         rcpIndex -= 1;
@@ -392,7 +465,11 @@ export default class RecipesModel {
     }
   };
 
-  refreshDisplayFromTags = () => {
+  /**
+   * Filter dropdowns and recipes from tags
+   * @returns {void}
+   */
+  refreshFiltersFromTags = () => {
     const recipesArray = this.filteredRecipes.length
       ? this.filteredRecipes
       : this.recipesArray;
@@ -422,6 +499,10 @@ export default class RecipesModel {
     );
   };
 
+  /**
+   * Refresh tagRecipes array from all active tags
+   * @returns {void}
+   */
   refreshTagsRecipes = () => {
     if (this.activeTags.length) {
       let tagsIndex = this.activeTags.length;
@@ -433,6 +514,11 @@ export default class RecipesModel {
     }
   };
 
+  /**
+   * Add recipes from a single tag
+   * @param {Array} sourceArray
+   * @returns {void}
+   */
   addtagsRecipesFromId = (sourceArray) => {
     let tagsIndex = sourceArray.length;
     while (tagsIndex) {
@@ -449,13 +535,15 @@ export default class RecipesModel {
     }
   };
 
+  /**
+   * Clear dropdown filters arrays
+   * @returns {void}
+   */
   clearFilters = () => {
     this.filteredIngredients = [];
     this.filteredAppliances = [];
     this.filteredUstensils = [];
   };
-
-  static searchString = (stringVal, needle) => stringVal.includes(needle);
 
   /**
    * Process data to fill property array
@@ -482,6 +570,14 @@ export default class RecipesModel {
       itemObject.recipes.push(id);
     }
   };
+
+  /**
+   * Search needle in string value
+   * @param {string} stringVal
+   * @param {string} needle
+   * @returns {boolean}
+   */
+  static searchString = (stringVal, needle) => stringVal.includes(needle);
 
   /**
    * Sort by string alphabetically (ascending)
