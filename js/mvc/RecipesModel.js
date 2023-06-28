@@ -338,21 +338,21 @@ export default class RecipesModel {
     switch (idPrefix) {
       case 'igr':
         if (this.filteredIngredients.length) {
-          this.toggleTag(tagValue, this.filteredIngredients);
+          RecipesModel.toggleTag(tagValue, this.filteredIngredients);
         }
-        tag = this.toggleTag(tagValue, this.ingredientsArray);
+        tag = RecipesModel.toggleTag(tagValue, this.ingredientsArray);
         break;
       case 'apl':
         if (this.filteredAppliances.length) {
-          this.toggleTag(tagValue, this.filteredAppliances);
+          RecipesModel.toggleTag(tagValue, this.filteredAppliances);
         }
-        tag = this.toggleTag(tagValue, this.appliancesArray);
+        tag = RecipesModel.toggleTag(tagValue, this.appliancesArray);
         break;
       case 'ust':
         if (this.filteredUstensils.length) {
-          this.toggleTag(tagValue, this.filteredUstensils);
+          RecipesModel.toggleTag(tagValue, this.filteredUstensils);
         }
-        tag = this.toggleTag(tagValue, this.ustensilsArray);
+        tag = RecipesModel.toggleTag(tagValue, this.ustensilsArray);
         break;
       default:
         break;
@@ -378,7 +378,7 @@ export default class RecipesModel {
    */
   removeTagFromSearch = (idPrefix, tagValue) => {
     let tag = null;
-    tag = this.toggleTag(tagValue, this.activeTags);
+    tag = RecipesModel.toggleTag(tagValue, this.activeTags);
     if (tag) {
       switch (idPrefix) {
         case 'igr':
@@ -424,7 +424,7 @@ export default class RecipesModel {
    * @param {Array} sourceArray
    * @returns {null | Object} tag object on match, null otherwise
    */
-  toggleTag = (tagName, sourceArray) => {
+  static toggleTag = (tagName, sourceArray) => {
     let tag = null;
     let index = sourceArray.length;
     while (index) {
