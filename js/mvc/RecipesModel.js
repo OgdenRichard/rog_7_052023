@@ -11,9 +11,9 @@ export default class RecipesModel {
     this.ingredientsArray = [];
     this.filteredIngredients = new Set();
     this.appliancesArray = [];
-    this.filteredAppliances = [];
+    this.filteredAppliances = new Set();
     this.ustensilsArray = [];
-    this.filteredUstensils = [];
+    this.filteredUstensils = new Set();
     this.activeTags = [];
     this.tagsRecipes = [];
     this.init();
@@ -211,29 +211,15 @@ export default class RecipesModel {
    * @returns {Array}
    */
   static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
-    let itemsIndex = itemsArray.length;
-    const filteredItems = [];
-    while (itemsIndex) {
-      itemsIndex -= 1;
-      const itemRecipes = itemsArray[itemsIndex].recipes;
-      for (let index = 0; index < itemRecipes.length; index += 1) {
-        const item = itemsArray[itemsIndex];
-        const itemRecipeId = itemRecipes[index];
-        let recipesIndex = recipesArray.length;
-        let matchFound = false;
-        while (recipesIndex) {
-          recipesIndex -= 1;
-          if (itemRecipeId === recipesArray[recipesIndex].id) {
-            matchFound = true;
-            filteredItems.push(item);
-            break;
-          }
+    const filteredItems = new Set();
+    itemsArray.forEach((item) => {
+      item.recipes.forEach((recipeId) => {
+        const res = recipesArray.filter((recipe) => recipe.id === recipeId);
+        if (res.length && !filteredItems.has(item)) {
+          filteredItems.add(item);
         }
-        if (matchFound) {
-          break;
-        }
-      }
-    }
+      });
+    });
     return filteredItems;
   };
 
@@ -253,10 +239,14 @@ export default class RecipesModel {
           : this.ingredientsArray;
         break;
       case 'apl':
-        sourceArray = !clear ? this.filteredAppliances : this.appliancesArray;
+        sourceArray = !clear
+          ? [...this.filteredAppliances]
+          : this.appliancesArray;
         break;
       case 'ust':
-        sourceArray = !clear ? this.filteredUstensils : this.ustensilsArray;
+        sourceArray = !clear
+          ? [...this.filteredUstensils]
+          : this.ustensilsArray;
         break;
       default:
         break;
@@ -512,8 +502,8 @@ export default class RecipesModel {
    */
   clearFilters = () => {
     this.filteredIngredients.clear();
-    this.filteredAppliances = [];
-    this.filteredUstensils = [];
+    this.filteredAppliances.clear();
+    this.filteredUstensils.clear();
   };
 
   /**
