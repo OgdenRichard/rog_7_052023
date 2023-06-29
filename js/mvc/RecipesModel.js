@@ -134,29 +134,24 @@ export default class RecipesModel {
     const recipes = this.tagsRecipes.length
       ? this.tagsRecipes
       : this.recipesArray;
-    let index = recipes.length;
     this.filteredRecipes = [];
     this.clearFilters();
-    while (index) {
-      index -= 1;
-      if (
+
+    this.filteredRecipes = recipes.filter(
+      (recipe) =>
         RecipesModel.searchString(
-          recipes[index].name.toLowerCase(),
+          recipe.name.toLowerCase(),
           this.mainSearchValue
         ) ||
         RecipesModel.searchString(
-          recipes[index].description.toLowerCase(),
+          recipe.description.toLowerCase(),
           this.mainSearchValue
         ) ||
-        this.browseRecipeIngredients(
-          recipes[index].ingredients,
-          this.mainSearchValue
-        )
-      ) {
-        this.filteredRecipes.push(recipes[index]);
-        this.trimIngredientsArray(recipes[index].ingredients);
-      }
-    }
+        this.browseRecipeIngredients(recipe.ingredients, this.mainSearchValue)
+    );
+    this.filteredRecipes.forEach((recipe) => {
+      this.trimIngredientsArray(recipe.ingredients);
+    });
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
       this.filteredRecipes,
       this.appliancesArray
