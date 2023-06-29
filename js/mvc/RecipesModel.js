@@ -117,7 +117,9 @@ export default class RecipesModel {
   processMainSearchValue = (inputValue) => {
     this.mainSearchValue = inputValue.toLowerCase();
     this.refreshTagsRecipes();
+    console.time('SearchMatchingRecipes');
     this.searchMatchingRecipes();
+    console.timeEnd('SearchMatchingRecipes');
     this.onMainSearchResult({
       recipes: this.filteredRecipes,
       ingredients: this.filteredIngredients,
@@ -136,7 +138,6 @@ export default class RecipesModel {
       : this.recipesArray;
     this.filteredRecipes = [];
     this.clearFilters();
-
     this.filteredRecipes = recipes.filter(
       (recipe) =>
         RecipesModel.searchString(
