@@ -151,6 +151,7 @@ export default class RecipesModel {
     this.filteredRecipes.forEach((recipe) => {
       this.trimIngredientsArray(recipe.ingredients);
     });
+    console.log(this.filteredIngredients);
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
       this.filteredRecipes,
       this.appliancesArray
@@ -184,29 +185,12 @@ export default class RecipesModel {
    * @returns {void}
    */
   trimIngredientsArray = (newIngredients) => {
-    let index = newIngredients.length;
-    while (index) {
-      index -= 1;
-      let matchFound = false;
-      let mainIndex = this.filteredIngredients.length;
-      while (mainIndex) {
-        mainIndex -= 1;
-        matchFound =
-          newIngredients[index].ingredient.toLowerCase() ===
-          this.filteredIngredients[mainIndex].name.toLowerCase();
-        if (matchFound) {
-          break;
-        }
+    newIngredients.forEach((newIngredient) => {
+      const ingredient = this.getIngredientData(newIngredient.ingredient);
+      if (ingredient && !this.filteredIngredients.has(ingredient)) {
+        this.filteredIngredients.add(ingredient);
       }
-      if (!matchFound) {
-        const ingredient = this.getIngredientData(
-          newIngredients[index].ingredient
-        );
-        if (ingredient) {
-          this.filteredIngredients.push(ingredient);
-        }
-      }
-    }
+    });
   };
 
   /**
@@ -215,15 +199,10 @@ export default class RecipesModel {
    * @returns {boolean | Object} ingredient object or false if there is no match
    */
   getIngredientData = (stringVal) => {
-    let index = this.ingredientsArray.length;
-    while (index) {
-      index -= 1;
-      const item = this.ingredientsArray[index];
-      if (item.name.toLowerCase() === stringVal.toLowerCase()) {
-        return item;
-      }
-    }
-    return false;
+    const result = this.ingredientsArray.filter(
+      (ingredient) => ingredient.name.toLowerCase() === stringVal.toLowerCase()
+    );
+    return result[0];
   };
 
   /**
@@ -270,7 +249,9 @@ export default class RecipesModel {
     let sourceArray = [];
     switch (idPrefix) {
       case 'igr':
-        sourceArray = !clear ? this.filteredIngredients : this.ingredientsArray;
+        sourceArray = !clear
+          ? [...this.filteredIngredients]
+          : this.ingredientsArray;
         break;
       case 'apl':
         sourceArray = !clear ? this.filteredAppliances : this.appliancesArray;
@@ -531,7 +512,7 @@ export default class RecipesModel {
    * @returns {void}
    */
   clearFilters = () => {
-    this.filteredIngredients = [];
+    this.filteredIngredients = new Set();
     this.filteredAppliances = [];
     this.filteredUstensils = [];
   };
