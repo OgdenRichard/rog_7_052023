@@ -117,9 +117,7 @@ export default class RecipesModel {
   processMainSearchValue = (inputValue) => {
     this.mainSearchValue = inputValue.toLowerCase();
     this.refreshTagsRecipes();
-    console.time('SearchMatchingRecipes');
     this.searchMatchingRecipes();
-    console.timeEnd('SearchMatchingRecipes');
     this.onMainSearchResult({
       recipes: this.filteredRecipes,
       ingredients: this.filteredIngredients,
@@ -169,16 +167,13 @@ export default class RecipesModel {
    * @returns {boolean}
    */
   browseRecipeIngredients = (ingredients) => {
-    let index = ingredients.length;
-    let matchFound = false;
-    while (index && !matchFound) {
-      index -= 1;
-      matchFound = RecipesModel.searchString(
-        ingredients[index].ingredient.toLowerCase(),
+    const matches = ingredients.filter((ingredient) =>
+      RecipesModel.searchString(
+        ingredient.ingredient.toLowerCase(),
         this.mainSearchValue
-      );
-    }
-    return matchFound;
+      )
+    );
+    return matches.length > 0;
   };
 
   /**
