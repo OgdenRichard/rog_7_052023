@@ -231,11 +231,16 @@
 }
 
 .card-recipe {
-  display: inline-block;
   width: calc(45%);
   max-height: 150px;
   font-size: 0.8em;
+}
+
+.recipe-text {
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
 }
 
 .card-ingredients {

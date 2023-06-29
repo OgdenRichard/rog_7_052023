@@ -97,8 +97,11 @@ export default class RecipeCard {
    */
   setDescription = () => {
     const container = document.createElement('div');
+    const text = document.createElement('p');
     container.className = 'card-recipe';
-    container.textContent = this.description;
+    text.className = 'recipe-text';
+    text.textContent = this.description;
+    container.appendChild(text);
     return container;
   };
 
