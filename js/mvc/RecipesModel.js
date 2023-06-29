@@ -9,7 +9,7 @@ export default class RecipesModel {
     this.recipesArray = [];
     this.filteredRecipes = [];
     this.ingredientsArray = [];
-    this.filteredIngredients = [];
+    this.filteredIngredients = new Set();
     this.appliancesArray = [];
     this.filteredAppliances = [];
     this.ustensilsArray = [];
@@ -151,7 +151,6 @@ export default class RecipesModel {
     this.filteredRecipes.forEach((recipe) => {
       this.trimIngredientsArray(recipe.ingredients);
     });
-    console.log(this.filteredIngredients);
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
       this.filteredRecipes,
       this.appliancesArray
@@ -512,7 +511,7 @@ export default class RecipesModel {
    * @returns {void}
    */
   clearFilters = () => {
-    this.filteredIngredients = new Set();
+    this.filteredIngredients.clear();
     this.filteredAppliances = [];
     this.filteredUstensils = [];
   };
