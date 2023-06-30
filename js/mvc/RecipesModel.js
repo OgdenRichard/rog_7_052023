@@ -290,21 +290,21 @@ export default class RecipesModel {
     this.clearFilters();
     switch (idPrefix) {
       case 'igr':
-        if (this.filteredIngredients.length) {
+        /* if (this.filteredIngredients.length) {
           RecipesModel.toggleTag(tagValue, this.filteredIngredients);
-        }
+        } */
         tag = RecipesModel.toggleTag(tagValue, this.ingredientsArray);
         break;
       case 'apl':
-        if (this.filteredAppliances.length) {
+        /*  if (this.filteredAppliances.length) {
           RecipesModel.toggleTag(tagValue, this.filteredAppliances);
-        }
+        } */
         tag = RecipesModel.toggleTag(tagValue, this.appliancesArray);
         break;
       case 'ust':
-        if (this.filteredUstensils.length) {
+        /* if (this.filteredUstensils.length) {
           RecipesModel.toggleTag(tagValue, this.filteredUstensils);
-        }
+        } */
         tag = RecipesModel.toggleTag(tagValue, this.ustensilsArray);
         break;
       default:
@@ -335,21 +335,21 @@ export default class RecipesModel {
     if (tag) {
       switch (idPrefix) {
         case 'igr':
-          if (this.filteredIngredients.length) {
+          /* if (this.filteredIngredients.length) {
             this.filteredIngredients.push(...tag);
-          }
+          } */
           this.ingredientsArray.push(...tag);
           break;
         case 'apl':
-          if (this.filteredAppliances.length) {
+          /* if (this.filteredAppliances.length) {
             this.filteredAppliances.push(...tag);
-          }
+          } */
           this.appliancesArray.push(...tag);
           break;
         case 'ust':
-          if (this.filteredUstensils.length) {
+          /*  if (this.filteredUstensils.length) {
             this.filteredUstensils.push(...tag);
-          }
+          } */
           this.ustensilsArray.push(...tag);
           break;
         default:
