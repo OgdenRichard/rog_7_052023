@@ -179,7 +179,7 @@ export default class RecipesView {
    * @returns {void}
    */
   setDropdownsTriggers = () => {
-    let clear = false;
+    // let clear = false;
     this.dropdowns.forEach((dropdown) => {
       const input = dropdown.searchInput;
       const inputContainer = dropdown.searchInput.parentNode;
@@ -192,17 +192,14 @@ export default class RecipesView {
           input.value = '';
         });
         input.addEventListener('focus', () => {
-          const tags = document.getElementsByClassName('tag');
           input.value = '';
-          clear = this.mainSearchInput.value.length < 3 && !tags.length;
-          this.onDropdownTextSearch(dropdown.idPrefix, input.value, clear);
+          this.onDropdownTextSearch(dropdown.idPrefix, input.value);
         });
         input.addEventListener('focusout', () => {
           input.value = dropdown.setInputValue();
         });
         input.addEventListener('keyup', () => {
-          clear = this.mainSearchInput.value.length < 3;
-          this.onDropdownTextSearch(dropdown.idPrefix, input.value, clear);
+          this.onDropdownTextSearch(dropdown.idPrefix, input.value);
         });
         for (let index = 0; index < options.length; index += 1) {
           const option = options[index];
