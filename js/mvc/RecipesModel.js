@@ -409,36 +409,17 @@ export default class RecipesModel {
     const recipesArray = this.filteredRecipes.length
       ? this.filteredRecipes
       : this.recipesArray;
-    let tagsIndex = this.tagsRecipes.length;
+    const updatedTagRecipes = [];
     this.tagsRecipes.forEach((tagRecipe) => {
-      const rcpIndex = recipesArray.findIndex(
+      const matches = recipesArray.filter(
         (recipe) => recipe.id === tagRecipe.id
       );
-      if (rcpIndex > -1) {
-        this.trimIngredientsArray(recipesArray[rcpIndex].ingredients);
-      } else {
-        const spliceIndex = this.tagsRecipes.findIndex(
-          (rcp) => rcp.id === tagRecipe.id
-        );
-        console.log(spliceIndex);
-        this.tagsRecipes.splice(spliceIndex, 1);
+      if (matches.length) {
+        this.trimIngredientsArray(matches[0].ingredients);
+        updatedTagRecipes.push(matches[0]);
       }
     });
-    /* while (tagsIndex) {
-      tagsIndex -= 1;
-      let found = false;
-      let rcpIndex = recipesArray.length;
-      while (rcpIndex && !found) {
-        rcpIndex -= 1;
-        found = recipesArray[rcpIndex].id === this.tagsRecipes[tagsIndex].id;
-        if (found) {
-          this.trimIngredientsArray(recipesArray[rcpIndex].ingredients);
-        }
-      }
-      if (!found) {
-        this.tagsRecipes.splice(tagsIndex, 1);
-      }
-    } */
+    this.tagsRecipes = updatedTagRecipes;
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
       this.tagsRecipes,
       this.appliancesArray
