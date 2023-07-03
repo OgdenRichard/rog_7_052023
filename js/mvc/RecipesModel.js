@@ -410,7 +410,21 @@ export default class RecipesModel {
       ? this.filteredRecipes
       : this.recipesArray;
     let tagsIndex = this.tagsRecipes.length;
-    while (tagsIndex) {
+    this.tagsRecipes.forEach((tagRecipe) => {
+      const rcpIndex = recipesArray.findIndex(
+        (recipe) => recipe.id === tagRecipe.id
+      );
+      if (rcpIndex > -1) {
+        this.trimIngredientsArray(recipesArray[rcpIndex].ingredients);
+      } else {
+        const spliceIndex = this.tagsRecipes.findIndex(
+          (rcp) => rcp.id === tagRecipe.id
+        );
+        console.log(spliceIndex);
+        this.tagsRecipes.splice(spliceIndex, 1);
+      }
+    });
+    /* while (tagsIndex) {
       tagsIndex -= 1;
       let found = false;
       let rcpIndex = recipesArray.length;
@@ -424,7 +438,7 @@ export default class RecipesModel {
       if (!found) {
         this.tagsRecipes.splice(tagsIndex, 1);
       }
-    }
+    } */
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
       this.tagsRecipes,
       this.appliancesArray
