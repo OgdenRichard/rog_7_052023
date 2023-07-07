@@ -251,21 +251,21 @@ export default class RecipesModel {
    */
   processDropdownSearch = (idPrefix, inputValue) => {
     let sourceArray = [];
+    const clear =
+      !this.activeTags.length &&
+      !this.filteredIngredients.length &&
+      !this.filteredAppliances.length &&
+      !this.filteredUstensils.length &&
+      this.mainSearchValue.length < 3;
     switch (idPrefix) {
       case 'igr':
-        sourceArray = this.filteredIngredients.length
-          ? this.filteredIngredients
-          : this.ingredientsArray;
+        sourceArray = !clear ? this.filteredIngredients : this.ingredientsArray;
         break;
       case 'apl':
-        sourceArray = this.filteredAppliances.length
-          ? this.filteredAppliances
-          : this.appliancesArray;
+        sourceArray = !clear ? this.filteredAppliances : this.appliancesArray;
         break;
       case 'ust':
-        sourceArray = this.filteredUstensils.length
-          ? this.filteredUstensils
-          : this.ustensilsArray;
+        sourceArray = !clear ? this.filteredUstensils : this.ustensilsArray;
         break;
       default:
         break;
@@ -314,26 +314,16 @@ export default class RecipesModel {
    * @returns {void}
    */
   processTagSearch = (idPrefix, tagValue) => {
-    // TODO : dégager le vérif sur filtered ingredients
     let tag = null;
     this.clearFilters();
     switch (idPrefix) {
       case 'igr':
-        if (this.filteredIngredients.length) {
-          RecipesModel.toggleTag(tagValue, this.filteredIngredients);
-        }
         tag = RecipesModel.toggleTag(tagValue, this.ingredientsArray);
         break;
       case 'apl':
-        if (this.filteredAppliances.length) {
-          RecipesModel.toggleTag(tagValue, this.filteredAppliances);
-        }
         tag = RecipesModel.toggleTag(tagValue, this.appliancesArray);
         break;
       case 'ust':
-        if (this.filteredUstensils.length) {
-          RecipesModel.toggleTag(tagValue, this.filteredUstensils);
-        }
         tag = RecipesModel.toggleTag(tagValue, this.ustensilsArray);
         break;
       default:
@@ -360,26 +350,16 @@ export default class RecipesModel {
    */
   removeTagFromSearch = (idPrefix, tagValue) => {
     let tag = null;
-    // TODO : dégager le vérif sur filtered ingredients
     tag = RecipesModel.toggleTag(tagValue, this.activeTags);
     if (tag) {
       switch (idPrefix) {
         case 'igr':
-          if (this.filteredIngredients.length) {
-            this.filteredIngredients.push(...tag);
-          }
           this.ingredientsArray.push(...tag);
           break;
         case 'apl':
-          if (this.filteredAppliances.length) {
-            this.filteredAppliances.push(...tag);
-          }
           this.appliancesArray.push(...tag);
           break;
         case 'ust':
-          if (this.filteredUstensils.length) {
-            this.filteredUstensils.push(...tag);
-          }
           this.ustensilsArray.push(...tag);
           break;
         default:
