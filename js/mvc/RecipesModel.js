@@ -439,12 +439,10 @@ export default class RecipesModel {
    */
   refreshTagsRecipes = () => {
     if (this.activeTags.length) {
-      let tagsIndex = this.activeTags.length;
       this.tagsRecipes = [];
-      while (tagsIndex) {
-        tagsIndex -= 1;
-        this.restrictByTagsRecipesIds(this.activeTags[tagsIndex]);
-      }
+      this.activeTags.forEach((tag) => {
+        this.restrictByTagsRecipesIds(tag);
+      });
     }
   };
 
@@ -454,19 +452,14 @@ export default class RecipesModel {
    * @returns {void}
    */
   addtagsRecipesFromId = (sourceArray) => {
-    let tagsIndex = sourceArray.length;
-    while (tagsIndex) {
-      tagsIndex -= 1;
-      let found = false;
-      let rcpIndex = this.recipesArray.length;
-      while (rcpIndex && !found) {
-        rcpIndex -= 1;
-        found = this.recipesArray[rcpIndex].id === sourceArray[tagsIndex];
-        if (found) {
-          this.tagsRecipes.push(this.recipesArray[rcpIndex]);
-        }
+    sourceArray.forEach((id) => {
+      const newTagRecipe = this.recipesArray.filter(
+        (recipe) => recipe.id === id
+      );
+      if (newTagRecipe.length) {
+        this.tagsRecipes.push(...newTagRecipe);
       }
-    }
+    });
   };
 
   /**
