@@ -186,8 +186,13 @@ export default class RecipesModel {
   trimIngredientsArray = (newIngredients) => {
     newIngredients.forEach((newIngredient) => {
       const ingredient = this.getIngredientData(newIngredient.ingredient);
-      if (ingredient && !this.filteredIngredients.has(ingredient)) {
-        this.filteredIngredients.add(ingredient);
+      if (
+        ingredient &&
+        !this.filteredIngredients.some(
+          (element) => element.id === ingredient.id
+        )
+      ) {
+        this.filteredIngredients.push(ingredient);
       }
     });
   };
@@ -246,11 +251,10 @@ export default class RecipesModel {
    */
   processDropdownSearch = (idPrefix, inputValue) => {
     let sourceArray = [];
-    // TODO : check destructuring
     switch (idPrefix) {
       case 'igr':
         sourceArray = this.filteredIngredients.length
-          ? [...this.filteredIngredients]
+          ? this.filteredIngredients
           : this.ingredientsArray;
         break;
       case 'apl':
@@ -519,7 +523,7 @@ export default class RecipesModel {
    * @returns {void}
    */
   clearFilters = () => {
-    this.filteredIngredients = new Set();
+    this.filteredIngredients = [];
     this.filteredAppliances = [];
     this.filteredUstensils = [];
   };
