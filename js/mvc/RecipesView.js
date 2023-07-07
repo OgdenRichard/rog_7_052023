@@ -179,7 +179,6 @@ export default class RecipesView {
    * @returns {void}
    */
   setDropdownsTriggers = () => {
-    // let clear = false;
     this.dropdowns.forEach((dropdown) => {
       const input = dropdown.searchInput;
       const inputContainer = dropdown.searchInput.parentNode;
