@@ -48,7 +48,6 @@ export default class RecipesController {
    * @callback for RecipesView.bindDropdownTextSearch
    * @param {string} idPrefix
    * @param {string} inputValue
-   * @param {boolean} clear
    * @returns {void}
    */
   onDropdownTextSearch = (idPrefix, inputValue) => {
@@ -57,8 +56,8 @@ export default class RecipesController {
 
   /**
    * @callback for RecipesView.bindAddNewTag
-   * @param {*} idPrefix
-   * @param {*} tagValue
+   * @param {string} idPrefix
+   * @param {string} tagValue
    * @returns {void}
    */
   onAddNewTag = (idPrefix, tagValue) => {
@@ -67,8 +66,8 @@ export default class RecipesController {
 
   /**
    * @callback for RecipesView.bindRemoveTag
-   * @param {*} idPrefix
-   * @param {*} tagValue
+   * @param {string} idPrefix
+   * @param {string} tagValue
    * @returns {void}
    */
   onRemoveTag = (idPrefix, tagValue) => {
