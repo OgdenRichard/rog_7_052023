@@ -244,20 +244,24 @@ export default class RecipesModel {
    * @param {boolean} clear
    * @returns {void}
    */
-  processDropdownSearch = (idPrefix, inputValue, clear = false) => {
+  processDropdownSearch = (idPrefix, inputValue) => {
     let sourceArray = [];
     // TODO : check destructuring
     switch (idPrefix) {
       case 'igr':
-        sourceArray = !clear
+        sourceArray = this.filteredIngredients.length
           ? [...this.filteredIngredients]
           : this.ingredientsArray;
         break;
       case 'apl':
-        sourceArray = !clear ? this.filteredAppliances : this.appliancesArray;
+        sourceArray = this.filteredAppliances.length
+          ? this.filteredAppliances
+          : this.appliancesArray;
         break;
       case 'ust':
-        sourceArray = !clear ? this.filteredUstensils : this.ustensilsArray;
+        sourceArray = this.filteredUstensils.length
+          ? this.filteredUstensils
+          : this.ustensilsArray;
         break;
       default:
         break;

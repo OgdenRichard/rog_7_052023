@@ -51,8 +51,8 @@ export default class RecipesController {
    * @param {boolean} clear
    * @returns {void}
    */
-  onDropdownTextSearch = (idPrefix, inputValue, clear = false) => {
-    this.model.processDropdownSearch(idPrefix, inputValue, clear);
+  onDropdownTextSearch = (idPrefix, inputValue) => {
+    this.model.processDropdownSearch(idPrefix, inputValue);
   };
 
   /**
