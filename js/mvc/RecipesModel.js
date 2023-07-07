@@ -365,7 +365,7 @@ export default class RecipesModel {
    * Search and remove tag from array if any match is found
    * @param {string} tagName
    * @param {Array} sourceArray
-   * @returns {null | Object} tag object on match, null otherwise
+   * @returns {null | Array} Array of one tag object on match, null otherwise
    */
   static toggleTag = (tagName, sourceArray) => {
     let tag = null;
@@ -412,22 +412,17 @@ export default class RecipesModel {
     const recipesArray = this.filteredRecipes.length
       ? this.filteredRecipes
       : this.recipesArray;
-    let tagsIndex = this.tagsRecipes.length;
-    while (tagsIndex) {
-      tagsIndex -= 1;
-      let found = false;
-      let rcpIndex = recipesArray.length;
-      while (rcpIndex && !found) {
-        rcpIndex -= 1;
-        found = recipesArray[rcpIndex].id === this.tagsRecipes[tagsIndex].id;
-        if (found) {
-          this.trimIngredientsArray(recipesArray[rcpIndex].ingredients);
-        }
+    const updatedTagRecipes = [];
+    this.tagsRecipes.forEach((tagRecipe) => {
+      const matches = recipesArray.filter(
+        (recipe) => recipe.id === tagRecipe.id
+      );
+      if (matches.length) {
+        this.trimIngredientsArray(matches[0].ingredients);
+        updatedTagRecipes.push(...matches);
       }
-      if (!found) {
-        this.tagsRecipes.splice(tagsIndex, 1);
-      }
-    }
+    });
+    this.tagsRecipes = updatedTagRecipes;
     this.filteredAppliances = RecipesModel.setArrayFromRecipesIds(
       this.tagsRecipes,
       this.appliancesArray
