@@ -289,21 +289,12 @@ export default class RecipesModel {
    * @returns {Array}
    */
   static searchMatchingDropdownItems = (sourceArray, stringVal) => {
-    // TODO : algo fonctionnelle
-    const searchResult = [];
-    let index = sourceArray.length;
-    while (index) {
-      index -= 1;
-      const item = sourceArray[index];
-      if (
-        RecipesModel.searchString(
-          item.name.toLowerCase(),
-          stringVal.toLowerCase()
-        )
-      ) {
-        searchResult.push(item);
-      }
-    }
+    const searchResult = sourceArray.filter((item) =>
+      RecipesModel.searchString(
+        item.name.toLowerCase(),
+        stringVal.toLowerCase()
+      )
+    );
     return searchResult;
   };
 
