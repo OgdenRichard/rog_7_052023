@@ -216,29 +216,18 @@ export default class RecipesModel {
    * @returns {Array}
    */
   static setArrayFromRecipesIds = (recipesArray, itemsArray) => {
-    let itemsIndex = itemsArray.length;
     const filteredItems = [];
-    while (itemsIndex) {
-      itemsIndex -= 1;
-      const itemRecipes = itemsArray[itemsIndex].recipes;
-      for (let index = 0; index < itemRecipes.length; index += 1) {
-        const item = itemsArray[itemsIndex];
-        const itemRecipeId = itemRecipes[index];
-        let recipesIndex = recipesArray.length;
-        let matchFound = false;
-        while (recipesIndex) {
-          recipesIndex -= 1;
-          if (itemRecipeId === recipesArray[recipesIndex].id) {
-            matchFound = true;
-            filteredItems.push(item);
-            break;
-          }
+    itemsArray.forEach((item) => {
+      item.recipes.forEach((recipeId) => {
+        const res = recipesArray.filter((recipe) => recipe.id === recipeId);
+        if (
+          res.length &&
+          !filteredItems.some((element) => element.id === item.id)
+        ) {
+          filteredItems.push(item);
         }
-        if (matchFound) {
-          break;
-        }
-      }
-    }
+      });
+    });
     return filteredItems;
   };
 
