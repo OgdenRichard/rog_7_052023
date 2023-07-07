@@ -369,13 +369,9 @@ export default class RecipesModel {
    */
   static toggleTag = (tagName, sourceArray) => {
     let tag = null;
-    let index = sourceArray.length;
-    while (index) {
-      index -= 1;
-      if (sourceArray[index].name === tagName) {
-        tag = sourceArray.splice(index, 1);
-        break;
-      }
+    const tagIndex = sourceArray.findIndex((el) => el.name === tagName);
+    if (tagIndex > -1) {
+      tag = sourceArray.splice(tagIndex, 1);
     }
     return tag;
   };
