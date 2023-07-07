@@ -281,7 +281,8 @@ export default class RecipesModel {
       !this.activeTags.length &&
       !this.filteredIngredients.length &&
       !this.filteredAppliances.length &&
-      !this.filteredUstensils.length;
+      !this.filteredUstensils.length &&
+      this.mainSearchValue.length < 3;
     switch (idPrefix) {
       case 'igr':
         sourceArray = !clear ? this.filteredIngredients : this.ingredientsArray;
