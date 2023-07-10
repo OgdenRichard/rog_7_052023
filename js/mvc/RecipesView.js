@@ -74,14 +74,7 @@ export default class RecipesView {
       const inputValue = event.target.value;
       if (inputValue.length >= 3) {
         handler(inputValue);
-      }
-    });
-    this.mainSearchInput.addEventListener('keydown', (event) => {
-      const t = event.target;
-      if (
-        (event.key === 'Delete' && t.selectionStart < 3) ||
-        (event.key === 'Backspace' && t.selectionStart === 3)
-      ) {
+      } else {
         handler('');
       }
     });
