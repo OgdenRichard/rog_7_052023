@@ -382,23 +382,18 @@ export default class RecipesModel {
    * @returns {void}
    */
   restrictByTagsRecipesIds = (tag) => {
-    let rcpIndex = this.tagsRecipes.length;
     const newRecipes = tag.recipes;
-    if (rcpIndex) {
-      while (rcpIndex) {
-        rcpIndex -= 1;
-        let found = false;
-        for (let index = 0; index < newRecipes.length; index += 1) {
-          const recipe = newRecipes[index];
-          found = recipe === this.tagsRecipes[rcpIndex].id;
-          if (found) {
-            break;
-          }
+    if (this.tagsRecipes.length) {
+      const updatedRecipes = [];
+      newRecipes.forEach((id) => {
+        const found = this.tagsRecipes.filter(
+          (tagRecipe) => tagRecipe.id === id
+        );
+        if (found.length) {
+          updatedRecipes.push(...found);
         }
-        if (!found) {
-          this.tagsRecipes.splice(rcpIndex, 1);
-        }
-      }
+      });
+      this.tagsRecipes = updatedRecipes;
     } else {
       this.addtagsRecipesFromId(newRecipes);
     }
