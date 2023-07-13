@@ -110,12 +110,21 @@ export default class RecipesModel {
   };
 
   /**
+   * Remove multiple whitespaces between words and convert string to lower case
+   * @param {string} inputValue
+   * @returns {void}
+   */
+  setMainSearchValue = (inputValue) => {
+    this.mainSearchValue = inputValue.replace(/\s+/g, ' ').toLowerCase();
+  };
+
+  /**
    * Main search event handler
    * @param {string} inputValue
    * @returns {void}
    */
   processMainSearchValue = (inputValue) => {
-    this.mainSearchValue = inputValue.toLowerCase();
+    this.setMainSearchValue(inputValue);
     this.refreshTagsRecipes();
     this.searchMatchingRecipes();
     this.onMainSearchResult({
