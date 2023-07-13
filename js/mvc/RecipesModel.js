@@ -286,6 +286,7 @@ export default class RecipesModel {
    */
   processDropdownSearch = (idPrefix, inputValue) => {
     let sourceArray = [];
+    const textSearch = inputValue.replace(/\s+/g, ' ').trim();
     const clear =
       !this.activeTags.length &&
       !this.filteredIngredients.length &&
@@ -305,11 +306,11 @@ export default class RecipesModel {
       default:
         break;
     }
-    if (inputValue.length) {
+    if (textSearch.length) {
       let result = [];
       result = RecipesModel.searchMatchingDropdownItems(
         sourceArray,
-        inputValue
+        textSearch
       );
       this.onDropdownSearchResult(result, idPrefix);
     } else if (sourceArray.length) {
