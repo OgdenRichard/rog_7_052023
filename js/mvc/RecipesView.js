@@ -71,7 +71,7 @@ export default class RecipesView {
    */
   mainSearchTrigger = (handler) => {
     this.mainSearchInput.addEventListener('keyup', (event) => {
-      const inputValue = event.target.value;
+      const inputValue = event.target.value.trim();
       if (inputValue.length >= 3) {
         handler(inputValue);
       } else {
