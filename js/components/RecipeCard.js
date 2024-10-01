@@ -112,7 +112,7 @@ export default class RecipeCard {
   static setCardImg = () => {
     const img = document.createElement('img');
     img.className = 'card-img-top';
-    img.src = './assets/img/grey_bg.jpg';
+    img.src = './assets/img/dish.svg';
     img.alt = 'food image';
     return img;
   };
