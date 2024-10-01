@@ -1,22 +1,12 @@
-[![forthebadge](https://forthebadge.com/images/badges/validated-html5.svg)](https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Farthurblanc.github.io%2FLesPetitsPlats%2F)
-[![forthebadge](https://forthebadge.com/images/badges/uses-css.svg)](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Farthurblanc.github.io%2FLesPetitsPlats%2F&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=fr)
-![forthebadge](https://forthebadge.com/images/badges/uses-js.svg)
-
 # Algorithme de recherche Javascript
-
----
 
 ## Contexte
 
 Projet développé dans le cadre de la formation diplômante Concepteur / Développeur d'Applications | Javascript / React.
 
----
-
 ## Objet
 
 Implémenter un algorithme de recherche textuelle en Javascript.
-
----
 
 ## Règles de gestion :
 
